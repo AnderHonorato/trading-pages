@@ -116,7 +116,7 @@ body{background:var(--t-bg);color:var(--t-fg);font-family:var(--ao-fonte-corpo);
 .ao-chip:focus-visible{outline:2px solid var(--c);outline-offset:2px}
 @media (max-width:700px){.ao-tab{padding:6px 10px;font-size:11px}.ao-chip{font-size:10px;padding:3px 8px 3px 6px}}
 </style>
-<link rel="stylesheet" href="./evolucao-v9.css">
+<link rel="stylesheet" href="./evolucao-v10.css">
 </head>
 <body>
 <div id="ao-root" role="img" aria-label="Agentes de trading orbitando um núcleo que evolui, com vinte temas visuais em abas, agrupados em Game, Estilos, Natureza e Pop">
@@ -124,7 +124,7 @@ body{background:var(--t-bg);color:var(--t-fg);font-family:var(--ao-fonte-corpo);
   <nav id="ao-tabs" aria-label="Tema visual"></nav>
   <div id="ao-chips" role="group" aria-label="Agentes ativos"></div>
 </div>
-<script src="./evolucao-v9.js"></script>
+<script src="./evolucao-v10.js"></script>
 <script>
 (function(){
 'use strict';
@@ -146,7 +146,7 @@ const CONFIG={
   mostrarAbas:true,
   lembrarTema:true,          // lembra a última aba escolhida neste navegador
   /* XP: o núcleo começa no nível 1 e evolui com o tempo e com os sinais (nomes dos níveis vêm do tema) */
-  xp:{passivo:.6,porSinal:4,niveis:[{xp:0},{xp:60},{xp:180},{xp:380},{xp:700}]},
+  xp:{passivo:1.2,porSinal:6,niveis:Array.from({length:50},(_,i)=>({xp:Math.round(i*54+i*i*18+i*i*i*.18)}))},
   /* órbitas 3D: r = raio, incl = inclinação do plano (graus), no = giro do plano (graus), vel = voltas/s */
   orbitas:[
     {r:.44,incl:8, no:10, vel:.050},
@@ -2815,7 +2815,12 @@ TEMAS.brinquedos={
 };
 
 /* ================= MOTOR (lógica comum a todos os temas) ================= */
-const nomeNivel=n=>(NIV[n-1]&&NIV[n-1].nome)||(TEMA&&TEMA.niveis[n-1])||('Nível '+n);
+const nomeNivel=n=>{
+  if(n<=5)return (NIV[n-1]&&NIV[n-1].nome)||(TEMA&&TEMA.niveis[n-1])||('Nível '+n);
+  const fases=['','ASCENSÃO','AURORA','CONSTELAÇÃO','LENDÁRIO','SOBERANIA','TRANSCENDÊNCIA','INFINITO','CELESTIAL','SUPREMO'];
+  const epoca=Math.floor((n-1)/5),forma=(n-1)%5+1;
+  return (fases[Math.min(fases.length-1,epoca)]||'SUPREMO')+' · FORMA '+forma;
+};
 const fonte=(peso,px,fam)=>(peso||'')+Math.round(px)+'px '+fam;
 
 function criaFundo(){
@@ -2838,6 +2843,7 @@ function explosao(x,y,cor,n,vel){for(let i=0;i<n;i++){const ang=Math.random()*TA
 function subirNivel(ant){
   nuc.nivelAnt=ant;nuc.morph=1;nuc.evo=1;nuc.aviso=3;nuc.avisoTxt='EVOLUIU!  NV '+nuc.nivel+' · '+nomeNivel(nuc.nivel).toUpperCase();
   nuc.shake=.7;nuc.paz=Math.max(nuc.paz,CONFIG.ataques.paz+3);flashTela=1;tempoEscala=.25;cam.pulso=.1;
+  if(OV)OV.onLevel(nuc.nivel);
   ondas.push({t:0,cor:TEMA.pal.destaque},{t:-.15,cor:'#ffffff'});
   explosao(CX,CY,TEMA.pal.destaque,70,S*.5);explosao(CX,CY,'#ffffff',30,S*.35);
 }
@@ -2939,7 +2945,7 @@ function desenhaProj(t){
 /* ---------------- defesa do núcleo ---------------- */
 function iniciaAmeaca(nome){
   const A=CONFIG.ataques,tp=A.tipos.find(x=>x.nome===nome)||A.tipos[Math.floor(Math.random()*A.tipos.length)];
-  ameaca.fase=1;ameaca.nome=tp.nome;ameaca.cor=tp.cor;ameaca.spawn=0;ameaca.quebrou=false;ameaca.n=3+Math.floor(nuc.nivel/2)+Math.floor(Math.random()*3);
+  ameaca.fase=1;ameaca.nome=tp.nome;ameaca.cor=tp.cor;ameaca.spawn=0;ameaca.quebrou=false;ameaca.n=3+Math.min(9,Math.floor(nuc.nivel/2))+Math.floor(Math.random()*3);
   const e=nuc.escudo;e.max=24+12*nuc.nivel;e.hp=e.max;e.alvoOn=1;nuc.medo=3.5;
   ativos().filter(a=>a.p&&a.carga<=0).sort(()=>Math.random()-.5).slice(0,3).forEach((a,i)=>agenda.push({t:.5+i*.25,fn:()=>dispararDe(a,'reforco','nucleo',{cor:TEMA.pal.escudo})}));
   for(let i=0;i<ameaca.n;i++)agenda.push({t:1.4+i*.4,fn:spawnAtaque});
@@ -2991,7 +2997,7 @@ function desenhaEscudo(t,dt){
   const e=nuc.escudo;e.on+=(e.alvoOn-e.on)*Math.min(1,dt*5);
   for(let i=e.rip.length-1;i>=0;i--){e.rip[i].t+=dt/.6;if(e.rip[i].t>=1)e.rip.splice(i,1);}
   if(e.on<.02)return;
-  const nv=nuc.nivel,R=nuc.r*(2+.1*nv)*(.7+.3*e.on),f=e.max?Math.max(0,e.hp/e.max):0;
+  const nv=Math.min(5,nuc.nivel),R=nuc.r*(2+.1*nv)*(.7+.3*e.on),f=e.max?Math.max(0,e.hp/e.max):0;
   (TEMA.escudo?TEMA.escudo.bind(TEMA):escudoPadrao)(CX,CY,R,f,t,nv,e.rip,Math.min(1,e.on));
 }
 
@@ -3000,7 +3006,9 @@ function blinkDe(a,t){const ph=(t+a.seed*7)%4.2;return ph>4.05?Math.max(0,1-Math
 function desenhaAgente(a,p,t){
   const T=TEMA,o=CONFIG.orbitas[a.orbita],sg=Math.sign(o.vel)||1;
   const nasc=a.nasc>0?Math.max(.001,easeBack(1-a.nasc)):1;
-  const r=S*CONFIG.tamanhoAgente*(T.escalaAgente||1)*p.f*nasc*(T.id==='criaturas'&&a.forma==='buraconegro'?.82:1);
+  const densidade=Math.max(0,ativos().length-6);
+  const escalaGrupo=Math.max(.56,1-densidade*.024);
+  const r=S*CONFIG.tamanhoAgente*escalaGrupo*(T.escalaAgente||1)*p.f*nasc*(T.id==='criaturas'&&a.forma==='buraconegro'?.82:1);
   const al=.62+.38*clamp((p.prof+1)/2,0,1),pulo=a.bounce>0?-Math.sin((1-a.bounce)*PI)*r*.9:0;
   const cs=a.carga>0?1-a.carga/.35:0,rec=Math.min(1,Math.hypot(a.recuoX,a.recuoY)/(r*.6+1));
   const cx=p.x+a.recuoX,cy=p.y+a.recuoY,dx=CX-cx,dy=CY-cy,d=Math.hypot(dx,dy)||1,luzD={x:dx/d,y:dy/d};
@@ -3045,15 +3053,16 @@ function desenhaBalao(a){
 /* ---------------- núcleo ---------------- */
 function blinkN(t){const ph=(t+1.3)%4.6;return ph>4.45?1-Math.abs((ph-4.525)/.075):0;}
 function desenhaNucleo(t,dt){
-  const T=TEMA,P=T.pal,nv=nuc.nivel,cor=P.nucleo[nv-1];
-  const alvo=S*(.05+.0095*(nv-1))*(T.escalaNucleo||1)*cam.zoom;
+  const T=TEMA,P=T.pal,nv=nuc.nivel,formaVisual=Math.min(5,nv),cor=P.nucleo[formaVisual-1]||P.destaque;
+  const alvo=S*(.05+.0095*(formaVisual-1))*(T.escalaNucleo||1)*cam.zoom;
   nuc.r=nuc.r?lerp(nuc.r,alvo,Math.min(1,dt*3+.001)):alvo;
   const pop=1+.25*Math.sin(Math.max(0,nuc.evo)*PI)+nuc.happy*.05,r=nuc.r*pop,cx=CX,cy=CY+Math.sin(t*1.8)*nuc.r*.05;
   const est={look:{x:nuc.lookX,y:nuc.lookY},blink:blinkN(t),feliz:nuc.happy>0,prog:progresso(),medo:nuc.medo,dano:nuc.dano,flash:nuc.flash,happy:nuc.happy};
-  if(T.auraNucleo)T.auraNucleo(cx,cy,r,nv,t,est);
-  const corpo=(n,esc,al)=>{if(al<=.01||esc<=.02)return;ctx.save();ctx.translate(cx,cy);ctx.scale(r*esc,r*esc);ctx.globalAlpha=al;T.nucleo(n,t,1/(r*esc),est);ctx.restore();};
+  if(T.auraNucleo)T.auraNucleo(cx,cy,r,formaVisual,t,est);
+  const corpo=(n,esc,al)=>{if(al<=.01||esc<=.02)return;ctx.save();ctx.translate(cx,cy);ctx.scale(r*esc,r*esc);ctx.globalAlpha=al;T.nucleo(Math.min(5,n),t,1/(r*esc),est);ctx.restore();};
   if(nuc.morph>0&&nuc.nivelAnt!==nv){const k=1-nuc.morph;corpo(nuc.nivelAnt,1+k*.6,nuc.morph*nuc.morph);corpo(nv,Math.max(.05,easeBack(clamp(k*1.25,0,1))),clamp(k*1.8,0,1));}
   else corpo(nv,1,1);
+  if(OV)OV.drawAscension(cx,cy,r,nv,t);
   ctx.globalAlpha=1;
   if(nuc.evo>0){const k=1-nuc.evo;ctx.beginPath();ctx.arc(cx,cy,r*(1+k*4.5),0,TAU);ctx.lineWidth=4*(1-k)+1;ctx.strokeStyle=hexA(P.destaque,1-k);ctx.stroke();}
   /* placa + barra de XP */
@@ -3113,11 +3122,15 @@ function quadro(t,dt,dtR){
   cam.voo=Math.max(0,cam.voo-dtR/1.1);cam.pulso*=Math.exp(-dtR*3);
   cam.yaw=(Cm.deriva?.22*Math.sin(t*.045):0)+(Cm.parallax?par.x*.5:0)+easeInOut(cam.voo)*.7;
   cam.pitch=clamp(Cm.inclinacao*PI/180+(Cm.deriva?.035*Math.sin(t*.06):0)+(Cm.parallax?par.y*.2:0)+easeInOut(cam.voo)*.25,.2,.95);
-  cam.zoom=1+.25*easeInOut(cam.voo)+cam.pulso;
+  const excesso=Math.max(0,ativos().length-6);
+  const zoomDesejado=1/(1+excesso*.10);
+  cam.encaixe=cam.encaixe==null?zoomDesejado:lerp(cam.encaixe,zoomDesejado,Math.min(1,dtR*2.5));
+  cam.zoom=(1+.25*easeInOut(cam.voo)+cam.pulso)*cam.encaixe;
   ctx.clearRect(0,0,W,H);ctx.save();
   if(nuc.shake>0){nuc.shake=Math.max(0,nuc.shake-dtR);const am=S*.012*nuc.shake;ctx.translate((Math.random()-.5)*am,(Math.random()-.5)*am);}
   ctx.drawImage(fundoImg,-W*.05-par.x*S*.03,-H*.05-par.y*S*.03,W*1.1,H*1.1);
   if(T.fundo)T.fundo(t,dt);
+  if(OV)OV.drawBackground(t,dt);
   if(T.chao)T.chao(t,dt);
   for(let i=ondas.length-1;i>=0;i--){const w=ondas[i];w.t+=dt/1.8;if(w.t>=1){ondas.splice(i,1);continue;}if(w.t<0)continue;
     caminhoAnel(w.t*1.15,0,90);ctx.lineWidth=1+3*(1-w.t);ctx.strokeStyle=hexA(w.cor||P.onda,(1-w.t)*.6);ctx.stroke();}
@@ -3144,7 +3157,9 @@ function quadro(t,dt,dtR){
     if(a.olharT<=0){const ang=Math.random()*TAU;a.olhar={x:Math.cos(ang),y:Math.sin(ang),t:.9};a.olharT=3+Math.random()*4;}
     if(a.carga>0){a.carga-=dt;if(a.carga<=0)liberar(a);}
     const p=posOrbita(CONFIG.orbitas[a.orbita],a.ang);if(OV)OV.move(a,p,t,dt);return{a,p};
-  }).sort((x,y)=>x.p.prof-y.p.prof);
+  });
+  if(OV)OV.separate(lista,t,dt);
+  lista.sort((x,y)=>x.p.prof-y.p.prof);
   ondas.forEach(w=>{if(w.t<0)return;lista.forEach(({a})=>{if(Math.abs(CONFIG.orbitas[a.orbita].r-w.t*1.15)<.04)a.glow=Math.max(a.glow,.9);});});
   if(T.ligacoes!==false)lista.forEach(({a,p})=>{const g=ctx.createLinearGradient(p.x,p.y,CX,CY);g.addColorStop(0,hexA(a.corT,.25));g.addColorStop(1,hexA(a.corT,.02));
     ctx.strokeStyle=g;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(CX,CY);ctx.stroke();});

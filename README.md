@@ -1,23 +1,20 @@
-# Agentes Orbitais v9 — Ander Quant OS
+# Agentes Orbitais v10 — Ander Quant OS
 
-Este projeto usa o HTML original **Agentes Orbitais v8** fornecido pelo autor e acrescenta melhorias em arquivos separados, sem remover os 20 estilos temáticos ou suas ilustrações.
+Projeto baseado no HTML **Agentes Orbitais v8** fornecido pelo autor, mantendo 20 temas e a evolução do motor de combate v9.
 
-## Novidades da v9
-- +8 mascotes inéditos: Luna, Rubi, Axo, Brasa, Mel, Névoa, Pipo e Lume (20 agentes no total).
-- 6 trajetórias orbitais: elipse 3D, infinito, hélice, espiral, vertical e coreografia livre; movimentos com profundidade, flutuação e esquiva.
-- Núcleo vigilante que escolhe alvo de menor eficiência, o sinaliza, dispara, e mantém escudo ativo.
-- Vida, escudos, esquiva, dano, morte com animação e substituição por reservas (gerações).
-- Evolução individual de rank, vida extra, auras e partículas.
-- Habilidades únicas para os 20 temas, com efeitos de crítico, raio, cura, proteção e onda.
-- Controles de órbita, duelo e poder e indicadores de combate.
-- Rotas `GET /api/status` e `GET /api/sinais` para demonstrar frontend + backend na Vercel.
+## Evoluções v10
+- **50 níveis de núcleo** com XP progressivo e nove ascensões visuais depois das cinco formas básicas de cada tema. As formas originais continuam preservadas em níveis altos.
+- Evolução individual dos mascotes com ranks e efeitos visuais extras: auras, satélites, anéis e asas energéticas.
+- Zoom automático animado ao acrescentar mascotes, raios das órbitas ampliados e separação anticolisão em tela.
+- 20 cenários com efeitos ambientais dinâmicos: chuva, neve, folhas, bolhas, estrelas, pixels, sinais digitais, luzes e ondas atmosféricas.
+- Interface adaptada para celulares: arena vertical ampliada, rótulos reduzidos quando há mais de 12 mascotes.
+- Botões **↑ Nível** e **+ Mascote**, além de Órbita, Duelo e Poder.
+- Vida, defesa e eliminação com animação e renovação de agentes.
 
-## Execução
+## Uso
+Abra `agentes-orbitais.html` em um servidor HTTP, ou visite a implantação na Vercel. O frontend utiliza `evolucao-v10.js` e `evolucao-v10.css`. A versão anterior (`evolucao-v9.js`) continua no repositório para referência.
 
-Abra `agentes-orbitais.html` num servidor estático. A interface opera localmente quando a API não está disponível. No Vercel, as rotas `api/` são funções Node.js e o frontend usa a API de demonstração. Teste `GET /api/status` para ver `conectadoCorretora:false`.
+A API `/api/status` e `/api/sinais` está em **modo de demonstração**. Não executa ordens financeiras reais, não possui integração com corretoras e não solicita credenciais.
 
-## Segurança e limites
-
-**Não há negociação real, credenciais, ligação com corretora ou estratégia financeira operacional.** A API é um feed demonstrativo claramente identificado. O estado de combate permanece no navegador; funções serverless não guardam sessões em memória. Uma integração real exige definição de contrato e origem de dados, autenticação, banco de dados e controle de risco.
-
-O arquivo HTML inicial foi enviado pelo usuário. Todos os créditos da base visual ficam preservados.
+## Testes
+O conjunto de renderização foi validado com até 20 mascotes simultâneos e núcleo no nível 45, incluindo viewport de celular, sem erros de JavaScript.
