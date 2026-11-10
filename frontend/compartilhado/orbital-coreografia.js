@@ -39,26 +39,30 @@
     return saida;
   }
 
-  function resolverSeparacao(itens,{dt=1/60,margem=6,maxDeslocamento=20,rigidez=7,amortecimento=.78}={}){
+  function resolverSeparacao(itens,{dt=1/60,margem=6,maxDeslocamento=20,rigidez=7,amortecimento=.78,iteracoes=2}={}){
     const desloc={};
     for(const item of itens)desloc[item.id]={x:Number(item.ox)||0,y:Number(item.oy)||0};
-    for(let i=0;i<itens.length;i++){
-      for(let j=i+1;j<itens.length;j++){
-        const a=itens[i],b=itens[j];
-        let ax=a.x+desloc[a.id].x,ay=a.y+desloc[a.id].y;
-        let bx=b.x+desloc[b.id].x,by=b.y+desloc[b.id].y;
-        let dx=bx-ax,dy=by-ay,dist=Math.hypot(dx,dy);
-        const min=(Number(a.raio)||0)+(Number(b.raio)||0)+margem;
-        if(dist>=min)continue;
-        if(dist<.001){
-          const ang=(i*2.399+j*.731);
-          dx=Math.cos(ang);dy=Math.sin(ang);dist=1;
+    const passes=Math.max(1,Math.min(5,Math.round(iteracoes)));
+    for(let passe=0;passe<passes;passe++){
+      for(let i=0;i<itens.length;i++){
+        for(let j=i+1;j<itens.length;j++){
+          const a=itens[i],b=itens[j];
+          let ax=a.x+desloc[a.id].x,ay=a.y+desloc[a.id].y;
+          let bx=b.x+desloc[b.id].x,by=b.y+desloc[b.id].y;
+          let dx=bx-ax,dy=by-ay,dist=Math.hypot(dx,dy);
+          const min=(Number(a.raio)||0)+(Number(b.raio)||0)+margem;
+          if(dist>=min)continue;
+          if(dist<.001){
+            const ang=(i*2.399+j*.731+passe*.37);
+            dx=Math.cos(ang);dy=Math.sin(ang);dist=1;
+          }
+          const falta=min-dist;
+          const ganho=1-Math.exp(-rigidez*Math.max(dt,.001));
+          const forca=falta*.5*ganho;
+          const ux=dx/dist,uy=dy/dist;
+          desloc[a.id].x-=ux*forca;desloc[a.id].y-=uy*forca;
+          desloc[b.id].x+=ux*forca;desloc[b.id].y+=uy*forca;
         }
-        const falta=min-dist;
-        const forca=falta*.5*(1-Math.exp(-rigidez*Math.max(dt,.001)));
-        const ux=dx/dist,uy=dy/dist;
-        desloc[a.id].x-=ux*forca;desloc[a.id].y-=uy*forca;
-        desloc[b.id].x+=ux*forca;desloc[b.id].y+=uy*forca;
       }
     }
     for(const item of itens){

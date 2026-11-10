@@ -792,8 +792,9 @@
         dt,
         margem:cosmo?(n>13?11:20):(n>13?5:10),
         maxDeslocamento:Math.min(cosmo?48:34,S*(cosmo?.155:.12)),
-        rigidez:cosmo?11:8,
-        amortecimento:cosmo?.90:.88
+        rigidez:cosmo?13:8,
+        amortecimento:cosmo?.92:.88,
+        iteracoes:cosmo?4:2
       });
       const k=1-Math.exp(-Math.max(dt,.001)*7);
       for(const e of lista){
