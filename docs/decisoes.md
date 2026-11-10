@@ -20,3 +20,5 @@
 
 16. **Instância única local:** o PID é usado como trava apenas no modo local. Em plataformas que fornecem `PORT`, a plataforma controla processos/replicação e a trava por PID é desabilitada para não confundir namespaces de containers.
 17. **Porta de plataforma:** `PORT` tem prioridade em hospedagem; `PORTA` continua sendo a preferência local e usa descoberta segura quando ocupada.
+
+18. **Bootstrap de produção:** `ADMIN_INICIAL_USUARIO` e `ADMIN_INICIAL_SENHA` só são aceitos quando a tabela de usuários está vazia. Depois do primeiro boot, os valores devem ser zerados/removidos no provedor.

@@ -87,6 +87,15 @@ A URL real é impressa no terminal e também registrada em:
 - `.execucao/servidor.pid`
 - `.execucao/servidor.porta`
 
+## Primeiro boot em hospedagem
+
+Quando o banco de produção estiver vazio, podem ser definidos temporariamente:
+
+- `ADMIN_INICIAL_USUARIO`
+- `ADMIN_INICIAL_SENHA`
+
+O servidor cria o primeiro administrador somente se ainda não existir nenhum usuário. A senha não é escrita nos logs. Após confirmar o primeiro login, zere/remova essas duas variáveis no provedor.
+
 ## Produção local
 
 ```bash

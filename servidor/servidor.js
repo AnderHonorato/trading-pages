@@ -15,9 +15,12 @@ const autenticacaoRotas=require('./rotas/autenticacao/autenticacao-rotas.js');
 const configuracoesRotas=require('./rotas/configuracoes/configuracoes-rotas.js');
 const {criarObservabilidade}=require('./observabilidade/observabilidade.js');
 const {obterBanco}=require('../banco/banco.js');
+const {garantirAdminInicial}=require('./bootstrap-admin.js');
 
 if(!process.env.CHAVE_CRIPTOGRAFIA)throw new Error('CHAVE_CRIPTOGRAFIA ausente no .env');
 migrar();
+const adminInicial=garantirAdminInicial({usuario:process.env.ADMIN_INICIAL_USUARIO,senha:process.env.ADMIN_INICIAL_SENHA});
+if(adminInicial.criado)console.log('Administrador inicial criado:',adminInicial.usuario);
 
 const raiz=path.resolve(__dirname,'..');
 const app=express();

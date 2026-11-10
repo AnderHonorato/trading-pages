@@ -31,3 +31,7 @@
 - PID obsoleto é removido automaticamente.
 - Encerramento remove somente o PID pertencente ao próprio processo.
 - Plataformas de hospedagem podem fornecer `PORT`; nesse caso a porta é usada exatamente como atribuída e a trava local por PID não é aplicada.
+
+### Deploy público seguro
+- Bootstrap opcional de administrador por variáveis de ambiente somente quando o banco está vazio.
+- O bootstrap não imprime senha em logs e nunca substitui usuários já existentes.
