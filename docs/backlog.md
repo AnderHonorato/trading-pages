@@ -54,8 +54,8 @@ Atualizado na v12. A prioridade muda a cada ciclo com base em risco, valor e evi
 - [P2] Endpoint de readiness separado do liveness.
 
 ## DevOps/CI-CD
-- [P1] CI GitHub com testes, audit e gate visual.
-- [P1] Deploy público persistente com secrets seguros e rollback.
+- [FEITO v12] CI GitHub com testes, audit, smoke e gate visual.
+- [P1] Deploy público persistente com secrets seguros e rollback — Railway atual bloqueado por trial expirado.
 - [P2] Release semântico e tags automatizadas.
 
 ## Acessibilidade/UX

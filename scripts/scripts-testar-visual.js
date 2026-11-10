@@ -11,7 +11,18 @@ async function principal(){
   const criado=autenticacao.criarAdmin({usuario,senha});
   obterBanco().prepare('UPDATE usuarios SET forcar_troca_senha=0 WHERE id=?').run(criado.id);
   const execucao=path.resolve(__dirname,'..','.execucao');fs.mkdirSync(execucao,{recursive:true});
-  const navegador=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe'});
+  const candidatos=[
+    process.env.CHROME_BIN,
+    process.platform==='win32'?'C:/Program Files/Google/Chrome/Application/chrome.exe':null,
+    process.platform==='win32'?'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe':null,
+    '/usr/bin/google-chrome',
+    '/usr/bin/google-chrome-stable',
+    '/usr/bin/chromium',
+    '/usr/bin/chromium-browser'
+  ].filter(Boolean);
+  const chrome=candidatos.find(c=>fs.existsSync(c));
+  if(!chrome)throw new Error('Chrome/Chromium não encontrado. Defina CHROME_BIN.');
+  const navegador=await chromium.launch({headless:true,executablePath:chrome});
   const erros=[];
   try{
     const contexto=await navegador.newContext({viewport:{width:1440,height:900}});
