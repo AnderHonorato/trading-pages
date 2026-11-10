@@ -30,6 +30,8 @@ function gerar(){
   copiar('frontend/paginas/painel/demo-publica.css');
   copiar('frontend/compartilhado/orbital-fisica.js');
   copiar('frontend/compartilhado/reciclagem-agentes.js');
+  copiar('frontend/compartilhado/orbital-coreografia.js');
+  copiar('frontend/compartilhado/conversa-contextual.js');
   copiar('evolucao-v11.css');
 
   let evolucao=fs.readFileSync(path.join(raiz,'evolucao-v11.js'),'utf8');
@@ -43,11 +45,11 @@ function gerar(){
 
   fs.mkdirSync(path.join(destino,'api'),{recursive:true});
   fs.writeFileSync(path.join(destino,'api','status.json'),JSON.stringify({
-    ok:true,versao:'12.0-demo',modo:'demonstracao',conectadoCorretora:false,
+    ok:true,versao:'13.0-demo',modo:'demonstracao',conectadoCorretora:false,
     orquestracao:'visual',publica:true
   },null,2));
   fs.writeFileSync(path.join(destino,'api','sinais.json'),JSON.stringify({
-    ok:true,demonstracao:true,versao:'12.0-demo',
+    ok:true,demonstracao:true,versao:'13.0-demo',
     eventos:[{id:'demo-publica-inicial',tipo:'observacao',agente:'LUNA',descricao:'Pulso visual simulado.'}]
   },null,2));
   fs.writeFileSync(path.join(destino,'.nojekyll'),'');

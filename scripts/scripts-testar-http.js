@@ -17,7 +17,7 @@ async function principal(){
     const saude=await fetch(origem+'/api/saude',{redirect:'manual'});
     const saudeJson=await saude.json();
     console.log('saude',saude.status,saudeJson.ok,saudeJson.versao,'request-id',Boolean(saude.headers.get('x-request-id')));
-    if(saude.status!==200||!saudeJson.ok||saudeJson.versao!=='12.0'||!saude.headers.get('x-request-id'))throw new Error('health check inválido');
+    if(saude.status!==200||!saudeJson.ok||saudeJson.versao!=='13.0'||!saude.headers.get('x-request-id'))throw new Error('health check inválido');
 
     const painelAnon=await fetch(origem+'/painel',{redirect:'manual'});
     console.log('painel_anon',painelAnon.status,painelAnon.headers.get('location'));

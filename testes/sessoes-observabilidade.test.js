@@ -50,7 +50,7 @@ test('encerrar outras sessões preserva a atual',()=>{
 });
 
 test('observabilidade gera request id, métricas e health sem segredos',()=>{
-  const obs=observabilidade.criarObservabilidade({versao:'12.0'});
+  const obs=observabilidade.criarObservabilidade({versao:'13.0'});
   const req={headers:{},method:'GET',originalUrl:'/api/saude'};
   const cabecalhos={};
   const res={statusCode:200,setHeader:(k,v)=>cabecalhos[k]=v,on:(evento,fn)=>{if(evento==='finish')res.finalizar=fn;}};
@@ -64,6 +64,6 @@ test('observabilidade gera request id, métricas e health sem segredos',()=>{
   assert.equal(snap.requisicoes.status2xx,1);
   const health=obs.health();
   assert.equal(health.ok,true);
-  assert.equal(health.versao,'12.0');
+  assert.equal(health.versao,'13.0');
   assert.equal('segredos' in health,false);
 });

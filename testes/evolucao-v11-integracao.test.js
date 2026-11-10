@@ -30,9 +30,11 @@ test('Cosmo fixa núcleo como buraco negro e bloqueia disparos dos planetas', ()
 });
 
 
-test('Cosmo omite placa central textual para manter a arena limpa', () => {
+test('V13 remove placa central textual e integra progresso ao núcleo', () => {
   const painel = fs.readFileSync(path.join(raiz, 'frontend/paginas/painel/painel.js'), 'utf8');
-  assert.match(painel, /if\(T\.id==='cosmos'\)return;\s*\/\* placa \+ barra de XP \*\//);
+  assert.equal(painel.includes('CONFIG.nucleo.titulo'), false);
+  assert.match(painel, /V13: progresso integrado ao núcleo/);
+  assert.match(painel, /fillText\('NÍVEL '\+nv/);
 });
 
 

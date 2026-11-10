@@ -1,4 +1,4 @@
-# CHECKLIST — Trading Pages v12
+# CHECKLIST — Trading Pages v13
 
 Legenda: [x] feito e testado · [~] em andamento · [ ] falta · [!] decisão/limitação
 
@@ -10,7 +10,7 @@ Legenda: [x] feito e testado · [~] em andamento · [ ] falta · [!] decisão/li
 - [x] Trava contra segunda instância local + limpeza de PID obsoleto
 - [x] Compatibilidade com PORT de plataforma
 - [x] .env e banco fora do Git
-- [x] Versionamento 12.0.0
+- [x] Versionamento 13.0.0
 
 ## Cosmo e animação
 - [x] Buraco negro central fixo no Cosmo
@@ -28,6 +28,15 @@ Legenda: [x] feito e testado · [~] em andamento · [ ] falta · [!] decisão/li
 - [x] Substituto herda órbita/função e recebe período de proteção
 - [x] Agente removido entra em cooldown e pode voltar futuramente
 - [x] Mobile sem overflow
+- [x] Slots orbitais dinâmicos por anel
+- [x] Repulsão suave com mola/amortecimento
+- [x] Separação reforçada específica no Cosmo
+- [x] Micro-movimento reduzido conforme densidade de agentes
+- [x] Rastros alinhados com a posição visual coreografada
+- [x] Fila contextual com apenas uma fala visual ativa
+- [x] Falas por papel/evento com cooldown e prioridade
+- [x] Placa central removida; progresso integrado ao núcleo
+- [x] Gate visual mede distância mínima entre agentes em Pixel e Cosmo
 
 ## Segurança
 - [x] Senha com crypto.scrypt + salt
@@ -75,7 +84,7 @@ Legenda: [x] feito e testado · [~] em andamento · [ ] falta · [!] decisão/li
 - [x] CI GitHub com testes, segurança, smoke, visual e release condicionado ao sucesso
 
 ## Verificação
-- [x] 47 testes unitários/integrados
+- [x] 57 testes unitários/integrados
 - [x] Smoke HTTP com health, login, sessão e diagnóstico
 - [x] Smoke 2FA
 - [x] Auditoria de segurança em 6 frentes
