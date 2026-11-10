@@ -46,11 +46,14 @@
   function escolherSubstituto(reservas,papel,aleatorio=Math.random){
     const lista=Array.from(reservas||[]).filter(Boolean);
     if(!lista.length)return null;
-    return lista.slice().sort((a,b)=>{
-      const fa=afinidadePapel(a,papel)*30+Number(aleatorio())*8;
-      const fb=afinidadePapel(b,papel)*30+Number(aleatorio())*8;
-      return fb-fa;
-    })[0];
+    // Sorteie uma vez por candidato: aleatoriedade dentro do comparador
+    // torna a ordenação inconsistente e pode selecionar a reserva errada.
+    const pontuados=lista.map((agente,indice)=>({
+      agente,indice,
+      pontos:afinidadePapel(agente,papel)*30+Math.max(0,Math.min(1,Number(aleatorio())||0))*8
+    }));
+    pontuados.sort((a,b)=>b.pontos-a.pontos||a.indice-b.indice);
+    return pontuados[0].agente;
   }
 
   return {calcularRelevancia,escolherMenorRelevancia,afinidadePapel,escolherSubstituto};
