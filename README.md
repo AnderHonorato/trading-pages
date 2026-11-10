@@ -213,7 +213,8 @@ As novas telas administrativas usam PT-BR e tema claro/escuro sem flash inicial.
 
 ## Variáveis do .env
 
-- `PORTA` — porta inicial, padrão 4312.
+- `PORT` — porta atribuída por plataformas de hospedagem; quando definida, tem prioridade.
+- `PORTA` — porta inicial local, padrão 4312.
 - `HOST` — bind do servidor; `0.0.0.0` permite LAN.
 - `MODO_PRODUCAO` — ativa cookie Secure.
 - `TRUST_PROXY` — habilite somente atrás de proxy confiável.

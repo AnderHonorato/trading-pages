@@ -40,3 +40,32 @@ test('Cosmo não desenha balões textuais sobre os planetas', () => {
   const painel = fs.readFileSync(path.join(raiz, 'frontend/paginas/painel/painel.js'), 'utf8');
   assert.match(painel, /function desenhaBalao\(a\)\{if\(TEMA\.id==='cosmos'\)return;/);
 });
+
+
+test('v12 carrega módulo de reciclagem antes do controlador orbital', () => {
+  const html = fs.readFileSync(path.join(raiz, 'agentes-orbitais.html'), 'utf8');
+  const reciclagem = html.indexOf('frontend/compartilhado/reciclagem-agentes.js');
+  const v11 = html.indexOf('evolucao-v11.js');
+  assert.ok(reciclagem >= 0);
+  assert.ok(v11 > reciclagem);
+});
+
+test('reciclagem por relevância usa sucção e substituição temática', () => {
+  const js = fs.readFileSync(path.join(raiz, 'evolucao-v11.js'), 'utf8');
+  assert.match(js, /ReciclagemAgentes/);
+  assert.match(js, /iniciarReciclagem/);
+  assert.match(js, /executarReciclagem/);
+  assert.match(js, /iniciarSuccao\(a,\{reciclagem:true/);
+  assert.match(js, /escolherSubstituto/);
+  assert.match(js, /proximaReciclagemSeg/);
+  assert.match(js, /reciclagens/);
+});
+
+test('Cosmo não volta a disparar para executar o agente sentenciado', () => {
+  const js = fs.readFileSync(path.join(raiz, 'evolucao-v11.js'), 'utf8');
+  const inicio = js.indexOf('function executarReciclagem()');
+  const fim = js.indexOf('function escolherAlvo()', inicio);
+  const trecho = js.slice(inicio, fim);
+  assert.match(trecho, /iniciarSuccao/);
+  assert.equal(/L\.lancar\(/.test(trecho), false);
+});

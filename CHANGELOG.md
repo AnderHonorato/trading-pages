@@ -10,6 +10,9 @@
 - `X-Request-Id` e tratamento de erro estruturado.
 - Testes de isolamento de sessão e observabilidade.
 - Validação visual da página de configurações em desktop/mobile.
+- Reciclagem automática por relevância portada de `main` para o motor v12.
+- Substituição por afinidade de função, proteção do recém-chegado e cooldown do agente removido.
+- Execução do sentenciado por sucção no Cosmo, sem reintroduzir projéteis dos planetas.
 
 ### Alterado
 - Configurações reorganizadas em Conta, Saúde, Sessões e Integrações.
@@ -22,3 +25,9 @@
 - Login administrativo, 2FA e configurações criptografadas de APIs.
 - CSP, CSRF, rate limit persistente e auditoria.
 - Acesso LAN e suíte inicial de testes/segurança.
+
+### Correções de infraestrutura da v12
+- Servidor local impede segunda instância quando o PID registrado ainda está ativo.
+- PID obsoleto é removido automaticamente.
+- Encerramento remove somente o PID pertencente ao próprio processo.
+- Plataformas de hospedagem podem fornecer `PORT`; nesse caso a porta é usada exatamente como atribuída e a trava local por PID não é aplicada.

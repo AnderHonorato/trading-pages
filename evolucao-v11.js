@@ -5,6 +5,7 @@
   const PI = Math.PI, TAU = PI * 2;
   const clamp = (n, a, b) => Math.min(b, Math.max(a, n));
   const FISICA = global.OrbitalFisica || null;
+  const RECICLAGEM = global.ReciclagemAgentes || null;
   const ORBITAS = [
     { id: 'elipse', nome: 'Elipse 3D' },
     { id: 'oito', nome: 'Infinito ∞' },
@@ -36,6 +37,7 @@
     brinquedos: ['Explosão de blocos', '#ffe681', 'critico']
   };
   let L, modo = 0, mortes = 0, evolucoes = 0, geracao = 1, contagem = 0, proximoAtaque = 7.2, pulsoEspecial = 3.8, proximoPerigo = 3.6;
+  let proximaReciclagem = 58 + Math.random() * 24, alvoReciclagem = null, esperaReciclagem = 0, reciclagens = 0;
   let aviso = '', durAviso = 0, alvoAvisado = null, esperaAtaque = 0, backend = 'LOCAL / DEMO', sinalRemoto = '', alternarBackend = 0;
   const caidos = [], eventos = [], perigosExternos = [], succoes = [];
   let botaoModo, botaoDesafio, indicador, avisoEl;
@@ -71,13 +73,81 @@
       a.succaoEstado = null;
       a.humorNovo = 'neutro';
       a.rotacaoPropria = Math.random() * TAU;
+      a.ultimaAcao = contagem;
+      a.entradaEm = contagem;
+      a.protegidoAte = contagem + 24;
+      a.relevancia = 100;
+      a.banidoAte = 0;
+      a.contribJanela = 0;
+      a.acertosJanela = 0;
+      a.sentenciado = false;
+      a.substituindo = null;
     }
   }
 
+  const reservasDisponiveis = excluir => L.AG.filter(a =>
+    !a.ativo && !a.morrendo && a.nome !== excluir && (a.banidoAte || 0) <= contagem
+  );
+
+  function scoreRelevancia(a) {
+    const score = RECICLAGEM ? RECICLAGEM.calcularRelevancia(a,contagem) : Math.round(clamp(vitoria(a),0,100));
+    a.relevancia = score;
+    return score;
+  }
+
+  function podeSerReciclado(a) {
+    if (!a || !a.ativo || a.morrendo || !a.p || a.sendoSugado) return false;
+    if (vivos().length <= 4) return false;
+    if (!reservasDisponiveis(a.nome).length) return false;
+    if ((a.protegidoAte || 0) > contagem) return false;
+    if (a === alvoAvisado || a === alvoReciclagem) return false;
+    if ((a.carga || 0) > 0 || a.pend) return false;
+    if ((a.disparoNovo || 0) > .25 || (a.escudoNovo || 0) > .45) return false;
+    return true;
+  }
+
+  function iniciarReciclagem() {
+    if (alvoReciclagem || alvoAvisado || L.ameaca.fase) return false;
+    const candidatos = vivos().filter(podeSerReciclado);
+    if (!candidatos.length) {
+      proximaReciclagem = 12 + Math.random() * 10;
+      return false;
+    }
+    candidatos.forEach(scoreRelevancia);
+    const a = RECICLAGEM ? RECICLAGEM.escolherMenorRelevancia(candidatos) : candidatos.sort((x,y)=>x.relevancia-y.relevancia)[0];
+    if(!a)return false;
+    alvoReciclagem = a;
+    esperaReciclagem = 2.45;
+    a.sentenciado = true;
+    a.humorNovo = 'panico';
+    L.nuc.alvoX = clamp((a.p.x - tamanho().CX) / 90, -1, 1);
+    L.nuc.alvoY = clamp((a.p.y - tamanho().CY) / 90, -1, 1);
+    L.nuc.flash = 1;
+    L.nuc.shake = .12;
+    evento('NÚCLEO JULGA ' + a.nome + ' · relevância ' + a.relevancia + '% · substituição preparada');
+    return true;
+  }
+
+  function executarReciclagem() {
+    const a = alvoReciclagem;
+    alvoReciclagem = null;
+    if (!a || !a.ativo || !a.p) return;
+    a.sentenciado = false;
+    a.banidoAte = contagem + 150;
+    iniciarSuccao(a,{reciclagem:true,motivo:'baixa relevância · '+Math.round(a.relevancia||0)+'%'});
+    evento('SENTENÇA GRAVITACIONAL · ' + a.nome);
+  }
+
   function escolherAlvo() {
-    const lista = vivos();
+    const todos = vivos();
+    const elegiveis = todos.filter(a =>
+      (a.protegidoAte || 0) <= contagem &&
+      a !== alvoReciclagem &&
+      !a.morrendo &&
+      !a.sendoSugado
+    );
+    const lista = elegiveis.length ? elegiveis : todos.filter(a=>a!==alvoReciclagem&&!a.sendoSugado);
     if (!lista.length) return null;
-    // O núcleo prefere quem tem menor eficiência e menor vida; não decide arbitrariamente.
     return lista.sort((a, b) => (vitoria(a) - vitoria(b)) + (Math.random() - .5) * 3)[0];
   }
   function iniciarAtaque() {
@@ -91,12 +161,16 @@
     evento('NÚCLEO FIXA ' + a.nome + ' · gravidade aumentando');
     return true;
   }
-  function iniciarSuccao(a) {
+  function iniciarSuccao(a,{motivo='absorção do núcleo',reciclagem=false}={}) {
     if (!a || !a.ativo || !a.p || a.sendoSugado) return false;
     const {CX,CY}=tamanho();
     a.sendoSugado = true;
     a.humorNovo = 'panico';
-    const estado={a,origem:{x:a.p.x,y:a.p.y},centro:{x:CX,y:CY},t:0,dur:1.9+Math.random()*.55,fase:a.seed||0,atual:{x:a.p.x,y:a.p.y,escala:1}};
+    const estado={
+      a,origem:{x:a.p.x,y:a.p.y},centro:{x:CX,y:CY},t:0,
+      dur:1.9+Math.random()*.55,fase:a.seed||0,atual:{x:a.p.x,y:a.p.y,escala:1},
+      motivo,reciclagem:Boolean(reciclagem)
+    };
     a.succaoEstado=estado;
     succoes.push(estado);
     L.nuc.shake=.18;L.nuc.flash=1;L.nuc.happy=.18;
@@ -113,32 +187,62 @@
       v.humorNovo='assustado';
     }
   }
-  function matar(a, motivo) {
+  function matar(a, motivo, {reciclagem=false}={}) {
     if (!a || !a.ativo || a.morrendo) return;
     const p = a.p ? {...a.p} : {x:tamanho().CX,y:tamanho().CY,r:15};
+    const registro={
+      nome:a.nome,papel:a.slotPapel||a.papel,orbita:a.orbita,ang:a.ang,
+      cor:a.corT||a.cor,x:p.x,y:p.y,r:p.r||15,t:0,dur:2.3,motivo,
+      reciclagem:Boolean(reciclagem),relevancia:Math.round(a.relevancia||0)
+    };
     a.morrendo = true;
+    a.sentenciado = false;
     a.vida = 0;
-    caidos.push({nome:a.nome, cor:a.corT || a.cor, x:p.x, y:p.y, r:p.r || 15, t:0, dur:2.3, motivo});
+    a.banidoAte=Math.max(a.banidoAte||0,contagem+180);
+    caidos.push(registro);
     L.explosao(p.x, p.y, a.corT || a.cor, 42, tamanho().S * .39);
     L.aneis.push({x:p.x, y:p.y, t:0, cor: a.corT || a.cor});
     a.ativo = false; a.p = null;
     mortes++;
     if (L.atualizaChips) L.atualizaChips();
-    evento(a.nome + ' FOI ELIMINADO · substituição iniciada');
+    evento(a.nome + ' FOI ELIMINADO · ' + motivo + ' · buscando substituto');
   }
-  function repor(nome) {
-    const reservas = L.AG.filter(a => !a.ativo && !a.morrendo && a.nome !== nome);
-    const escolhido = reservas[Math.floor(Math.random() * reservas.length)];
-    let novo = escolhido;
-    if (!novo) novo = L.AG.find(a => a.nome === nome) || L.AG.find(a=>!a.ativo);
-    if (!novo) return;
-    novo.morrendo = false;
-    novo.vida = 0;
+
+  function repor(registro) {
+    if(!registro)return;
+    const reservas=reservasDisponiveis(registro.nome);
+    if(!reservas.length){
+      evento('VAGA DE '+registro.nome+' AGUARDA NOVO AGENTE');
+      return;
+    }
+    const novo=RECICLAGEM
+      ? RECICLAGEM.escolherSubstituto(reservas,registro.papel)
+      : reservas[Math.floor(Math.random()*reservas.length)];
+    if(!novo)return;
+    novo.morrendo=false;
+    novo.vida=0;
+    novo.orbita=Number.isInteger(registro.orbita)?registro.orbita:novo.orbita;
+    if(Number.isFinite(registro.ang)){
+      const fase=(((registro.ang/TAU)%1)+1)%1;
+      novo.fase=fase;
+      novo.ang=registro.ang;
+    }
+    novo.substituindo=registro.nome;
+    novo.slotPapel=registro.papel;
     L.ativar(novo.nome);
     initAgente(novo);
+    novo.entradaEm=contagem;
+    novo.ultimaAcao=contagem;
+    novo.protegidoAte=contagem+38;
+    novo.contribJanela=0;
+    novo.acertosJanela=0;
+    novo.relevancia=100;
+    novo.renascido=1.6;
     geracao++;
     evolucoes++;
-    evento(novo.nome + ' ENTROU NA ÓRBITA · geração ' + geracao);
+    if(registro.reciclagem)reciclagens++;
+    L.explosao(novo.p?.x||tamanho().CX,novo.p?.y||tamanho().CY,novo.corT||novo.cor,34,tamanho().S*.29);
+    evento(novo.nome+' SUBSTITUI '+registro.nome+' · '+registro.papel+' · G'+geracao);
   }
   function impacto(s) {
     const a = s.para;
@@ -241,7 +345,7 @@
         a.sendoSugado=false;
         a.succaoEstado=null;
         succoes.splice(i,1);
-        matar(a,'absorção do núcleo');
+        matar(a,s.motivo||'absorção do núcleo',{reciclagem:Boolean(s.reciclagem)});
       }
     }
   }
@@ -300,7 +404,7 @@
   function desenharRostoCosmo(a,p,t){
     if(!FISICA||tema()?.id!=='cosmos'||!p)return;
     const {ctx}=L;
-    const humor=FISICA.determinarHumor({vida:a.vida,vidaMax:a.vidaMax,ameacado:alvoAvisado===a,absorvendo:a.sendoSugado,feliz:a.happy>0});
+    const humor=FISICA.determinarHumor({vida:a.vida,vidaMax:a.vidaMax,ameacado:alvoAvisado===a||alvoReciclagem===a,absorvendo:a.sendoSugado,feliz:a.happy>0});
     a.humorNovo=humor;
     const rot=FISICA.calcularRotacaoPropria({tempo:t,velocidade:.22+(a.i%5)*.025,fase:a.rotacaoPropria||0});
     const desloc=Math.sin(rot)*p.r*.10,olhoY=p.y-p.r*.08,rOlho=Math.max(1.8,p.r*.12);
@@ -332,8 +436,12 @@
     const a = s.de; initAgente(a);
     const tipo = s.poderTipo || power()[2];
     a.acertos++;
+    a.acertosJanela = (a.acertosJanela||0) + 1;
+    a.contribJanela = (a.contribJanela||0) + (tipo==='onda'?3:tipo==='cura'?2.6:2);
+    a.ultimaAcao = contagem;
     a.xpNovo += tipo === 'critico' ? 4 : 2.3;
     a.contributo += tipo === 'onda' ? 3 : 2;
+    scoreRelevancia(a);
     if (tipo === 'cura') {
       for (const b of vivos()) b.vida = Math.min(b.vidaMax, b.vida + 3.5);
     } else if (tipo === 'escudo') {
@@ -408,10 +516,19 @@
     proximoAtaque -= dt;
     proximoPerigo -= dt;
     pulsoEspecial -= dt;
+    proximaReciclagem -= dt;
     durAviso -= dtR;
     if (durAviso<=0 && avisoEl) avisoEl.classList.remove('on');
+    if (alvoReciclagem) {
+      esperaReciclagem -= dt;
+      if (esperaReciclagem<=0) executarReciclagem();
+    }
+    if (proximaReciclagem<=0 && !alvoReciclagem) {
+      const iniciou=iniciarReciclagem();
+      if(iniciou)proximaReciclagem=62+Math.random()*34;
+    }
     if (alvoAvisado) {esperaAtaque-=dt;if(esperaAtaque<=0) executarAtaque();}
-    if (proximoAtaque<=0) { iniciarAtaque(); proximoAtaque = 9.5 + Math.random()*4.5; }
+    if (proximoAtaque<=0 && !alvoReciclagem) { iniciarAtaque(); proximoAtaque = 9.5 + Math.random()*4.5; }
     if (proximoPerigo<=0) { criarPerigoExterno(); proximoPerigo = 4.1 + Math.random()*3.4; }
     atualizarPerigos(dt);
     atualizarSuccoes(dt);
@@ -432,6 +549,9 @@
       a.disparoNovo = Math.max(0,a.disparoNovo-dt*1.8);
       a.escudoNovo = Math.max(0,a.escudoNovo-dt);
       a.renascido = Math.max(0,a.renascido-dt);
+      a.contribJanela = (a.contribJanela||0) * Math.exp(-dt/58);
+      a.acertosJanela = (a.acertosJanela||0) * Math.exp(-dt/72);
+      scoreRelevancia(a);
       if (a.vida < a.vidaMax && contagem % 2 < dt) a.vida = Math.min(a.vidaMax,a.vida+1.1);
     }
     // A proteção básica nunca desaparece. Sob ameaça ou ataque, o escudo se reforça.
@@ -439,11 +559,14 @@
     if (L.nuc.escudo.hp <= 0 && L.ameaca.fase === 0) L.nuc.escudo.hp = Math.min(L.nuc.escudo.max, 18);
     for (let i=caidos.length-1;i>=0;i--) {
       caidos[i].t += dt;
-      if (caidos[i].t >= caidos[i].dur) {const nome=caidos[i].nome;caidos.splice(i,1);repor(nome);}
+      if (caidos[i].t >= caidos[i].dur) {const registro=caidos[i];caidos.splice(i,1);const antigo=L.AG.find(a=>a.nome===registro.nome);if(antigo)antigo.morrendo=false;repor(registro);}
     }
     if (indicador && Math.floor(t*4)%4===0) {
       const pp = power();
-      indicador.innerHTML='<strong>✦ '+pp[0].toUpperCase()+'</strong><span>✧ NÍVEL '+L.nuc.nivel+'/50 · G'+geracao+' · '+L.ativos().length+' seres</span><small>◎ Zoom auto · '+ORBITAS[modo].nome+' · '+backend+'</small>';
+      const ativosAgora=vivos();
+      const pior=ativosAgora.length?(RECICLAGEM?RECICLAGEM.escolherMenorRelevancia(ativosAgora):ativosAgora.slice().sort((a,b)=>(a.relevancia||100)-(b.relevancia||100))[0]):null;
+      const rel=pior?pior.nome+' '+Math.round(pior.relevancia||0)+'%':'—';
+      indicador.innerHTML='<strong>✦ '+pp[0].toUpperCase()+'</strong><span>✧ NÍVEL '+L.nuc.nivel+'/50 · G'+geracao+' · '+L.ativos().length+' seres · ♻ '+reciclagens+'</span><small>◎ '+ORBITAS[modo].nome+' · reciclagem em '+Math.max(0,Math.ceil(proximaReciclagem))+'s · menor relevância '+rel+' · '+backend+'</small>';
     }
   }
   function drawAura(a, p, t) {
@@ -494,11 +617,30 @@
       if (s.poder) {ctx.rotate(-t*7-s.seed*5);ctx.fillStyle='#fff';ctx.font='700 '+Math.max(9,S*.015)+'px sans-serif';ctx.textAlign='center';ctx.fillText(s.tipo==='nucleo-agente'?'!':'✦',0,4);}
       ctx.restore();
     }
-    if (alvoAvisado?.p) {
-      const p=alvoAvisado.p,rr=p.r*1.7+Math.sin(t*10)*3;
-      ctx.save();ctx.strokeStyle='#ff667d';ctx.lineWidth=2.3;ctx.setLineDash([7,5]);ctx.lineDashOffset=-t*25;
+    const alvoVisual=alvoReciclagem?.p?alvoReciclagem:alvoAvisado;
+    if (alvoVisual?.p) {
+      const p=alvoVisual.p,reciclando=alvoVisual===alvoReciclagem;
+      const rr=p.r*(reciclando?2.05:1.7)+Math.sin(t*10)*3;
+      ctx.save();
+      ctx.strokeStyle=reciclando?'#ff315e':'#ff667d';
+      ctx.lineWidth=reciclando?3:2.3;
+      ctx.setLineDash(reciclando?[3,4,10,4]:[7,5]);ctx.lineDashOffset=-t*(reciclando?38:25);
       ctx.beginPath();ctx.arc(p.x,p.y,rr,0,TAU);ctx.stroke();ctx.setLineDash([]);
-      ctx.font='700 '+Math.max(9,S*.017)+'px sans-serif';ctx.fillStyle='#ff8698';ctx.textAlign='center';ctx.fillText('ALVO',p.x,p.y-rr-9);ctx.restore();
+      if(reciclando){
+        for(let k=0;k<4;k++){
+          const ang=t*1.7+k*TAU/4;
+          ctx.beginPath();
+          ctx.moveTo(p.x+Math.cos(ang)*rr*.74,p.y+Math.sin(ang)*rr*.74);
+          ctx.lineTo(p.x+Math.cos(ang)*rr*1.18,p.y+Math.sin(ang)*rr*1.18);
+          ctx.strokeStyle=k%2?'#ffffff':'#ff315e';ctx.lineWidth=1.6;ctx.stroke();
+        }
+      }
+      if(!(reciclando&&tema()?.id==='cosmos')){
+        ctx.font='700 '+Math.max(9,S*.017)+'px sans-serif';
+        ctx.fillStyle=reciclando?'#ff315e':'#ff8698';ctx.textAlign='center';
+        ctx.fillText(reciclando?'SENTENCIADO · '+Math.round(alvoVisual.relevancia||0)+'%':'ALVO',p.x,p.y-rr-9);
+      }
+      ctx.restore();
     }
     for(const f of caidos) {
       const k=clamp(f.t/f.dur,0,1), rr=f.r*(1+k*3.5), alpha=(1-k);
@@ -560,8 +702,21 @@
     return ORBITAS[modo].id;
   }
   function challenge() {proximoAtaque=7;return iniciarAtaque();}
+  function recycleNow() {proximaReciclagem=0;const iniciou=iniciarReciclagem();if(iniciou)proximaReciclagem=62+Math.random()*34;return iniciou;}
   function theme(T) {if (indicador) evento('PODER DESBLOQUEADO · '+(PODERES[T.id]?.[0]||T.nome));}
-  function state(){return {modo:tema()?.id==='cosmos'?'orbita-cosmica':ORBITAS[modo].id,eliminacoes:mortes,evolucoes,geracao,nivelNucleo:L?.nuc.nivel||1,poder:power()[0],backend,zoomAutomatico:true,perigosAtivos:perigosExternos.length,sucoesAtivas:succoes.length,agentes:L?L.AG.filter(a=>a.ativo).map(a=>({nome:a.nome,vida:Math.round(a.vida||0),rank:a.rankNovo||1})):[],eventos:eventos.slice(0,7)};}
+  function state(){return {
+    modo:tema()?.id==='cosmos'?'orbita-cosmica':ORBITAS[modo].id,
+    eliminacoes:mortes,reciclagens,evolucoes,geracao,nivelNucleo:L?.nuc.nivel||1,
+    poder:power()[0],backend,zoomAutomatico:true,
+    proximaReciclagemSeg:Math.max(0,Math.ceil(proximaReciclagem)),
+    sentenciado:alvoReciclagem?.nome||null,
+    perigosAtivos:perigosExternos.length,sucoesAtivas:succoes.length,
+    agentes:L?L.AG.filter(a=>a.ativo).map(a=>({
+      nome:a.nome,papel:a.papel,vida:Math.round(a.vida||0),rank:a.rankNovo||1,
+      relevancia:Math.round(a.relevancia||0),protegido:(a.protegidoAte||0)>contagem
+    })):[],
+    eventos:eventos.slice(0,10)
+  };}
   async function verificarBackend() {
     try {
       const res = await fetch('/api/status',{cache:'no-store',signal:AbortSignal.timeout(3800)});
@@ -614,7 +769,7 @@
     safe(verificarBackend);safe(sinalBackend);
     global.setInterval(()=>{if(document.visibilityState==='visible')safe(verificarBackend);},30000);
     global.setInterval(()=>{if(document.visibilityState==='visible')safe(sinalBackend);},12000);
-    evento('SISTEMA V11 · ÓRBITAS VIVAS + PERIGOS TEMÁTICOS');
+    evento('SISTEMA V12 · ÓRBITAS VIVAS + RECICLAGEM POR RELEVÂNCIA');
   }
 
   /* Arena anti-colisão: distância mínima em tela, e centro protegido dos rótulos. */
@@ -745,5 +900,5 @@
     ctx.restore();
   }
 
-  global.OrbitalV9={setup,installForms,orbital,move,tick,impact:impacto,powerHit,drawAura,drawDetails,drawScene,drawBackground,drawAscension,separate,onLevel,setMode,challenge,theme,state};
+  global.OrbitalV9={setup,installForms,orbital,move,tick,impact:impacto,powerHit,drawAura,drawDetails,drawScene,drawBackground,drawAscension,separate,onLevel,setMode,challenge,recycleNow,theme,state};
 })(window);

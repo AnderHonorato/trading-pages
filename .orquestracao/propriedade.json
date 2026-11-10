@@ -29,9 +29,11 @@
     "evolucao-v11.js",
     "evolucao-v11.css",
     "frontend/compartilhado/orbital-fisica.js",
+    "frontend/compartilhado/reciclagem-agentes.js",
     "frontend/paginas/painel/**",
     "agentes-orbitais.html",
     "testes/orbital-fisica.test.js",
+    "testes/reciclagem-agentes.test.js",
     "testes/evolucao-v11-integracao.test.js"
   ],
   "A-banco": [

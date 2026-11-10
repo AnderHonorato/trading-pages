@@ -10,6 +10,7 @@ const {segurancaCabecalhos}=require('./seguranca/seguranca-cabecalhos.js');
 const {carregarSessao}=require('./seguranca/seguranca-autenticacao.js');
 const {limitarRequisicoes}=require('./seguranca/seguranca-limite-requisicoes.js');
 const {encontrarPortaLivre}=require('./servidor-porta.js');
+const {verificarInstancia,removerPidProprio}=require('./servidor-instancia.js');
 const autenticacaoRotas=require('./rotas/autenticacao/autenticacao-rotas.js');
 const configuracoesRotas=require('./rotas/configuracoes/configuracoes-rotas.js');
 const {criarObservabilidade}=require('./observabilidade/observabilidade.js');
@@ -96,28 +97,52 @@ app.use((erro,req,res,_next)=>{
 });
 
 const host=process.env.HOST||'0.0.0.0';
+const portaPlataforma=Number(process.env.PORT||0);
 const inicial=Math.max(1024,Number(process.env.PORTA||4312));
+const execucao=path.join(raiz,'.execucao');
+const arquivoPid=path.join(execucao,'servidor.pid');
+const arquivoPorta=path.join(execucao,'servidor.porta');
+const usarGuardaLocal=!portaPlataforma;
 let servidor=null;
 
 async function iniciar(){
-  const porta=await encontrarPortaLivre(inicial,20);
+  fs.mkdirSync(execucao,{recursive:true});
+  if(usarGuardaLocal){
+    const existente=verificarInstancia({arquivoPid});
+    if(existente.ativa)throw new Error('outra_instancia_ativa_pid_'+existente.pid);
+  }
+  const porta=portaPlataforma>0 ? portaPlataforma : await encontrarPortaLivre(inicial,20);
   servidor=http.createServer({maxHeaderSize:16384},app);
   servidor.headersTimeout=10000;
   servidor.requestTimeout=15000;
   servidor.keepAliveTimeout=5000;
   servidor.maxHeadersCount=100;
   await new Promise((resolve,reject)=>{servidor.once('error',reject);servidor.listen(porta,host,resolve);});
-  const execucao=path.join(raiz,'.execucao');fs.mkdirSync(execucao,{recursive:true});
-  fs.writeFileSync(path.join(execucao,'servidor.pid'),String(process.pid));
-  fs.writeFileSync(path.join(execucao,'servidor.porta'),String(porta));
-  console.log(`Trading Pages v11 em http://127.0.0.1:${porta} · LAN habilitada em ${host}:${porta}`);
+  if(usarGuardaLocal){
+    fs.writeFileSync(arquivoPid,String(process.pid));
+    fs.writeFileSync(arquivoPorta,String(porta));
+  }
+  console.log(`Trading Pages v12 em http://127.0.0.1:${porta} · bind ${host}:${porta}`);
 }
 
 function encerrar(){
-  const finalizar=()=>{try{fecharBanco();}finally{process.exit(0);}};
+  const finalizar=()=>{
+    try{
+      fecharBanco();
+      if(usarGuardaLocal)removerPidProprio(arquivoPid);
+    }finally{process.exit(0);}
+  };
   if(servidor)servidor.close(finalizar);else finalizar();
-  setTimeout(()=>process.exit(1),3000).unref();
+  setTimeout(()=>{
+    if(usarGuardaLocal)removerPidProprio(arquivoPid);
+    process.exit(1);
+  },3000).unref();
 }
 process.on('SIGINT',encerrar);
 process.on('SIGTERM',encerrar);
-iniciar().catch(e=>{console.error('Falha ao iniciar:',e);fecharBanco();process.exit(1);});
+iniciar().catch(e=>{
+  console.error('Falha ao iniciar:',e);
+  fecharBanco();
+  if(usarGuardaLocal)removerPidProprio(arquivoPid);
+  process.exit(1);
+});

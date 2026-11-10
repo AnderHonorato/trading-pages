@@ -13,3 +13,10 @@
 10. **Sessões v12:** o usuário pode revogar apenas sessões pertencentes ao próprio ID; tokens e CSRF nunca são devolvidos na listagem.
 11. **Observabilidade v12:** health público é deliberadamente mínimo; métricas detalhadas exigem autenticação.
 12. **Request ID:** cada requisição recebe UUID para correlação de erros, sem registrar segredos.
+
+13. **Reciclagem após rebase:** a seleção por relevância de `main` foi preservada, mas extraída parcialmente para `frontend/compartilhado/reciclagem-agentes.js` para reduzir acoplamento.
+14. **Execução temática:** no Cosmo, reciclagem nunca usa projétil; o agente sentenciado é absorvido pelo buraco negro. Nos demais temas o núcleo usa a mesma mecânica de absorção com apresentação temática.
+15. **Retorno futuro:** agentes removidos recebem cooldown e voltam ao pool de reserva após o período, evitando esgotar a população em sessões longas.
+
+16. **Instância única local:** o PID é usado como trava apenas no modo local. Em plataformas que fornecem `PORT`, a plataforma controla processos/replicação e a trava por PID é desabilitada para não confundir namespaces de containers.
+17. **Porta de plataforma:** `PORT` tem prioridade em hospedagem; `PORTA` continua sendo a preferência local e usa descoberta segura quando ocupada.

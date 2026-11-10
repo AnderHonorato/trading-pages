@@ -7,6 +7,8 @@ Legenda: [x] feito e testado · [~] em andamento · [ ] falta · [!] decisão/li
 - [x] SQLite com migrações incrementais
 - [x] Porta 4312 com faixa de fallback e portas proibidas
 - [x] PID/porta em .execucao
+- [x] Trava contra segunda instância local + limpeza de PID obsoleto
+- [x] Compatibilidade com PORT de plataforma
 - [x] .env e banco fora do Git
 - [x] Versionamento 12.0.0
 
@@ -21,6 +23,10 @@ Legenda: [x] feito e testado · [~] em andamento · [ ] falta · [!] decisão/li
 - [x] Planetas não disparam no Cosmo
 - [x] Núcleo absorve em espiral em vez de atirar
 - [x] Outros temas herdam perigos e absorção com linguagem temática
+- [x] Reciclagem automática do agente menos relevante
+- [x] Sentenciado usa sucção no Cosmo em vez de disparo
+- [x] Substituto herda órbita/função e recebe período de proteção
+- [x] Agente removido entra em cooldown e pode voltar futuramente
 - [x] Mobile sem overflow
 
 ## Segurança
