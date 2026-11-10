@@ -27,3 +27,13 @@
 
 ## Erros
 A API retorna códigos como `credenciais_invalidas`, `csrf_invalido`, `2fa_necessario`, `muitas_tentativas`.
+
+## Sessões v12
+- `GET /api/autenticacao/sessoes` → lista somente sessões ativas do usuário autenticado, sem token/CSRF.
+- `DELETE /api/autenticacao/sessoes/:id` → revoga apenas sessão pertencente ao usuário atual; exige CSRF.
+- `POST /api/autenticacao/sessoes/encerrar-outras` → revoga outras sessões e preserva a atual; exige CSRF.
+
+## Observabilidade v12
+- `GET /api/saude` → health mínimo público: estado, versão, uptime, banco e horário.
+- `GET /api/diagnostico` → exige autenticação e retorna métricas agregadas de requisições, processo e banco.
+- Todas as respostas passam pelo middleware de `X-Request-Id`.

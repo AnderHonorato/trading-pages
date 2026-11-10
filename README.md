@@ -1,7 +1,7 @@
-# Trading Pages v11 — Ander Quant OS
+# Trading Pages v12 — Ander Quant OS
 
 Painel orbital visual para orquestração demonstrativa de agentes, com múltiplos estilos, progressão, eventos animados e área administrativa segura.
-A versão v11 adiciona o **Cosmo vivo**, autenticação real, 2FA, configuração criptografada de provedores de IA e acesso pela rede local.
+A base v11 adicionou o **Cosmo vivo**, autenticação real, 2FA, configuração criptografada de provedores de IA e acesso pela rede local. A v12 acrescenta gestão de sessões/dispositivos, health check, métricas de diagnóstico e request IDs.
 O projeto permanece em **modo demonstrativo**: não envia ordens financeiras reais e não está conectado a corretora.
 
 ## Evoluções v10
@@ -100,6 +100,8 @@ npm run iniciar
 - `/painel` — painel orbital protegido
 - `/configuracoes/apis` — provedores de IA + 2FA
 - `/api/status` — estado protegido do sistema
+- `/api/saude` — health check público mínimo, sem segredos
+- `/api/diagnostico` — métricas protegidas de processo, requisições e banco
 
 ## Acesso pelo Wi-Fi
 
@@ -161,6 +163,18 @@ O teste visual usa Chrome instalado localmente e valida desktop 1440px e celular
 - permissões verificadas no servidor.
 
 Para exposição pública na Internet, adicione proteção de borda como Cloudflare, HTTPS, domínio e política de produção. O bind LAN atual não substitui proteção contra DDoS.
+
+## Sessões e observabilidade
+
+Em **Configurações > Conta e integrações** é possível:
+
+- ver sessões/dispositivos ativos;
+- identificar a sessão atual;
+- revogar uma sessão específica;
+- encerrar todas as outras sessões preservando a atual;
+- acompanhar versão, uptime, memória, total de requisições, sessões ativas e eventos de auditoria das últimas 24 horas.
+
+Cada resposta HTTP recebe `X-Request-Id` para correlação de erros. Exceções inesperadas geram log estruturado no servidor e a API responde com erro genérico + request ID, sem expor stack trace ao navegador.
 
 ## Provedores de IA
 
@@ -239,6 +253,5 @@ git push
 
 - tradução completa EN do painel Canvas legado;
 - recuperação de senha por e-mail, dependente de um provedor de envio;
-- tela dedicada de gerenciamento/revogação de todas as sessões;
 - teste de conectividade individual de cada provedor de IA;
 - produção pública com HTTPS/Cloudflare, se for desejada.

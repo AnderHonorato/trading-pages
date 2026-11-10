@@ -67,6 +67,28 @@ rotas.post('/entrar',(req,res)=>{
   res.json({ok:true,forcarTrocaSenha:Boolean(resultado.usuario.forcar_troca_senha),csrf:sessao.csrfToken});
 });
 
+rotas.get('/sessoes',exigirAutenticacao,(req,res)=>{
+  res.set('Cache-Control','no-store');
+  res.json({ok:true,sessoes:autenticacao.listarSessoes({usuarioId:req.sessao.usuario_id,tokenAtual:req.tokenSessao})});
+});
+
+rotas.delete('/sessoes/:id',exigirAutenticacao,exigirCsrf,(req,res)=>{
+  const sessaoId=Number(req.params.id);
+  if(!Number.isInteger(sessaoId)||sessaoId<=0)return res.status(400).json({ok:false,erro:'sessao_invalida'});
+  const atual=sessaoId===Number(req.sessao.id);
+  const revogada=autenticacao.revogarSessaoPorId({usuarioId:req.sessao.usuario_id,sessaoId});
+  if(!revogada)return res.status(404).json({ok:false,erro:'sessao_nao_encontrada'});
+  registrarAuditoria({usuarioId:req.sessao.usuario_id,acao:'sessao_revogada',ip:ipCliente(req),detalhes:{sessaoId,atual}});
+  if(atual)res.setHeader('Set-Cookie',cookie(COOKIE_SESSAO,'',{httpOnly:true,secure:seguro(),sameSite:'Lax',maxAge:0}));
+  res.json({ok:true,sessaoAtualRevogada:atual});
+});
+
+rotas.post('/sessoes/encerrar-outras',exigirAutenticacao,exigirCsrf,(req,res)=>{
+  const encerradas=autenticacao.revogarOutrasSessoes({usuarioId:req.sessao.usuario_id,tokenAtual:req.tokenSessao});
+  registrarAuditoria({usuarioId:req.sessao.usuario_id,acao:'outras_sessoes_revogadas',ip:ipCliente(req),detalhes:{encerradas}});
+  res.json({ok:true,encerradas});
+});
+
 rotas.post('/sair',exigirAutenticacao,exigirCsrf,(req,res)=>{
   registrarAuditoria({usuarioId:req.sessao.usuario_id,acao:'logout',ip:ipCliente(req)});
   autenticacao.revogarSessao(req.tokenSessao);

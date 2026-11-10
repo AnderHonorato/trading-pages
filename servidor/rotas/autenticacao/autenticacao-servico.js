@@ -59,6 +59,7 @@ function obterSessaoPorToken(tokenBruto) {
     WHERE s.token_hash=?
   `).get(hash);
   if (!linha || linha.revogada_em || !linha.ativo || Date.parse(linha.expira_em) <= Date.now()) return null;
+  obterBanco().prepare('UPDATE sessoes SET ultimo_acesso_em=? WHERE id=?').run(agoraIso(),linha.id);
   linha.totp_ativo=Boolean(linha.totp_ativo);
   return linha;
 }
@@ -67,6 +68,55 @@ function revogarSessao(tokenBruto) {
   if (!tokenBruto) return;
   obterBanco().prepare('UPDATE sessoes SET revogada_em=? WHERE token_hash=? AND revogada_em IS NULL')
     .run(agoraIso(), credenciais.hashToken(tokenBruto));
+}
+
+function resumirDispositivo(agenteUsuario='') {
+  const ua=String(agenteUsuario||'');
+  let sistema='Dispositivo desconhecido';
+  if(/Android/i.test(ua))sistema='Android';
+  else if(/iPhone|iPad|iOS/i.test(ua))sistema='iPhone / iPad';
+  else if(/Windows/i.test(ua))sistema='Windows';
+  else if(/Macintosh|Mac OS/i.test(ua))sistema='macOS';
+  else if(/Linux/i.test(ua))sistema='Linux';
+  let navegador='';
+  if(/Edg\//i.test(ua))navegador='Edge';
+  else if(/Chrome\//i.test(ua))navegador='Chrome';
+  else if(/Firefox\//i.test(ua))navegador='Firefox';
+  else if(/Safari\//i.test(ua))navegador='Safari';
+  return navegador ? sistema+' · '+navegador : sistema;
+}
+
+function listarSessoes({usuarioId,tokenAtual}) {
+  const atualHash=tokenAtual?credenciais.hashToken(tokenAtual):null;
+  return obterBanco().prepare(`
+    SELECT id,token_hash,ip,agente_usuario,criado_em,expira_em,ultimo_acesso_em
+    FROM sessoes
+    WHERE usuario_id=? AND revogada_em IS NULL AND expira_em>?
+    ORDER BY COALESCE(ultimo_acesso_em,criado_em) DESC
+  `).all(usuarioId,agoraIso()).map(linha=>({
+    id:Number(linha.id),
+    ip:linha.ip||'',
+    dispositivo:resumirDispositivo(linha.agente_usuario),
+    criadoEm:linha.criado_em,
+    expiraEm:linha.expira_em,
+    ultimoAcessoEm:linha.ultimo_acesso_em||linha.criado_em,
+    atual:Boolean(atualHash&&linha.token_hash===atualHash)
+  }));
+}
+
+function revogarSessaoPorId({usuarioId,sessaoId}) {
+  const r=obterBanco().prepare(
+    'UPDATE sessoes SET revogada_em=? WHERE id=? AND usuario_id=? AND revogada_em IS NULL'
+  ).run(agoraIso(),Number(sessaoId),usuarioId);
+  return r.changes===1;
+}
+
+function revogarOutrasSessoes({usuarioId,tokenAtual}) {
+  if(!tokenAtual)return 0;
+  const r=obterBanco().prepare(
+    'UPDATE sessoes SET revogada_em=? WHERE usuario_id=? AND token_hash<>? AND revogada_em IS NULL'
+  ).run(agoraIso(),usuarioId,credenciais.hashToken(tokenAtual));
+  return Number(r.changes||0);
 }
 
 function trocarSenha({ usuarioId, senhaAtual, novaSenha }) {
@@ -131,5 +181,6 @@ function desativar2fa({usuarioId,codigo}) {
 
 module.exports = {
   criarAdmin, autenticar, criarSessao, obterSessaoPorToken, revogarSessao, trocarSenha,
+  listarSessoes, revogarSessaoPorId, revogarOutrasSessoes,
   preparar2fa, ativar2fa, validarSegundoFator, desativar2fa
 };

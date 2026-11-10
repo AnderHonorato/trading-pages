@@ -1,1 +1,37 @@
-.segredo{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.estado-ok{color:#3c8b64}.estado-vazio{color:var(--suave)}.bloco-seguranca{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:start;padding:24px 0 34px;border-bottom:1px solid var(--borda);margin-bottom:28px}.bloco-seguranca h2{margin:4px 0 8px;font-size:24px;letter-spacing:-.035em}.bloco-seguranca p{color:var(--suave);margin:0;line-height:1.6}.rotulo{text-transform:uppercase;letter-spacing:.12em;font-size:11px!important;font-weight:700}.configuracao-2fa{grid-column:1/-1;max-width:620px;padding-top:10px}.configuracao-2fa code{display:block;overflow-wrap:anywhere;padding:14px 0;font:700 15px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--acento)}.configuracao-2fa .campo{max-width:280px}.configuracao-2fa pre{white-space:pre-wrap;border:1px solid var(--borda);border-radius:14px;padding:16px;background:var(--superficie);line-height:1.7}@media(max-width:760px){.bloco-seguranca{grid-template-columns:1fr}.configuracao-2fa{grid-column:1}}
+.conteudo{padding-bottom:88px}
+.topo-secao{display:flex;justify-content:space-between;gap:20px;align-items:flex-start}
+.topo-secao h2,.faixa-saude h2,.bloco-seguranca h2{margin:4px 0 8px;font-size:24px;letter-spacing:-.035em}
+.topo-secao p,.faixa-saude p,.bloco-seguranca p{color:var(--suave);margin:0;line-height:1.6}
+.rotulo{text-transform:uppercase;letter-spacing:.12em;font-size:11px!important;font-weight:700}
+.faixa-saude,.bloco-seguranca,.bloco-sessoes,.bloco-provedores{padding:28px 0;border-top:1px solid var(--borda)}
+.faixa-saude{display:grid;grid-template-columns:minmax(220px,.8fr) minmax(280px,1.2fr);gap:26px;align-items:start;border-top:0}
+.metricas-saude{display:grid;grid-template-columns:repeat(3,minmax(90px,1fr));gap:10px}
+.metrica{padding:12px 0;border-bottom:1px solid var(--borda)}
+.metrica strong{display:block;font-size:20px;letter-spacing:-.04em}
+.metrica span{font-size:11px;color:var(--suave);text-transform:uppercase;letter-spacing:.08em}
+.bloco-seguranca{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:start}
+.configuracao-2fa{grid-column:1/-1;max-width:620px;padding-top:10px}
+.configuracao-2fa code{display:block;overflow-wrap:anywhere;padding:14px 0;font:700 15px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--acento)}
+.configuracao-2fa .campo{max-width:280px}
+.configuracao-2fa pre{white-space:pre-wrap;border:1px solid var(--borda);border-radius:14px;padding:16px;background:var(--superficie);line-height:1.7}
+.lista-sessoes{margin-top:18px}
+.sessao{display:grid;grid-template-columns:minmax(180px,1fr) minmax(120px,.55fr) minmax(140px,.7fr) auto;gap:14px;align-items:center;padding:14px 0;border-top:1px solid var(--borda)}
+.sessao:first-child{border-top:0}
+.sessao-principal strong{display:flex;align-items:center;gap:8px}
+.sessao-principal span,.sessao-dado span{display:block;color:var(--suave);font-size:12px;margin-top:4px}
+.sessao-atual{display:inline-flex!important;align-items:center;border:1px solid var(--borda);border-radius:999px;padding:3px 7px;margin:0!important;font-size:10px!important;color:var(--acento)!important}
+.sessao-dado strong{font-size:13px}
+.sessao-vazia{padding:20px 0;color:var(--suave)}
+.bloco-provedores{margin-top:4px}
+.linha-provedor{display:grid;grid-template-columns:minmax(120px,.6fr) minmax(160px,1fr) minmax(220px,1.5fr) auto;gap:12px;align-items:end;padding:18px 0;border-top:1px solid var(--borda)}
+.provedor-nome strong{display:block}.provedor-nome span{font-size:12px;color:var(--suave)}
+.segredo{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.estado-ok{color:#3c8b64!important}.estado-vazio{color:var(--suave)!important}
+@media(max-width:760px){
+  .faixa-saude,.bloco-seguranca{grid-template-columns:1fr}
+  .configuracao-2fa{grid-column:1}
+  .metricas-saude{grid-template-columns:repeat(2,1fr)}
+  .topo-secao{display:grid}
+  .sessao{grid-template-columns:1fr auto;gap:8px}
+  .sessao-dado{grid-column:1}
+  .linha-provedor{grid-template-columns:1fr;gap:8px;padding:20px 0}
+}

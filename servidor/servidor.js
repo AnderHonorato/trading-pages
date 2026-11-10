@@ -12,15 +12,19 @@ const {limitarRequisicoes}=require('./seguranca/seguranca-limite-requisicoes.js'
 const {encontrarPortaLivre}=require('./servidor-porta.js');
 const autenticacaoRotas=require('./rotas/autenticacao/autenticacao-rotas.js');
 const configuracoesRotas=require('./rotas/configuracoes/configuracoes-rotas.js');
+const {criarObservabilidade}=require('./observabilidade/observabilidade.js');
+const {obterBanco}=require('../banco/banco.js');
 
 if(!process.env.CHAVE_CRIPTOGRAFIA)throw new Error('CHAVE_CRIPTOGRAFIA ausente no .env');
 migrar();
 
 const raiz=path.resolve(__dirname,'..');
 const app=express();
+const observabilidade=criarObservabilidade({versao:'12.0'});
 app.disable('x-powered-by');
 if(String(process.env.TRUST_PROXY).toLowerCase()==='true')app.set('trust proxy',1);
 app.use(segurancaCabecalhos());
+app.use(observabilidade.middleware);
 app.use(compression());
 app.use(express.json({limit:'100kb'}));
 app.use(express.urlencoded({extended:false,limit:'100kb'}));
@@ -31,21 +35,40 @@ for(const arquivo of ['evolucao-v11.js','evolucao-v11.css']){
   app.get('/'+arquivo,(_req,res)=>res.sendFile(path.join(raiz,arquivo)));
 }
 
+app.get('/api/saude',(_req,res)=>{
+  res.set('Cache-Control','no-store');
+  try{
+    obterBanco().prepare('SELECT 1 AS ok').get();
+    res.json({...observabilidade.health(),banco:'ok'});
+  }catch{
+    res.status(503).json({ok:false,versao:'12.0',estado:'degradado',banco:'erro',hora:new Date().toISOString()});
+  }
+});
+
 app.use('/api',limitarRequisicoes({grupo:'api_geral',limite:120,janelaMinutos:1}));
 app.use('/api/autenticacao',autenticacaoRotas);
 app.use('/api/configuracoes',limitarRequisicoes({grupo:'admin',limite:60,janelaMinutos:1,chave:req=>req.sessao?.usuario||req.ip}),configuracoesRotas);
 
+app.get('/api/diagnostico',(req,res)=>{
+  if(!req.sessao)return res.status(401).json({ok:false,erro:'autenticacao_necessaria'});
+  const banco=obterBanco();
+  const sessoesAtivas=banco.prepare("SELECT COUNT(*) AS n FROM sessoes WHERE revogada_em IS NULL AND expira_em>?").get(new Date().toISOString()).n;
+  const auditoria24h=banco.prepare("SELECT COUNT(*) AS n FROM auditoria WHERE criado_em>?").get(new Date(Date.now()-86400000).toISOString()).n;
+  res.set('Cache-Control','no-store');
+  res.json({ok:true,versao:'12.0',...observabilidade.snapshot(),banco:{sessoesAtivas:Number(sessoesAtivas),eventosAuditoria24h:Number(auditoria24h)}});
+});
+
 app.get('/api/status',(req,res)=>{
   if(!req.sessao)return res.status(401).json({ok:false,erro:'autenticacao_necessaria'});
   res.set('Cache-Control','no-store');
-  res.json({ok:true,versao:'11.0',modo:'demonstracao',conectadoCorretora:false,orquestracao:'visual',hora:new Date().toISOString()});
+  res.json({ok:true,versao:'12.0',modo:'demonstracao',conectadoCorretora:false,orquestracao:'visual',hora:new Date().toISOString()});
 });
 app.get('/api/sinais',(req,res)=>{
   if(!req.sessao)return res.status(401).json({ok:false,erro:'autenticacao_necessaria'});
   const agentes=['KELLY','SPOTTER','TAKER','CLOSER','PRIOR','EDGE','LUNA','RUBI','AXO'];
   const ciclo=Math.floor(Date.now()/30000);
   res.set('Cache-Control','no-store');
-  res.json({ok:true,demonstracao:true,versao:'11.0',eventos:[{id:'demo-'+ciclo,tipo:'observacao',agente:agentes[ciclo%agentes.length],horario:new Date(ciclo*30000).toISOString(),descricao:'Pulso visual demonstrativo — sem ordem real.'}]});
+  res.json({ok:true,demonstracao:true,versao:'12.0',eventos:[{id:'demo-'+ciclo,tipo:'observacao',agente:agentes[ciclo%agentes.length],horario:new Date(ciclo*30000).toISOString(),descricao:'Pulso visual demonstrativo — sem ordem real.'}]});
 });
 
 function paginaProtegida(arquivo,{permitirTroca=false}={}){
@@ -66,6 +89,11 @@ app.get('/agentes-orbitais.html',paginaProtegida('agentes-orbitais.html'));
 
 app.use('/api',(req,res)=>res.status(404).json({ok:false,erro:'rota_nao_encontrada'}));
 app.use((_req,res)=>res.status(404).type('text/plain').send('Página não encontrada.'));
+app.use((erro,req,res,_next)=>{
+  console.error(JSON.stringify({nivel:'erro',evento:'erro_http',requestId:req.requestId||null,metodo:req.method,rota:req.originalUrl,mensagem:String(erro?.message||'erro_interno'),hora:new Date().toISOString()}));
+  if(res.headersSent)return;
+  res.status(500).json({ok:false,erro:'erro_interno',requestId:req.requestId||null});
+});
 
 const host=process.env.HOST||'0.0.0.0';
 const inicial=Math.max(1024,Number(process.env.PORTA||4312));

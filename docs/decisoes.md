@@ -9,3 +9,7 @@
 7. **LAN:** servidor escuta em `0.0.0.0`; firewall deve permitir somente `LocalSubnet`. A conta atual não possui elevação para criar a regra automaticamente.
 8. **Trading real:** o painel permanece demonstrativo; nenhuma corretora ou ordem financeira real é acionada.
 9. **i18n legado:** a migração completa do canvas legado para PT-BR/EN permanece fora desta onda; não foi marcada como concluída.
+
+10. **Sessões v12:** o usuário pode revogar apenas sessões pertencentes ao próprio ID; tokens e CSRF nunca são devolvidos na listagem.
+11. **Observabilidade v12:** health público é deliberadamente mínimo; métricas detalhadas exigem autenticação.
+12. **Request ID:** cada requisição recebe UUID para correlação de erros, sem registrar segredos.

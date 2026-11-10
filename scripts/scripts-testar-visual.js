@@ -34,8 +34,26 @@ async function principal(){
     await pagina.waitForTimeout(1600);
     const mobile=await pagina.evaluate(()=>({largura:innerWidth,scroll:document.documentElement.scrollWidth,altura:innerHeight,scrollAltura:document.documentElement.scrollHeight}));
     await pagina.screenshot({path:path.join(execucao,'cosmo-mobile.png'),fullPage:true});
-    console.log(JSON.stringify({desktop,mobile,erros},null,2));
-    if(desktop.scroll>desktop.largura+1||mobile.scroll>mobile.largura+1||erros.length)process.exitCode=1;
+
+    await pagina.goto('http://127.0.0.1:4312/configuracoes/apis',{waitUntil:'networkidle'});
+    await pagina.waitForSelector('.sessao',{timeout:10000});
+    const configuracoesMobile=await pagina.evaluate(()=>({
+      largura:innerWidth,
+      scroll:document.documentElement.scrollWidth,
+      sessoes:document.querySelectorAll('.sessao').length,
+      metricas:document.querySelectorAll('.metrica').length
+    }));
+    await pagina.screenshot({path:path.join(execucao,'configuracoes-mobile.png'),fullPage:true});
+    await pagina.setViewportSize({width:1440,height:900});
+    await pagina.waitForTimeout(300);
+    const configuracoesDesktop=await pagina.evaluate(()=>({largura:innerWidth,scroll:document.documentElement.scrollWidth}));
+    await pagina.screenshot({path:path.join(execucao,'configuracoes-desktop.png'),fullPage:true});
+
+    console.log(JSON.stringify({desktop,mobile,configuracoesMobile,configuracoesDesktop,erros},null,2));
+    if(desktop.scroll>desktop.largura+1||mobile.scroll>mobile.largura+1||
+       configuracoesMobile.scroll>configuracoesMobile.largura+1||
+       configuracoesDesktop.scroll>configuracoesDesktop.largura+1||
+       configuracoesMobile.sessoes<1||configuracoesMobile.metricas<4||erros.length)process.exitCode=1;
     await contexto.close();
   }finally{
     await navegador.close();
