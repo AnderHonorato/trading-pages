@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR" data-tema="claro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Configurações · Trading Pages</title>
+  <script src="/frontend/compartilhado/tema-inicial.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/frontend/compartilhado/interface.css">
+  <link rel="stylesheet" href="/frontend/paginas/configuracoes/configuracoes.css">
+</head>
+<body>
+  <main class="conteudo">
+    <header class="cabecalho-pagina">
+      <div>
+        <p>Configurações privadas</p>
+        <h1>Conta e integrações</h1>
+        <p>Segurança, sessões ativas e provedores de IA em um único lugar.</p>
+      </div>
+      <div class="barra-topo">
+        <a class="botao-secundario" href="/painel">Voltar ao painel</a>
+        <button class="botao-icone" type="button" data-acao-tema aria-label="Alternar tema"></button>
+        <button class="botao-secundario" type="button" id="sair">Sair</button>
+      </div>
+    </header>
+
+    <section class="faixa-saude" aria-labelledby="titulo-saude">
+      <div>
+        <p class="rotulo">Sistema</p>
+        <h2 id="titulo-saude">Saúde e diagnóstico</h2>
+        <p id="estado-saude">Verificando…</p>
+      </div>
+      <div class="metricas-saude" id="metricas-saude" aria-live="polite"></div>
+    </section>
+
+    <section class="bloco-seguranca" aria-labelledby="titulo-2fa">
+      <div>
+        <p class="rotulo">Segurança da conta</p>
+        <h2 id="titulo-2fa">Autenticação em duas etapas</h2>
+        <p id="estado-2fa">Carregando estado…</p>
+      </div>
+      <div class="acoes" id="acoes-2fa"></div>
+      <div class="configuracao-2fa oculto" id="configuracao-2fa">
+        <p>Adicione este segredo no seu aplicativo autenticador:</p>
+        <code id="segredo-2fa"></code>
+        <div class="campo">
+          <label for="codigo-2fa">Código de 6 dígitos</label>
+          <input id="codigo-2fa" inputmode="numeric" autocomplete="one-time-code" maxlength="6">
+        </div>
+        <button class="botao-principal" type="button" id="confirmar-2fa">Confirmar 2FA</button>
+        <pre id="recuperacao-2fa" class="oculto"></pre>
+      </div>
+    </section>
+
+    <section class="bloco-sessoes" aria-labelledby="titulo-sessoes">
+      <div class="topo-secao">
+        <div>
+          <p class="rotulo">Dispositivos</p>
+          <h2 id="titulo-sessoes">Sessões ativas</h2>
+          <p>Revogue acessos antigos sem alterar sua senha.</p>
+        </div>
+        <button class="botao-secundario" type="button" id="encerrar-outras">Encerrar outras</button>
+      </div>
+      <div id="lista-sessoes" class="lista-sessoes" aria-live="polite"></div>
+    </section>
+
+    <section class="bloco-provedores" aria-labelledby="titulo-provedores">
+      <div class="topo-secao">
+        <div>
+          <p class="rotulo">Integrações</p>
+          <h2 id="titulo-provedores">Provedores de IA</h2>
+          <p>As chaves são criptografadas no servidor e nunca retornam ao navegador.</p>
+        </div>
+      </div>
+      <div id="provedores" aria-label="Provedores de IA"></div>
+    </section>
+
+    <p class="aviso" id="aviso-configuracoes" role="status" aria-live="polite"></p>
+  </main>
+  <script src="/frontend/compartilhado/tema.js"></script>
+  <script src="/frontend/paginas/configuracoes/configuracoes.js"></script>
+</body>
+</html>

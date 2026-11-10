@@ -1,0 +1,42 @@
+{
+  "ORQ-core": [
+    "package.json",
+    ".env.exemplo",
+    "README.md",
+    "CHECKLIST.md",
+    "docs/**",
+    ".orquestracao/**",
+    "servidor/servidor.js",
+    "servidor/servidor-porta.js",
+    "scripts/**"
+  ],
+  "A-seguranca": [
+    "servidor/seguranca/**",
+    "testes/seguranca*.test.js",
+    "testes/trafego-persistente.test.js"
+  ],
+  "A-autenticacao": [
+    "servidor/rotas/autenticacao/**",
+    "frontend/paginas/entrar/**",
+    "frontend/paginas/trocar-senha/**",
+    "testes/banco-autenticacao.test.js"
+  ],
+  "A-configuracoes": [
+    "servidor/rotas/configuracoes/**",
+    "frontend/paginas/configuracoes/**"
+  ],
+  "A-cosmo": [
+    "evolucao-v11.js",
+    "evolucao-v11.css",
+    "frontend/compartilhado/orbital-fisica.js",
+    "frontend/compartilhado/reciclagem-agentes.js",
+    "frontend/paginas/painel/**",
+    "agentes-orbitais.html",
+    "testes/orbital-fisica.test.js",
+    "testes/reciclagem-agentes.test.js",
+    "testes/evolucao-v11-integracao.test.js"
+  ],
+  "A-banco": [
+    "banco/**"
+  ]
+}

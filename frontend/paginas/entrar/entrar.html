@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt-BR" data-tema="claro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Entrar · Trading Pages</title>
+  <script src="/frontend/compartilhado/tema-inicial.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/frontend/compartilhado/interface.css">
+  <link rel="stylesheet" href="/frontend/paginas/entrar/entrar.css">
+</head>
+<body>
+  <main class="pagina">
+    <section class="painel-marca" aria-label="Trading Pages">
+      <div class="marca"><span class="marca-simbolo" aria-hidden="true"></span><span>Ander Quant OS</span></div>
+      <div class="marca-texto"><small>Acesso privado</small><h1>Agentes vivos.<br>Controle humano.</h1><p>Seu painel orbital, configurações e segredos ficam protegidos atrás da sessão administrativa.</p></div>
+    </section>
+    <section class="area-formulario">
+      <form class="formulario" id="formulario-entrar" novalidate>
+        <div class="formulario-topo"><span></span><button class="botao-icone" type="button" data-acao-tema aria-label="Alternar tema"></button></div>
+        <h2>Entrar</h2>
+        <p class="subtitulo">Use o acesso de administrador deste computador.</p>
+        <div class="campo"><label for="usuario">Usuário</label><input id="usuario" name="usuario" autocomplete="username" maxlength="40" required></div>
+        <div class="campo"><label for="senha">Senha</label><input id="senha" name="senha" type="password" autocomplete="current-password" minlength="12" maxlength="200" required></div>
+        <div class="campo oculto" id="campo-2fa"><label for="codigo2fa">Código 2FA</label><input id="codigo2fa" name="codigo2fa" inputmode="numeric" autocomplete="one-time-code" maxlength="32"></div>
+        <button class="botao-principal" type="submit">Acessar painel</button>
+        <p class="aviso" id="aviso-entrar" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+  <script src="/frontend/compartilhado/tema.js"></script>
+  <script src="/frontend/paginas/entrar/entrar.js"></script>
+</body>
+</html>

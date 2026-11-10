@@ -1,0 +1,33 @@
+{
+  "name": "trading-pages",
+  "version": "12.0.0",
+  "private": true,
+  "description": "Trading Pages — painel orbital seguro e demonstrativo",
+  "scripts": {
+    "desenvolver": "node --watch servidor/servidor.js",
+    "iniciar": "node servidor/servidor.js",
+    "parar": "node scripts/scripts-parar.js",
+    "testar": "node --test testes/*.test.js",
+    "testar:http": "node scripts/scripts-testar-http.js",
+    "testar:2fa": "node scripts/scripts-testar-2fa.js",
+    "testar:visual": "node scripts/scripts-testar-visual.js",
+    "verificar": "node scripts/scripts-verificar.js",
+    "auditar:seguranca": "node scripts/scripts-auditar-seguranca.js",
+    "banco:migrar": "node banco/banco-migrador.js",
+    "admin:criar": "node scripts/scripts-criar-admin.js",
+    "admin:redefinir": "node scripts/scripts-redefinir-admin.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "better-sqlite3": "^13.0.3",
+    "compression": "^1.8.1",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.65.0"
+  }
+}
