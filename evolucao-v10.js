@@ -35,6 +35,7 @@
     brinquedos: ['Explosão de blocos', '#ffe681', 'critico']
   };
   let L, modo = 0, mortes = 0, evolucoes = 0, geracao = 1, contagem = 0, proximoAtaque = 5.4, pulsoEspecial = 3.8;
+  let proximaReciclagem = 58 + Math.random() * 24, alvoReciclagem = null, esperaReciclagem = 0, reciclagens = 0;
   let aviso = '', durAviso = 0, alvoAvisado = null, esperaAtaque = 0, backend = 'LOCAL / DEMO', sinalRemoto = '', alternarBackend = 0;
   const caidos = [], eventos = [];
   let botaoModo, botaoDesafio, indicador, avisoEl;
@@ -66,13 +67,110 @@
       a.disparoNovo = 0;
       a.morrendo = false;
       a.renascido = 1;
+      a.contribJanela = 0;
+      a.acertosJanela = 0;
+      a.ultimaAcao = contagem;
+      a.entradaEm = contagem;
+      a.protegidoAte = contagem + 24;
+      a.relevancia = 100;
+      a.banidoAte = 0;
     }
   }
 
+  const reservasDisponiveis = excluir => L.AG.filter(a =>
+    !a.ativo && !a.morrendo && a.nome !== excluir && (a.banidoAte || 0) <= contagem
+  );
+
+  function scoreRelevancia(a) {
+    const idade = Math.max(1, contagem - (a.entradaEm || 0));
+    const ociosidade = Math.max(0, contagem - (a.ultimaAcao || 0));
+    const recente = clamp(1 - ociosidade / 42, 0, 1);
+    const producao = clamp(
+      ((a.contribJanela || 0) / 13) + ((a.acertosJanela || 0) / 9),
+      0,
+      1
+    );
+    const evolucao = clamp(((a.rankNovo || 1) - 1) / 12, 0, 1);
+    const saude = clamp((a.vida || 0) / Math.max(1, a.vidaMax || 1), 0, 1);
+    const maturidade = clamp(idade / 70, 0, 1);
+
+    const score = 100 * (
+      producao * .43 +
+      recente * .31 +
+      evolucao * .12 +
+      saude * .08 +
+      maturidade * .06
+    );
+    a.relevancia = Math.round(score);
+    return score;
+  }
+
+  function podeSerReciclado(a) {
+    if (!a || !a.ativo || a.morrendo || !a.p) return false;
+    if (vivos().length <= 4) return false;
+    if (!reservasDisponiveis(a.nome).length) return false;
+    if ((a.protegidoAte || 0) > contagem) return false;
+    if (a === alvoAvisado || a === alvoReciclagem) return false;
+    if ((a.carga || 0) > 0 || a.pend) return false;
+    if ((a.disparoNovo || 0) > .25 || (a.escudoNovo || 0) > .45) return false;
+    return true;
+  }
+
+  function iniciarReciclagem() {
+    if (alvoReciclagem || alvoAvisado || L.ameaca.fase) return false;
+    const candidatos = vivos().filter(podeSerReciclado);
+    if (!candidatos.length) {
+      proximaReciclagem = 12 + Math.random() * 10;
+      return false;
+    }
+    candidatos.forEach(scoreRelevancia);
+    candidatos.sort((a, b) => a.relevancia - b.relevancia);
+    const a = candidatos[0];
+
+    alvoReciclagem = a;
+    esperaReciclagem = 2.45;
+    a.sentenciado = true;
+    L.nuc.alvoX = clamp((a.p.x - tamanho().CX) / 90, -1, 1);
+    L.nuc.alvoY = clamp((a.p.y - tamanho().CY) / 90, -1, 1);
+    L.nuc.flash = 1;
+    L.nuc.shake = .12;
+    evento('NÚCLEO JULGA ' + a.nome + ' · relevância ' + a.relevancia + '% · substituição preparada');
+    return true;
+  }
+
+  function executarReciclagem() {
+    const a = alvoReciclagem;
+    alvoReciclagem = null;
+    if (!a || !a.ativo || !a.p) return;
+
+    const s = L.lancar('nucleo-agente', 'nucleo', a, {
+      cor: '#ff315e',
+      dur: .92,
+      curva: .22,
+      poder: 'RECICLAGEM DO NÚCLEO'
+    });
+    if (s) {
+      s.poderTipo = 'execucao';
+      s.reciclagem = true;
+      s.danoBase = 999999;
+      s.motivo = 'baixa relevância · ' + Math.round(a.relevancia || 0) + '%';
+    }
+    L.nuc.flash = 1;
+    L.nuc.shake = .28;
+    L.aneis.push({x:tamanho().CX, y:tamanho().CY, t:0, cor:'#ff315e'});
+    evento('SENTENÇA EXECUTADA · ' + a.nome);
+  }
+
   function escolherAlvo() {
-    const lista = vivos();
+    const todos = vivos();
+    const elegiveis = todos.filter(a =>
+      (a.protegidoAte || 0) <= contagem &&
+      a !== alvoReciclagem &&
+      !a.morrendo
+    );
+    const lista = elegiveis.length ? elegiveis : todos;
     if (!lista.length) return null;
-    // O núcleo prefere quem tem menor eficiência e menor vida; não decide arbitrariamente.
+    // Duelos normais também evitam recém-chegados e tarefas protegidas.
     return lista.sort((a, b) => (vitoria(a) - vitoria(b)) + (Math.random() - .5) * 3)[0];
   }
   function iniciarAtaque() {
@@ -104,29 +202,76 @@
   function matar(a, motivo) {
     if (!a || !a.ativo || a.morrendo) return;
     const p = a.p ? {...a.p} : {x:tamanho().CX,y:tamanho().CY,r:15};
+    const registro = {
+      nome:a.nome,
+      papel:a.papel || 'Agente',
+      orbita:a.orbita,
+      fase:a.fase,
+      ang:a.ang,
+      cor:a.corT || a.cor,
+      x:p.x,y:p.y,r:p.r || 15,
+      t:0,dur:2.6,motivo
+    };
     a.morrendo = true;
+    a.sentenciado = false;
+    a.banidoAte = contagem + 180;
     a.vida = 0;
-    caidos.push({nome:a.nome, cor:a.corT || a.cor, x:p.x, y:p.y, r:p.r || 15, t:0, dur:2.3, motivo});
-    L.explosao(p.x, p.y, a.corT || a.cor, 42, tamanho().S * .39);
+    caidos.push(registro);
+    L.explosao(p.x, p.y, a.corT || a.cor, 52, tamanho().S * .43);
     L.aneis.push({x:p.x, y:p.y, t:0, cor: a.corT || a.cor});
     a.ativo = false; a.p = null;
     mortes++;
     if (L.atualizaChips) L.atualizaChips();
-    evento(a.nome + ' FOI ELIMINADO · substituição iniciada');
+    evento(a.nome + ' FOI ELIMINADO · ' + motivo + ' · buscando substituto');
   }
-  function repor(nome) {
-    const reservas = L.AG.filter(a => !a.ativo && !a.morrendo && a.nome !== nome);
-    const escolhido = reservas[Math.floor(Math.random() * reservas.length)];
-    let novo = escolhido;
-    if (!novo) novo = L.AG.find(a => a.nome === nome) || L.AG.find(a=>!a.ativo);
-    if (!novo) return;
+
+  function afinidadePapel(candidato, papel) {
+    const limpar = v => String(v || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    const base = limpar(papel).split(/[^a-z0-9]+/).filter(x=>x.length>2);
+    const alvo = limpar(candidato.papel).split(/[^a-z0-9]+/).filter(x=>x.length>2);
+    return base.reduce((n, token) => n + (alvo.includes(token) ? 1 : 0), 0);
+  }
+
+  function repor(registro) {
+    const reservas = reservasDisponiveis(registro.nome);
+    if (!reservas.length) {
+      evento('VAGA DE ' + registro.nome + ' AGUARDA NOVO AGENTE');
+      return;
+    }
+
+    reservas.sort((a,b) => {
+      const fa = afinidadePapel(a, registro.papel) * 30 + Math.random() * 8;
+      const fb = afinidadePapel(b, registro.papel) * 30 + Math.random() * 8;
+      return fb - fa;
+    });
+    const novo = reservas[0];
+
     novo.morrendo = false;
     novo.vida = 0;
+    novo.orbita = Number.isInteger(registro.orbita) ? registro.orbita : novo.orbita;
+    if (Number.isFinite(registro.ang)) {
+      const fase = (((registro.ang / TAU) % 1) + 1) % 1;
+      novo.fase = fase;
+      novo.ang = registro.ang;
+    }
+    novo.substituindo = registro.nome;
+    novo.slotPapel = registro.papel;
+
     L.ativar(novo.nome);
     initAgente(novo);
+    novo.entradaEm = contagem;
+    novo.ultimaAcao = contagem;
+    novo.protegidoAte = contagem + 38;
+    novo.contribJanela = 0;
+    novo.acertosJanela = 0;
+    novo.relevancia = 100;
+    novo.renascido = 1.6;
+
     geracao++;
     evolucoes++;
-    evento(novo.nome + ' ENTROU NA ÓRBITA · geração ' + geracao);
+    reciclagens++;
+    L.explosao(novo.p?.x || tamanho().CX, novo.p?.y || tamanho().CY, novo.corT || novo.cor, 34, tamanho().S*.29);
+    evento(novo.nome + ' SUBSTITUI ' + registro.nome + ' · ' + registro.papel + ' · G' + geracao);
   }
   function impacto(s) {
     const a = s.para;
@@ -134,6 +279,14 @@
     initAgente(a);
     const p = a.p || {x:s.x,y:s.y,r:12};
     const v = power(), tipo = s.poderTipo || v[2];
+
+    if (s.reciclagem) {
+      a.sentenciado = false;
+      L.fxTxt.push({x:p.x,y:p.y-p.r*2.1,t:0,txt:'RECICLADO',cor:'#ff315e',bruto:true});
+      matar(a, s.motivo || 'menor relevância');
+      return;
+    }
+
     const chance = .24 + Math.min(.19, a.rankNovo * .03) + (a.nome === 'RUBI' ? .12 : 0);
     if (Math.random() < chance) {
       a.desvios++;
@@ -166,6 +319,10 @@
     const a = s.de; initAgente(a);
     const tipo = s.poderTipo || power()[2];
     a.acertos++;
+    a.acertosJanela = (a.acertosJanela || 0) + 1;
+    a.contribJanela = (a.contribJanela || 0) + (tipo === 'onda' ? 3 : tipo === 'cura' ? 2.6 : 2);
+    a.ultimaAcao = contagem;
+    a.relevancia = Math.max(a.relevancia || 0, 42);
     a.xpNovo += tipo === 'critico' ? 4 : 2.3;
     a.contributo += tipo === 'onda' ? 3 : 2;
     if (tipo === 'cura') {
@@ -223,10 +380,21 @@
     contagem += dt;
     proximoAtaque -= dt;
     pulsoEspecial -= dt;
+    proximaReciclagem -= dt;
     durAviso -= dtR;
     if (durAviso<=0 && avisoEl) avisoEl.classList.remove('on');
+
+    if (alvoReciclagem) {
+      esperaReciclagem -= dt;
+      if (esperaReciclagem <= 0) executarReciclagem();
+    }
+    if (proximaReciclagem <= 0 && !alvoReciclagem) {
+      const iniciou = iniciarReciclagem();
+      if (iniciou) proximaReciclagem = 62 + Math.random() * 34;
+    }
+
     if (alvoAvisado) {esperaAtaque-=dt;if(esperaAtaque<=0) executarAtaque();}
-    if (proximoAtaque<=0) { iniciarAtaque(); proximoAtaque = 5.8 + Math.random()*2.8; }
+    if (proximoAtaque<=0 && !alvoReciclagem) { iniciarAtaque(); proximoAtaque = 5.8 + Math.random()*2.8; }
     if (pulsoEspecial<=0) {
       const agentes = vivos().filter(a => a.p && a.carga<=0);
       const a = agentes[Math.floor(Math.random()*agentes.length)];
@@ -234,6 +402,8 @@
         const p = power();
         L.dispararDe(a,'sinal','nucleo',{cor:p[1],poder:p[0],poderTipo:p[2]});
         a.disparoNovo = 1;
+        a.ultimaAcao = contagem;
+        a.contribJanela = (a.contribJanela || 0) + .7;
         if (Math.random()<.4) evento(a.nome+' USOU '+p[0].toUpperCase());
       }
       pulsoEspecial = 3.3 + Math.random()*2.8;
@@ -244,6 +414,9 @@
       a.disparoNovo = Math.max(0,a.disparoNovo-dt*1.8);
       a.escudoNovo = Math.max(0,a.escudoNovo-dt);
       a.renascido = Math.max(0,a.renascido-dt);
+      a.contribJanela = (a.contribJanela || 0) * Math.exp(-dt/58);
+      a.acertosJanela = (a.acertosJanela || 0) * Math.exp(-dt/72);
+      scoreRelevancia(a);
       if (a.vida < a.vidaMax && contagem % 2 < dt) a.vida = Math.min(a.vidaMax,a.vida+1.1);
     }
     // A proteção básica nunca desaparece. Sob ameaça ou ataque, o escudo se reforça.
@@ -251,11 +424,20 @@
     if (L.nuc.escudo.hp <= 0 && L.ameaca.fase === 0) L.nuc.escudo.hp = Math.min(L.nuc.escudo.max, 18);
     for (let i=caidos.length-1;i>=0;i--) {
       caidos[i].t += dt;
-      if (caidos[i].t >= caidos[i].dur) {const nome=caidos[i].nome;caidos.splice(i,1);repor(nome);}
+      if (caidos[i].t >= caidos[i].dur) {
+        const registro = caidos[i];
+        caidos.splice(i,1);
+        const antigo = L.AG.find(a=>a.nome===registro.nome);
+        if (antigo) antigo.morrendo = false;
+        repor(registro);
+      }
     }
     if (indicador && Math.floor(t*4)%4===0) {
       const pp = power();
-      indicador.innerHTML='<strong>✦ '+pp[0].toUpperCase()+'</strong><span>✧ NÍVEL '+L.nuc.nivel+'/50 · G'+geracao+' · '+L.ativos().length+' seres</span><small>◎ Zoom auto · '+ORBITAS[modo].nome+' · '+backend+'</small>';
+      const ativosAgora = vivos();
+      const pior = ativosAgora.length ? ativosAgora.slice().sort((a,b)=>(a.relevancia||100)-(b.relevancia||100))[0] : null;
+      const rel = pior ? pior.nome+' '+Math.round(pior.relevancia||0)+'%' : '—';
+      indicador.innerHTML='<strong>✦ '+pp[0].toUpperCase()+'</strong><span>✧ NÍVEL '+L.nuc.nivel+'/50 · G'+geracao+' · '+L.ativos().length+' seres · ♻ '+reciclagens+'</span><small>◎ '+ORBITAS[modo].nome+' · reciclagem em '+Math.max(0,Math.ceil(proximaReciclagem))+'s · menor relevância '+rel+' · '+backend+'</small>';
     }
   }
   function drawAura(a, p, t) {
@@ -301,17 +483,60 @@
     for (const s of proj) {
       if (!(s.tipo==='nucleo-agente' || s.poder)) continue;
       const col=s.cor || powerNow[1];
+
+      if (s.reciclagem) {
+        ctx.save();ctx.translate(s.x,s.y);ctx.rotate(t*12+s.seed*3);
+        ctx.globalCompositeOperation='screen';
+        ctx.strokeStyle='#ff315e';ctx.fillStyle='rgba(255,49,94,.22)';
+        for(let k=0;k<3;k++){
+          const rr=S*(.012+k*.006);
+          ctx.beginPath();
+          for(let i=0;i<9;i++){
+            const a=i/9*TAU, rj=rr*(.72+Math.sin(i*2.1+t*15+k)*.22);
+            i?ctx.lineTo(Math.cos(a)*rj,Math.sin(a)*rj):ctx.moveTo(Math.cos(a)*rj,Math.sin(a)*rj);
+          }
+          ctx.closePath();ctx.lineWidth=2.4-k*.55;ctx.stroke();
+        }
+        for(let j=0;j<5;j++){
+          const a=j/5*TAU+t*5, len=S*(.018+.009*Math.sin(t*8+j));
+          ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a)*len,Math.sin(a)*len);
+          ctx.lineWidth=1.3;ctx.strokeStyle=j%2?'#ffffff':'#ff315e';ctx.stroke();
+        }
+        ctx.beginPath();ctx.arc(0,0,S*.009,0,TAU);ctx.fillStyle='#ffffff';ctx.fill();
+        ctx.restore();
+        continue;
+      }
+
       ctx.save();ctx.translate(s.x,s.y);ctx.rotate(t*7+s.seed*5);ctx.strokeStyle=col;ctx.fillStyle=L.hexA(col,.25);ctx.lineWidth=2;
       const n=s.tipo==='nucleo-agente'?5:7, r=S*(s.tipo==='nucleo-agente'?.023:.014);
       ctx.beginPath();for(let i=0;i<n;i++){const ang=i/n*TAU, rr=(i%2?.66:1)*r;ctx.lineTo(Math.cos(ang)*rr,Math.sin(ang)*rr);}ctx.closePath();ctx.fill();ctx.stroke();
       if (s.poder) {ctx.rotate(-t*7-s.seed*5);ctx.fillStyle='#fff';ctx.font='700 '+Math.max(9,S*.015)+'px sans-serif';ctx.textAlign='center';ctx.fillText(s.tipo==='nucleo-agente'?'!':'✦',0,4);}
       ctx.restore();
     }
-    if (alvoAvisado?.p) {
-      const p=alvoAvisado.p,rr=p.r*1.7+Math.sin(t*10)*3;
-      ctx.save();ctx.strokeStyle='#ff667d';ctx.lineWidth=2.3;ctx.setLineDash([7,5]);ctx.lineDashOffset=-t*25;
+    const alvoVisual = alvoReciclagem?.p ? alvoReciclagem : alvoAvisado;
+    if (alvoVisual?.p) {
+      const p=alvoVisual.p,rr=p.r*(alvoReciclagem?2.05:1.7)+Math.sin(t*10)*3;
+      const reciclando = alvoVisual === alvoReciclagem;
+      ctx.save();
+      ctx.strokeStyle=reciclando?'#ff315e':'#ff667d';
+      ctx.lineWidth=reciclando?3:2.3;
+      ctx.setLineDash(reciclando?[3,4,10,4]:[7,5]);
+      ctx.lineDashOffset=-t*(reciclando?38:25);
       ctx.beginPath();ctx.arc(p.x,p.y,rr,0,TAU);ctx.stroke();ctx.setLineDash([]);
-      ctx.font='700 '+Math.max(9,S*.017)+'px sans-serif';ctx.fillStyle='#ff8698';ctx.textAlign='center';ctx.fillText('ALVO',p.x,p.y-rr-9);ctx.restore();
+      if(reciclando){
+        for(let k=0;k<4;k++){
+          const a=t*1.7+k*TAU/4;
+          ctx.beginPath();
+          ctx.moveTo(p.x+Math.cos(a)*rr*.74,p.y+Math.sin(a)*rr*.74);
+          ctx.lineTo(p.x+Math.cos(a)*rr*1.18,p.y+Math.sin(a)*rr*1.18);
+          ctx.strokeStyle=k%2?'#ffffff':'#ff315e';ctx.lineWidth=1.6;ctx.stroke();
+        }
+      }
+      ctx.font='700 '+Math.max(9,S*.017)+'px sans-serif';
+      ctx.fillStyle=reciclando?'#ff315e':'#ff8698';
+      ctx.textAlign='center';
+      ctx.fillText(reciclando?'SENTENCIADO · '+Math.round(alvoVisual.relevancia||0)+'%':'ALVO',p.x,p.y-rr-9);
+      ctx.restore();
     }
     for(const f of caidos) {
       const k=clamp(f.t/f.dur,0,1), rr=f.r*(1+k*3.5), alpha=(1-k);
@@ -373,8 +598,35 @@
     return ORBITAS[modo].id;
   }
   function challenge() {proximoAtaque=7;return iniciarAtaque();}
+  function recycleNow() {
+    proximaReciclagem = 0;
+    const iniciou = iniciarReciclagem();
+    if (iniciou) proximaReciclagem = 62 + Math.random() * 34;
+    return iniciou;
+  }
   function theme(T) {if (indicador) evento('PODER DESBLOQUEADO · '+(PODERES[T.id]?.[0]||T.nome));}
-  function state(){return {modo:ORBITAS[modo].id,eliminacoes:mortes,evolucoes,geracao,nivelNucleo:L?.nuc.nivel||1,poder:power()[0],backend,zoomAutomatico:true,agentes:L?L.AG.filter(a=>a.ativo).map(a=>({nome:a.nome,vida:Math.round(a.vida||0),rank:a.rankNovo||1})):[],eventos:eventos.slice(0,7)};}
+  function state(){return {
+    modo:ORBITAS[modo].id,
+    eliminacoes:mortes,
+    reciclagens,
+    evolucoes,
+    geracao,
+    nivelNucleo:L?.nuc.nivel||1,
+    poder:power()[0],
+    backend,
+    zoomAutomatico:true,
+    proximaReciclagemSeg:Math.max(0,Math.ceil(proximaReciclagem)),
+    sentenciado:alvoReciclagem?.nome||null,
+    agentes:L?L.AG.filter(a=>a.ativo).map(a=>({
+      nome:a.nome,
+      papel:a.papel,
+      vida:Math.round(a.vida||0),
+      rank:a.rankNovo||1,
+      relevancia:Math.round(a.relevancia||0),
+      protegido:(a.protegidoAte||0)>contagem
+    })):[],
+    eventos:eventos.slice(0,10)
+  };}
   async function verificarBackend() {
     try {
       const res = await fetch('/api/status',{cache:'no-store',signal:AbortSignal.timeout(3800)});
@@ -390,7 +642,16 @@
       if(!res.ok)return;
       const d=await res.json();if(!d?.demonstracao||!Array.isArray(d.eventos))return;
       const item=d.eventos.find(x=>x.id!==sinalRemoto&&x.tipo==='observacao');
-      if(item){sinalRemoto=item.id;const a=L.AG.find(x=>x.nome===item.agente&&x.ativo);if(a)L.agentesAPI.pulso(a.nome);}
+      if(item){
+        sinalRemoto=item.id;
+        const a=L.AG.find(x=>x.nome===item.agente&&x.ativo);
+        if(a){
+          a.ultimaAcao = contagem;
+          a.contribJanela = (a.contribJanela || 0) + 1.8;
+          a.protegidoAte = Math.max(a.protegidoAte || 0, contagem + 8);
+          L.agentesAPI.pulso(a.nome);
+        }
+      }
     }catch(_e){/* permanece executando simulação local */}
   }
   function setup(obj) {
@@ -558,5 +819,5 @@
     ctx.restore();
   }
 
-  global.OrbitalV9={setup,installForms,orbital,move,tick,impact:impacto,powerHit,drawAura,drawDetails,drawScene,drawBackground,drawAscension,separate,onLevel,setMode,challenge,theme,state};
+  global.OrbitalV9={setup,installForms,orbital,move,tick,impact:impacto,powerHit,drawAura,drawDetails,drawScene,drawBackground,drawAscension,separate,onLevel,setMode,challenge,recycleNow,theme,state};
 })(window);
