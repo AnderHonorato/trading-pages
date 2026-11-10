@@ -69,8 +69,9 @@ Legenda: [x] feito e testado · [~] em andamento · [ ] falta · [!] decisão/li
 - [x] localhost
 - [x] bind LAN em 0.0.0.0
 - [x] helper de firewall LocalSubnet
-- [~] Link público canônico — entrega desta onda em andamento
-- [~] Release Google Drive — entrega desta onda em andamento
+- [!] Link público full-stack — Railway bloqueado por trial expirado; não foi criado deploy efêmero inseguro
+- [~] Release Google Drive — pipeline automatizado criado; upload após artefato do main ficar verde
+- [x] CI GitHub com testes, segurança, smoke, visual e release condicionado ao sucesso
 
 ## Verificação
 - [x] 26 testes unitários/integrados

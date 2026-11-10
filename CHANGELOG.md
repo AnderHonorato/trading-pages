@@ -35,3 +35,10 @@
 ### Deploy público seguro
 - Bootstrap opcional de administrador por variáveis de ambiente somente quando o banco está vazio.
 - O bootstrap não imprime senha em logs e nunca substitui usuários já existentes.
+
+### CI/CD e releases
+- Workflow GitHub Actions em `.github/workflows/ci-release.yml` para pushes no `main`, PRs e execução manual.
+- Gates automáticos: sintaxe/estrutura, 42+ testes, auditoria interna, `npm audit`, smoke HTTP, 2FA e visual desktop/mobile.
+- Release só é publicado quando todos os gates passam; falhas geram artefato de diagnóstico separado.
+- Pacote de release usa `git archive`, sem `.env`, banco local ou arquivos ignorados.
+- Teste visual tornou-se portátil entre Windows e Linux via descoberta de Chrome/Chromium.

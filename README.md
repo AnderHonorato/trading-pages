@@ -265,3 +265,18 @@ git push
 - recuperação de senha por e-mail, dependente de um provedor de envio;
 - teste de conectividade individual de cada provedor de IA;
 - produção pública com HTTPS/Cloudflare, se for desejada.
+
+## CI/CD e release automático
+
+O workflow `.github/workflows/ci-release.yml` roda em pull requests e pushes para `main`.
+
+Um release validado só é gerado depois de passar por:
+
+- verificação estrutural/sintaxe;
+- testes unitários e de integração;
+- auditoria interna de segurança;
+- `npm audit --omit=dev`;
+- smoke HTTP e autenticação/2FA;
+- teste visual em desktop e 390 px.
+
+O artefato inclui ZIP do código via `git archive`, relatório, screenshots e evidências de segurança. Em caso de falha, o workflow publica apenas diagnóstico/logs, nunca um release marcado como válido.

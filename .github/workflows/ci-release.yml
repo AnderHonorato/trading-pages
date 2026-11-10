@@ -1,0 +1,136 @@
+name: CI e Release
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: trading-pages-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validar:
+    name: Validar v12
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NODE_ENV: test
+      HOST: 127.0.0.1
+      PORTA: "4312"
+      MODO_PRODUCAO: "false"
+      TRUST_PROXY: "false"
+      BANCO_CAMINHO: ./banco/dados/ci.sqlite
+      CHAVE_CRIPTOGRAFIA: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+      SESSAO_HORAS: "8"
+
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Verificar estrutura e sintaxe
+        run: npm run verificar
+
+      - name: Testes unitários e integração
+        run: npm run testar
+
+      - name: Auditoria interna de segurança
+        run: npm run auditar:seguranca
+
+      - name: Auditoria de dependências
+        run: npm audit --omit=dev
+
+      - name: Smoke HTTP, 2FA e visual
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .execucao
+          node servidor/servidor.js > .execucao/ci-servidor.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+
+          for tentativa in {1..40}; do
+            if curl --fail --silent http://127.0.0.1:4312/api/saude > /dev/null; then
+              break
+            fi
+            if ! kill -0 "$SERVER_PID" 2>/dev/null; then
+              cat .execucao/ci-servidor.log
+              exit 1
+            fi
+            sleep 0.5
+          done
+
+          curl --fail --silent http://127.0.0.1:4312/api/saude > /dev/null
+          npm run testar:http
+          npm run testar:2fa
+          npm run testar:visual
+
+      - name: Preparar pacote de release
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p release/evidencias
+
+          git archive --format=zip --output=release/trading-pages-v12-source.zip HEAD
+
+          for arquivo in             .execucao/cosmo-desktop.png             .execucao/cosmo-mobile.png             .execucao/configuracoes-desktop.png             .execucao/configuracoes-mobile.png             .execucao/ci-servidor.log             docs/auditoria-seguranca.json             CHANGELOG.md             CHECKLIST.md; do
+            if [ -f "$arquivo" ]; then
+              cp "$arquivo" release/evidencias/
+            fi
+          done
+
+          {
+            echo "# Trading Pages v12 — Relatório de Release"
+            echo
+            echo "- Commit: \`${GITHUB_SHA}\`"
+            echo "- Ref: \`${GITHUB_REF}\`"
+            echo "- Execução: \`${GITHUB_RUN_ID}\`"
+            echo "- Data UTC: \`$(date -u +'%Y-%m-%dT%H:%M:%SZ')\`"
+            echo "- Node: \`$(node --version)\`"
+            echo
+            echo "## Gates previstos"
+            echo "- Verificação estrutural e sintaxe"
+            echo "- Testes unitários e integração"
+            echo "- Auditoria interna de segurança"
+            echo "- npm audit"
+            echo "- Smoke HTTP"
+            echo "- Smoke 2FA"
+            echo "- Teste visual desktop/mobile"
+            echo
+            echo "O pacote de código foi criado com \`git archive\`, portanto não inclui \`.git\`, \`.env\`, banco local nem arquivos ignorados."
+          } > release/RELATORIO.md
+
+      - name: Publicar release validado
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trading-pages-v12-${{ github.sha }}
+          path: release/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publicar diagnóstico de falha
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trading-pages-v12-falha-${{ github.sha }}
+          path: |
+            .execucao/
+            docs/auditoria-seguranca.json
+          if-no-files-found: warn
+          retention-days: 14
