@@ -70,12 +70,12 @@ Legenda: [x] feito e testado · [~] em andamento · [ ] falta · [!] decisão/li
 - [x] bind LAN em 0.0.0.0
 - [x] helper de firewall LocalSubnet
 - [!] Link público full-stack — Railway bloqueado por trial expirado; não foi criado deploy efêmero inseguro
-- [~] Demo pública visual GitHub Pages — pipeline criado e testado localmente; aguardando deploy do main
+- [x] Demo pública visual GitHub Pages — online, HTTP 200 e validada em 1440 px/390 px sem overflow ou erros de console
 - [x] Release Google Drive — artefato validado do main enviado e conferido
 - [x] CI GitHub com testes, segurança, smoke, visual e release condicionado ao sucesso
 
 ## Verificação
-- [x] 26 testes unitários/integrados
+- [x] 47 testes unitários/integrados
 - [x] Smoke HTTP com health, login, sessão e diagnóstico
 - [x] Smoke 2FA
 - [x] Auditoria de segurança em 6 frentes

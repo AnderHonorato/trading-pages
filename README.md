@@ -285,8 +285,8 @@ O artefato inclui ZIP do código via `git archive`, relatório, screenshots e ev
 
 O projeto mantém o app full-stack protegido separado de uma demo pública somente visual.
 
-URL canônica planejada do Pages:
+URL canônica ativa e testada do Pages:
 
 `https://anderhonorato.github.io/trading-pages/`
 
-A demo é gerada por `npm run gerar:demo-publica` e validada por `npm run testar:demo-publica`. Ela **não contém login, banco de dados, sessões, chaves de API ou trading real**; os poucos sinais remotos são JSONs locais simulados apenas para manter a animação viva.
+A URL foi validada em HTTP 200, desktop 1440 px e mobile 390 px, sem overflow e sem erros de console. A demo é gerada por `npm run gerar:demo-publica` e validada por `npm run testar:demo-publica`. Ela **não contém login, banco de dados, sessões, chaves de API ou trading real**; os poucos sinais remotos são JSONs locais simulados apenas para manter a animação viva.

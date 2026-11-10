@@ -48,3 +48,4 @@
 - Endpoints privados são substituídos por JSONs locais explicitamente simulados.
 - Teste visual dedicado valida 1440 px e 390 px com zero overflow e zero erros de console.
 - Workflow `pages-demo.yml` publica somente `.site-publico` no GitHub Pages.
+- URL canônica `https://anderhonorato.github.io/trading-pages/` validada após deploy com HTTP 200, Cosmo funcional e zero erros de console.
