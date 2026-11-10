@@ -1,0 +1,1 @@
+(function(){try{const salvo=localStorage.getItem('trading-tema');const tema=salvo||(matchMedia('(prefers-color-scheme: dark)').matches?'escuro':'claro');document.documentElement.dataset.tema=tema;}catch{}})();

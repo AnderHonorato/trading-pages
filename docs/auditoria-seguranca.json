@@ -1,0 +1,142 @@
+{
+  "gerado_em": "2026-11-10T02:06:24.552Z",
+  "aprovado": true,
+  "resultados": [
+    {
+      "agente": "Autenticação",
+      "aprovado": true,
+      "detalhes": [
+        {
+          "rotulo": "scrypt com salt",
+          "ok": true,
+          "motivo": ""
+        },
+        {
+          "rotulo": "troca obrigatória",
+          "ok": true,
+          "motivo": ""
+        },
+        {
+          "rotulo": "2FA TOTP",
+          "ok": true,
+          "motivo": ""
+        }
+      ]
+    },
+    {
+      "agente": "Sessão e cookies",
+      "aprovado": true,
+      "detalhes": [
+        {
+          "rotulo": "token salvo por hash",
+          "ok": true,
+          "motivo": ""
+        },
+        {
+          "rotulo": "HttpOnly e SameSite",
+          "ok": true,
+          "motivo": ""
+        },
+        {
+          "rotulo": "expiração e revogação",
+          "ok": true,
+          "motivo": ""
+        }
+      ]
+    },
+    {
+      "agente": "Superfície Web",
+      "aprovado": true,
+      "detalhes": [
+        {
+          "rotulo": "Helmet/CSP",
+          "ok": true,
+          "motivo": ""
+        },
+        {
+          "rotulo": "sem unsafe-inline/eval na CSP",
+          "ok": true,
+          "motivo": ""
+        },
+        {
+          "rotulo": "CSRF em mutações privadas",
+          "ok": true,
+          "motivo": ""
+        },
+        {
+          "rotulo": "limite corpo 100kb",
+          "ok": true,
+          "motivo": ""
+        }
+      ]
+    },
+    {
+      "agente": "Segredos",
+      "aprovado": true,
+      "detalhes": [
+        {
+          "rotulo": ".env ignorado",
+          "ok": true,
+          "motivo": ""
+        },
+        {
+          "rotulo": "API cifrada AES-GCM",
+          "ok": true,
+          "motivo": ""
+        },
+        {
+          "rotulo": "API não devolve segredo",
+          "ok": true,
+          "motivo": ""
+        },
+        {
+          "rotulo": ".env não rastreado",
+          "ok": true,
+          "motivo": ""
+        }
+      ]
+    },
+    {
+      "agente": "Auditoria e abuso",
+      "aprovado": true,
+      "detalhes": [
+        {
+          "rotulo": "auditoria persistente",
+          "ok": true,
+          "motivo": ""
+        },
+        {
+          "rotulo": "bloqueio persistente",
+          "ok": true,
+          "motivo": ""
+        },
+        {
+          "rotulo": "progressão até 24h",
+          "ok": true,
+          "motivo": ""
+        }
+      ]
+    },
+    {
+      "agente": "Hardening",
+      "aprovado": true,
+      "detalhes": [
+        {
+          "rotulo": "timeouts HTTP",
+          "ok": true,
+          "motivo": ""
+        },
+        {
+          "rotulo": "porta não usa 3000",
+          "ok": true,
+          "motivo": ""
+        },
+        {
+          "rotulo": "npm audit limpo",
+          "ok": true,
+          "motivo": ""
+        }
+      ]
+    }
+  ]
+}
