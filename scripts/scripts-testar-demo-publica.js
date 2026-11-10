@@ -1,0 +1,69 @@
+const fs=require('node:fs');
+const path=require('node:path');
+const http=require('node:http');
+const {chromium}=require('playwright-core');
+const {gerar}=require('./scripts-gerar-demo-publica.js');
+
+function mime(arquivo){
+  const ext=path.extname(arquivo).toLowerCase();
+  return ({'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json; charset=utf-8','.png':'image/png','.svg':'image/svg+xml'})[ext]||'application/octet-stream';
+}
+function chromeLocal(){
+  const candidatos=[
+    process.env.CHROME_BIN,
+    process.platform==='win32'?'C:/Program Files/Google/Chrome/Application/chrome.exe':null,
+    process.platform==='win32'?'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe':null,
+    '/usr/bin/google-chrome','/usr/bin/google-chrome-stable','/usr/bin/chromium','/usr/bin/chromium-browser'
+  ].filter(Boolean);
+  const achado=candidatos.find(c=>fs.existsSync(c));
+  if(!achado)throw new Error('Chrome/Chromium não encontrado. Defina CHROME_BIN.');
+  return achado;
+}
+async function principal(){
+  const raiz=gerar();
+  const execucao=path.resolve(__dirname,'..','.execucao');fs.mkdirSync(execucao,{recursive:true});
+  const servidor=http.createServer((req,res)=>{
+    let rota=decodeURIComponent((req.url||'/').split('?')[0]);
+    if(rota==='/')rota='/index.html';
+    const alvo=path.resolve(raiz,'.'+rota);
+    if(!alvo.startsWith(path.resolve(raiz))){res.writeHead(403);return res.end();}
+    fs.stat(alvo,(erro,info)=>{
+      if(erro||!info.isFile()){res.writeHead(404);return res.end('not found');}
+      res.writeHead(200,{'Content-Type':mime(alvo),'Cache-Control':'no-store'});
+      fs.createReadStream(alvo).pipe(res);
+    });
+  });
+  await new Promise((resolve,reject)=>servidor.listen(0,'127.0.0.1',erro=>erro?reject(erro):resolve()));
+  const porta=servidor.address().port;
+  const origem='http://127.0.0.1:'+porta;
+  const navegador=await chromium.launch({headless:true,executablePath:chromeLocal()});
+  const erros=[];
+  try{
+    const contexto=await navegador.newContext({viewport:{width:1440,height:900}});
+    const pagina=await contexto.newPage();
+    pagina.on('console',m=>{if(m.type()==='error')erros.push('console: '+m.text());});
+    pagina.on('pageerror',e=>erros.push('page: '+e.message));
+    await pagina.goto(origem+'/',{waitUntil:'networkidle'});
+    await pagina.waitForFunction(()=>window.AgentesOrbitais&&window.AgentesOrbitais.tema,{timeout:10000});
+    await pagina.evaluate(()=>window.AgentesOrbitais.tema('cosmos'));
+    await pagina.waitForTimeout(2500);
+    const desktop=await pagina.evaluate(()=>({
+      largura:innerWidth,scroll:document.documentElement.scrollWidth,
+      demo:Boolean(document.querySelector('#demo-publica')),
+      conta:Boolean(document.querySelector('#painel-conta')),
+      tema:window.AgentesOrbitais.estado().tema
+    }));
+    await pagina.screenshot({path:path.join(execucao,'demo-publica-desktop.png'),fullPage:true});
+    await pagina.setViewportSize({width:390,height:844});
+    await pagina.waitForTimeout(800);
+    const mobile=await pagina.evaluate(()=>({largura:innerWidth,scroll:document.documentElement.scrollWidth,altura:innerHeight,scrollAltura:document.documentElement.scrollHeight}));
+    await pagina.screenshot({path:path.join(execucao,'demo-publica-mobile.png'),fullPage:true});
+    console.log(JSON.stringify({desktop,mobile,erros},null,2));
+    if(!desktop.demo||desktop.conta||desktop.scroll>desktop.largura+1||mobile.scroll>mobile.largura+1||erros.length)process.exitCode=1;
+    await contexto.close();
+  }finally{
+    await navegador.close();
+    await new Promise(resolve=>servidor.close(resolve));
+  }
+}
+principal().catch(e=>{console.error(e);process.exit(1);});

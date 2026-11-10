@@ -11,6 +11,8 @@
     "testar:http": "node scripts/scripts-testar-http.js",
     "testar:2fa": "node scripts/scripts-testar-2fa.js",
     "testar:visual": "node scripts/scripts-testar-visual.js",
+    "gerar:demo-publica": "node scripts/scripts-gerar-demo-publica.js",
+    "testar:demo-publica": "node scripts/scripts-testar-demo-publica.js",
     "verificar": "node scripts/scripts-verificar.js",
     "auditar:seguranca": "node scripts/scripts-auditar-seguranca.js",
     "banco:migrar": "node banco/banco-migrador.js",

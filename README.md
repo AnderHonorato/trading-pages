@@ -280,3 +280,13 @@ Um release validado só é gerado depois de passar por:
 - teste visual em desktop e 390 px.
 
 O artefato inclui ZIP do código via `git archive`, relatório, screenshots e evidências de segurança. Em caso de falha, o workflow publica apenas diagnóstico/logs, nunca um release marcado como válido.
+
+## Demo pública visual
+
+O projeto mantém o app full-stack protegido separado de uma demo pública somente visual.
+
+URL canônica planejada do Pages:
+
+`https://anderhonorato.github.io/trading-pages/`
+
+A demo é gerada por `npm run gerar:demo-publica` e validada por `npm run testar:demo-publica`. Ela **não contém login, banco de dados, sessões, chaves de API ou trading real**; os poucos sinais remotos são JSONs locais simulados apenas para manter a animação viva.

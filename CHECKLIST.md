@@ -70,7 +70,8 @@ Legenda: [x] feito e testado · [~] em andamento · [ ] falta · [!] decisão/li
 - [x] bind LAN em 0.0.0.0
 - [x] helper de firewall LocalSubnet
 - [!] Link público full-stack — Railway bloqueado por trial expirado; não foi criado deploy efêmero inseguro
-- [~] Release Google Drive — pipeline automatizado criado; upload após artefato do main ficar verde
+- [~] Demo pública visual GitHub Pages — pipeline criado e testado localmente; aguardando deploy do main
+- [x] Release Google Drive — artefato validado do main enviado e conferido
 - [x] CI GitHub com testes, segurança, smoke, visual e release condicionado ao sucesso
 
 ## Verificação

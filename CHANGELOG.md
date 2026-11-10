@@ -42,3 +42,9 @@
 - Release só é publicado quando todos os gates passam; falhas geram artefato de diagnóstico separado.
 - Pacote de release usa `git archive`, sem `.env`, banco local ou arquivos ignorados.
 - Teste visual tornou-se portátil entre Windows e Linux via descoberta de Chrome/Chromium.
+
+### Demo pública visual
+- Gerador isolado em `scripts/scripts-gerar-demo-publica.js` cria um site estático sem autenticação, banco, sessões, `.env` ou chaves.
+- Endpoints privados são substituídos por JSONs locais explicitamente simulados.
+- Teste visual dedicado valida 1440 px e 390 px com zero overflow e zero erros de console.
+- Workflow `pages-demo.yml` publica somente `.site-publico` no GitHub Pages.
