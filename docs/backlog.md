@@ -55,7 +55,8 @@ Atualizado na v12. A prioridade muda a cada ciclo com base em risco, valor e evi
 
 ## DevOps/CI-CD
 - [FEITO v12] CI GitHub com testes, audit, smoke e gate visual.
-- [P1] Deploy público persistente com secrets seguros e rollback — Railway atual bloqueado por trial expirado.
+- [P1] Deploy público full-stack persistente com secrets seguros e rollback — Railway atual bloqueado por trial expirado.
+- [FEITO v12] Demo pública visual isolada via GitHub Pages, sem dados privados.
 - [P2] Release semântico e tags automatizadas.
 
 ## Acessibilidade/UX

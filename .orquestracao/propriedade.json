@@ -8,7 +8,8 @@
     ".orquestracao/**",
     "servidor/servidor.js",
     "servidor/servidor-porta.js",
-    "scripts/**"
+    "scripts/**",
+    ".github/**"
   ],
   "A-seguranca": [
     "servidor/seguranca/**",
