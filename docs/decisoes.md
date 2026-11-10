@@ -22,3 +22,18 @@
 17. **Porta de plataforma:** `PORT` tem prioridade em hospedagem; `PORTA` continua sendo a preferência local e usa descoberta segura quando ocupada.
 
 18. **Bootstrap de produção:** `ADMIN_INICIAL_USUARIO` e `ADMIN_INICIAL_SENHA` só são aceitos quando a tabela de usuários está vazia. Depois do primeiro boot, os valores devem ser zerados/removidos no provedor.
+
+
+## Decisões v13 — Fluidez, Coreografia e Conversa
+
+12. **Coreografia preventiva em vez de colisão reativa:** agentes da mesma órbita recebem fases-alvo distribuídas regularmente e chegam a esses slots com interpolação angular. A repulsão em tela passa a ser apenas correção suave, evitando o efeito de “um agente empurrando o outro” depois que a colisão já aconteceu.
+
+13. **Separação dependente do tema:** o Cosmo recebe margem e rigidez maiores porque planetas visualmente se sobrepõem com mais facilidade, especialmente entre órbitas projetadas em 2D. Os demais estilos mantêm parâmetros mais leves para preservar naturalidade.
+
+14. **Micro-movimento adaptativo:** a agitação individual diminui quando a população cresce. Isso mantém o sistema vivo sem transformar uma arena cheia em ruído visual.
+
+15. **Conversa contextual com fila única visual:** o sistema limita a uma fala visível por vez, com prioridade e cooldown. O conteúdo depende de papel e evento. O Cosmo permanece sem balões, preservando a leitura dos planetas.
+
+16. **Progresso integrado ao núcleo:** a antiga placa central grande foi removida. Nível/progresso passam a ocupar um anel discreto ao redor do núcleo para liberar o centro da composição.
+
+17. **Gate anti-colisão:** a API visual expõe apenas nome, posição, raio e órbita dos agentes para QA. O teste visual mede a razão distância/(raioA+raioB) e falha abaixo do limite definido, sem expor sessão, tokens ou segredos.

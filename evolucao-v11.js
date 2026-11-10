@@ -6,6 +6,7 @@
   const clamp = (n, a, b) => Math.min(b, Math.max(a, n));
   const FISICA = global.OrbitalFisica || null;
   const RECICLAGEM = global.ReciclagemAgentes || null;
+  const COREOGRAFIA = global.OrbitalCoreografia || null;
   const ORBITAS = [
     { id: 'elipse', nome: 'Elipse 3D' },
     { id: 'oito', nome: 'Infinito ∞' },
@@ -124,6 +125,7 @@
     L.nuc.alvoY = clamp((a.p.y - tamanho().CY) / 90, -1, 1);
     L.nuc.flash = 1;
     L.nuc.shake = .12;
+    if(L.falar)L.falar(a,'reciclagem',{relevancia:a.relevancia},4);
     evento('NÚCLEO JULGA ' + a.nome + ' · relevância ' + a.relevancia + '% · substituição preparada');
     return true;
   }
@@ -242,6 +244,7 @@
     evolucoes++;
     if(registro.reciclagem)reciclagens++;
     L.explosao(novo.p?.x||tamanho().CX,novo.p?.y||tamanho().CY,novo.corT||novo.cor,34,tamanho().S*.29);
+    if(L.falar)L.falar(novo,'entrada',{substituindo:registro.nome},3);
     evento(novo.nome+' SUBSTITUI '+registro.nome+' · '+registro.papel+' · G'+geracao);
   }
   function impacto(s) {
@@ -271,7 +274,7 @@
     a.recuoY = (p.y - tamanho().CY) * .12;
     L.explosao(p.x, p.y, v[1], 23, tamanho().S * .22);
     L.fxTxt.push({x:p.x,y:p.y-p.r*1.7,t:0,txt:'−'+Math.round(dano)+' VIDA',cor:'#ff7389',bruto:true});
-    a.balao = {txt:'ai! ' + Math.round(a.vida) + ' HP',t:1.3,dur:1.3};
+    if(L.falar)L.falar(a,'impacto',{vida:Math.round(a.vida)},3);
     if (a.vida <= 0) matar(a, v[0]);
     else if (a.vida < 38) { a.escudoNovo = 1.9; evento(a.nome + ' ATIVOU ESCUDO DE EMERGÊNCIA'); }
   }
@@ -500,16 +503,16 @@
     }
     const { S } = tamanho();
     const sh = a.saltoNovo || 0;
-    const wave = Math.sin(t*2.7+a.passoNovo);
-    // Manobras em tela e em profundidade: esquiva, salto, deslizamento e flutuação.
+    const wave = Math.sin(t*1.75+a.passoNovo);
     const lv=Math.min(20,a.rankNovo||1),fase=a.passoNovo;
-    p.x += Math.sin(t*3.1+a.seed*8) * S * .012 + Math.sin(t*1.4+a.seed*4) * S*.012
-      + Math.cos(t*.7+fase*3)*S*(.002+lv*.00025);
-    p.y += Math.cos(t*2.2+a.seed*5) * S * .014 - Math.sin(Math.max(0,1-sh)*PI)*S*.04
-      + Math.sin(t*1.2+fase)*S*(.004+lv*.00025);
-    // Coreografia: mergulhos, giros e mudanças de altitude sem teletransporte.
-    p.y += Math.sin(t*.37+a.seed*5.2)*S*.007;
-    if (Math.abs(wave)>.84) p.y -= S*.005 * (wave+.84);
+    const densidade=COREOGRAFIA?COREOGRAFIA.escalaMicroMovimento(L.ativos().length):1;
+    const respira=Math.sin(t*.82+a.seed*5.1);
+    const deriva=Math.sin(t*.46+a.seed*3.7);
+    // V13: movimentos mais lentos e coerentes; a órbita conduz, a microanimação só dá vida.
+    p.x += (respira*S*.007 + deriva*S*.004 + Math.cos(t*.28+fase*3)*S*(.0015+lv*.00012))*densidade;
+    p.y += (Math.cos(t*.69+a.seed*4.2)*S*.008 + Math.sin(t*.41+fase)*S*(.0025+lv*.00012))*densidade;
+    if(sh>0)p.y -= Math.sin(clamp(sh,0,1)*PI)*S*.025;
+    if(Math.abs(wave)>.93)p.y -= S*.0025*(wave+.93)*densidade;
   }
   function tick(dt, dtR, t) {
     contagem += dt;
@@ -769,45 +772,46 @@
     safe(verificarBackend);safe(sinalBackend);
     global.setInterval(()=>{if(document.visibilityState==='visible')safe(verificarBackend);},30000);
     global.setInterval(()=>{if(document.visibilityState==='visible')safe(sinalBackend);},12000);
-    evento('SISTEMA V12 · ÓRBITAS VIVAS + RECICLAGEM POR RELEVÂNCIA');
+    evento('SISTEMA V13 · FLUIDEZ + COREOGRAFIA + CONVERSA CONTEXTUAL');
   }
 
   /* Arena anti-colisão: distância mínima em tela, e centro protegido dos rótulos. */
   function separate(lista,t,dt) {
     if(!lista.length)return;
     const {W,H,S,CX,CY}=tamanho(),n=lista.length;
-    const encolher=Math.max(.52,1-Math.max(0,n-6)*.035);
+    const encolher=Math.max(.56,1-Math.max(0,n-6)*.03);
     const r=e=>Math.max(9,S*L.CONFIG.tamanhoAgente*encolher*(tema().escalaAgente||1)*(e.p.f||1));
-    const margin=Math.max(14,S*.055),top=W<650?65:57,bottom=W<650?95:69;
-    const antes=lista.map(e=>({x:e.p.x,y:e.p.y}));
-    for(const e of lista){e.p.x+=(e.a.antiColX||0);e.p.y+=(e.a.antiColY||0);}
-    for(let pass=0;pass<4;pass++){
-      for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){
-        const A=lista[i].p,B=lista[j].p;
-        let dx=B.x-A.x,dy=B.y-A.y,d=Math.hypot(dx,dy);
-        const sep=(r(lista[i])+r(lista[j]))*(n>13?1.32:1.52)+3;
-        if(d>=sep)continue;
-        if(d<.01){const ang=(i*2.39+j*.91);dx=Math.cos(ang);dy=Math.sin(ang);d=1;}
-        const push=Math.min(15,(sep-d)*.52),ux=dx/d,uy=dy/d;
-        A.x-=ux*push;A.y-=uy*push;B.x+=ux*push;B.y+=uy*push;
+    const margin=Math.max(14,S*.055),top=W<650?96:60,bottom=W<650?92:70;
+    if(COREOGRAFIA){
+      const itens=lista.map(e=>({
+        id:e.a.nome,x:e.p.x,y:e.p.y,raio:r(e),
+        ox:e.a.antiColX||0,oy:e.a.antiColY||0
+      }));
+      const cosmo=tema()?.id==='cosmos';
+      const offsets=COREOGRAFIA.resolverSeparacao(itens,{
+        dt,
+        margem:cosmo?(n>13?11:20):(n>13?5:10),
+        maxDeslocamento:Math.min(cosmo?48:34,S*(cosmo?.155:.12)),
+        rigidez:cosmo?11:8,
+        amortecimento:cosmo?.90:.88
+      });
+      const k=1-Math.exp(-Math.max(dt,.001)*7);
+      for(const e of lista){
+        const alvo=offsets[e.a.nome]||{x:0,y:0};
+        e.a.antiColX=(e.a.antiColX||0)+(alvo.x-(e.a.antiColX||0))*k;
+        e.a.antiColY=(e.a.antiColY||0)+(alvo.y-(e.a.antiColY||0))*k;
+        e.p.x+=e.a.antiColX;e.p.y+=e.a.antiColY;
+        const dx=e.p.x-CX,dy=e.p.y-CY,d=Math.hypot(dx,dy)||1;
+        const mi=Math.min(150,S*.17)+Math.min(54,(L.nuc.r||S*.06)*1.25);
+        if(d<mi){const emp=(mi-d)*(1-Math.exp(-dt*6));e.p.x+=dx/d*emp;e.p.y+=dy/d*emp;}
+        e.p.x=clamp(e.p.x,margin,W-margin);
+        e.p.y=clamp(e.p.y,top,H-bottom);
       }
-      for(const {p} of lista){
-        const dx=p.x-CX,dy=p.y-CY,d=Math.hypot(dx,dy)||1;
-        const mi=Math.min(145,S*.16)+Math.min(52,(L.nuc.r||S*.06)*1.25);
-        if(d<mi){p.x+=dx/d*(mi-d)*.5;p.y+=dy/d*(mi-d)*.5;}
-        p.x=clamp(p.x,margin,W-margin);
-        p.y=clamp(p.y,top,H-bottom);
-      }
+      return;
     }
-    // Aplica transição gradual para não saltar quando outro mascote entra/sai.
-    for(let i=0;i<n;i++){
-      const e=lista[i],prevX=e.a.antiColX||0,prevY=e.a.antiColY||0;
-      const x=clamp(e.p.x-antes[i].x,-S*.22,S*.22),y=clamp(e.p.y-antes[i].y,-S*.22,S*.22);
-      const a=Math.min(1,Math.max(.14,dt*8));
-      e.a.antiColX=prevX+(x-prevX)*a;
-      e.a.antiColY=prevY+(y-prevY)*a;
-      e.p.x=clamp(antes[i].x+e.a.antiColX,margin,W-margin);
-      e.p.y=clamp(antes[i].y+e.a.antiColY,top,H-bottom);
+    for(const e of lista){
+      e.p.x=clamp(e.p.x+(e.a.antiColX||0),margin,W-margin);
+      e.p.y=clamp(e.p.y+(e.a.antiColY||0),top,H-bottom);
     }
   }
 

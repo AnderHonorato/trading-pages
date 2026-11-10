@@ -25,5 +25,5 @@ test('release só é publicado após sucesso e fonte usa git archive',()=>{
 
 test('falhas geram artefato de diagnóstico separado',()=>{
   assert.match(workflow,/Publicar diagnóstico de falha\s*\n\s*if: failure\(\)/);
-  assert.match(workflow,/trading-pages-v12-falha-/);
+  assert.match(workflow,/trading-pages-v13-falha-/);
 });

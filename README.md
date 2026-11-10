@@ -1,8 +1,19 @@
-# Trading Pages v12 — Ander Quant OS
+# Trading Pages v13 — Ander Quant OS
 
 Painel orbital visual para orquestração demonstrativa de agentes, com múltiplos estilos, progressão, eventos animados e área administrativa segura.
-A base v11 adicionou o **Cosmo vivo**, autenticação real, 2FA, configuração criptografada de provedores de IA e acesso pela rede local. A v12 acrescenta gestão de sessões/dispositivos, health check, métricas de diagnóstico e request IDs.
+A base v11 adicionou o **Cosmo vivo**, autenticação real, 2FA, configuração criptografada de provedores de IA e acesso pela rede local. A v12 acrescentou gestão de sessões/dispositivos, health check, métricas de diagnóstico e request IDs. A v13 refina o sistema visual com coreografia orbital, anti-colisão previsível, movimentos mais suaves e comunicação contextual com menos poluição visual.
 O projeto permanece em **modo demonstrativo**: não envia ordens financeiras reais e não está conectado a corretora.
+
+## Evoluções v13
+- **Slots orbitais dinâmicos:** agentes da mesma órbita mantêm ordem e espaçamento regular antes de chegar à zona de colisão.
+- **Separação com mola e amortecimento:** a repulsão em tela virou correção suave, com parâmetros mais fortes no Cosmo para impedir planetas sobrepostos.
+- **Micro-movimento adaptativo:** quanto mais agentes existem, menor a agitação individual; a órbita passa a conduzir a animação.
+- **Rastros sincronizados com a posição visual real**, inclusive quando a coreografia reposiciona suavemente um agente.
+- **Conversa contextual:** falas dependem do papel e do evento (sinal, impacto, passagem de contexto, reciclagem e entrada), evitando respostas genéricas.
+- **Uma fala visual por vez**, com cooldown e prioridade, posicionada para fora do centro da arena.
+- **Núcleo mais limpo:** a placa central grande foi removida e o progresso passou a ser um anel discreto integrado ao núcleo.
+- **Eventos menos frenéticos:** pulsos e falas têm mais intervalo para o sistema parecer coordenado, não caótico.
+- **Gate anti-colisão no QA:** os testes visuais medem automaticamente a distância mínima entre agentes em Pixel e Cosmo, além de overflow e erros de console.
 
 ## Evoluções v10
 - **50 níveis de núcleo** com XP progressivo e nove ascensões visuais depois das cinco formas básicas de cada tema. As formas originais continuam preservadas em níveis altos.

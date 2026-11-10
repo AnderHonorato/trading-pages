@@ -1,6 +1,6 @@
 # Backlog técnico vivo — Trading Pages
 
-Atualizado na v12. A prioridade muda a cada ciclo com base em risco, valor e evidência.
+Atualizado na v13. A prioridade muda a cada ciclo com base em risco, valor e evidência.
 
 ## Produto
 - [P1] Teste real de conectividade dos provedores de IA sem expor chave.
@@ -9,7 +9,8 @@ Atualizado na v12. A prioridade muda a cada ciclo com base em risco, valor e evi
 - [P2] Preferências persistentes de painel por usuário.
 
 ## Frontend
-- [P1] Quebrar o motor Canvas legado em módulos menores.
+- [FEITO v13] Coreografia orbital e conversa contextual extraídas para módulos reutilizáveis.
+- [P1] Quebrar o restante do motor Canvas legado em módulos menores.
 - [P1] Completar i18n PT-BR/EN.
 - [P2] Estados loading/empty/error consistentes.
 - [P2] Acessibilidade por teclado e leitores de tela nas áreas não-Canvas.
@@ -38,6 +39,7 @@ Atualizado na v12. A prioridade muda a cada ciclo com base em risco, valor e evi
 - [P2] CSP report-only/reporting endpoint.
 
 ## Testes/QA
+- [FEITO v13] Gate visual de distância mínima entre agentes em Pixel/Cosmo.
 - [P1] E2E da revogação de sessão pelo navegador.
 - [P1] Testes de API com matriz de autorização.
 - [P2] Testes de carga leves.

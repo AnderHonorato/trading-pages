@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## 13.0.0 — 2026-11-10
+### Adicionado
+- Módulo `orbital-coreografia.js` com distribuição regular de fases, interpolação angular e separação suave.
+- Módulo `conversa-contextual.js` com falas por papel/evento, prioridade e cooldown.
+- API visual segura `layout()` para QA de colisão sem expor sessão, token ou dados sensíveis.
+- Gate visual que mede distância mínima entre agentes em Pixel e Cosmo.
+
+### Alterado
+- Agentes da mesma órbita agora ocupam slots dinâmicos e preservam ordem durante o movimento.
+- Micro-movimento foi desacelerado e reduzido conforme a densidade para evitar sensação de tremor/caos.
+- Separação do Cosmo foi reforçada para impedir aproximação excessiva entre planetas de órbitas diferentes.
+- Rastros usam o ângulo visual coreografado em vez do ângulo bruto.
+- Comunicação visual limitada a uma fala ativa, posicionada para fora do centro da arena.
+- Falas genéricas foram substituídas por mensagens contextuais e claramente simuladas.
+- Placa central `OBSERVANDO` foi removida; nível/progresso agora aparecem de forma integrada ao núcleo.
+- Ritmo de eventos foi reduzido para melhorar legibilidade e sensação de coordenação.
+- Pacote, health/status, demo pública e CI foram atualizados para 13.0.0.
+
 ## 12.0.0 — 2026-11-10
 ### Adicionado
 - Gestão visual de sessões/dispositivos.

@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   validar:
-    name: Validar v12
+    name: Validar v13
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -86,7 +86,7 @@ jobs:
           set -euo pipefail
           mkdir -p release/evidencias
 
-          git archive --format=zip --output=release/trading-pages-v12-source.zip HEAD
+          git archive --format=zip --output=release/trading-pages-v13-source.zip HEAD
 
           for arquivo in             .execucao/cosmo-desktop.png             .execucao/cosmo-mobile.png             .execucao/configuracoes-desktop.png             .execucao/configuracoes-mobile.png             .execucao/ci-servidor.log             docs/auditoria-seguranca.json             CHANGELOG.md             CHECKLIST.md; do
             if [ -f "$arquivo" ]; then
@@ -95,7 +95,7 @@ jobs:
           done
 
           {
-            echo "# Trading Pages v12 — Relatório de Release"
+            echo "# Trading Pages v13 — Relatório de Release"
             echo
             echo "- Commit: \`${GITHUB_SHA}\`"
             echo "- Ref: \`${GITHUB_REF}\`"
@@ -119,7 +119,7 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: trading-pages-v12-${{ github.sha }}
+          name: trading-pages-v13-${{ github.sha }}
           path: release/
           if-no-files-found: error
           retention-days: 30
@@ -128,7 +128,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: trading-pages-v12-falha-${{ github.sha }}
+          name: trading-pages-v13-falha-${{ github.sha }}
           path: |
             .execucao/
             docs/auditoria-seguranca.json
