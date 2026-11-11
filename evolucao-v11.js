@@ -780,7 +780,8 @@
     const r=e=>Math.max(9,S*L.CONFIG.tamanhoAgente*encolher*(tema().escalaAgente||1)*(e.p.f||1));
     const margin=Math.max(14,S*.055),top=W<650?65:57,bottom=W<650?95:69;
     const antes=lista.map(e=>({x:e.p.x,y:e.p.y}));
-    for(const e of lista){e.p.x+=(e.a.antiColX||0);e.p.y+=(e.a.antiColY||0);}
+    // Resolve sempre a partir da órbita ideal: reaplicar o deslocamento anterior
+    // a cada quadro acumula correções e provoca tremores entre agentes.
     for(let pass=0;pass<4;pass++){
       for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){
         const A=lista[i].p,B=lista[j].p;
