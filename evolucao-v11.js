@@ -804,9 +804,13 @@
     for(let i=0;i<n;i++){
       const e=lista[i],prevX=e.a.antiColX||0,prevY=e.a.antiColY||0;
       const x=clamp(e.p.x-antes[i].x,-S*.22,S*.22),y=clamp(e.p.y-antes[i].y,-S*.22,S*.22);
-      const a=1-Math.exp(-Math.max(0,Math.min(dt,.05))*8);
-      e.a.antiColX=prevX+(x-prevX)*a;
-      e.a.antiColY=prevY+(y-prevY)*a;
+      // Amortece a correção espacial e limita a velocidade da mudança.
+      // O alvo pode variar bruscamente quando dois agentes cruzam a órbita.
+      const passo=Math.max(0,Math.min(dt,.05));
+      const a=1-Math.exp(-passo*5);
+      const limite=S*.26*passo;
+      e.a.antiColX=prevX+clamp((x-prevX)*a,-limite,limite);
+      e.a.antiColY=prevY+clamp((y-prevY)*a,-limite,limite);
       e.p.x=clamp(antes[i].x+e.a.antiColX,margin,W-margin);
       e.p.y=clamp(antes[i].y+e.a.antiColY,top,H-bottom);
     }
