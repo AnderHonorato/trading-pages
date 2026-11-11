@@ -78,3 +78,9 @@
 ## 2026-11-11 - Diario visual do Chefinho
 - Atelie ganhou diario cronologico persistente de atividades manuais, exportacao JSON e retorno de etapa.
 - Eventos locais `flow:historico` permitem integrar futuros indicadores, sem afirmar que agentes executaram trabalho autonomo.
+
+## 2026-11-11 — Mural vivo de missoes (branch feat/equipe-viva-chefinho-20261111)
+- Novo mural de quatro etapas com cartoes de personagens 2D, arrastar desktop, botoes acessiveis para toque/teclado e modo responsivo.
+- Reutiliza persistencia do Atelie, atualiza Diario do Chefinho e indicadores, sem inventar execucao de IA.
+- Playwright: validacao de transicao, visual desktop/mobile e capturas. 49 testes unitarios passaram; npm audit de producao: zero vulnerabilidades.
+- Smoke HTTP e 2FA isolados pendentes: ambiente local sem migracao `usuarios` e sem servidor de teste ativo.
