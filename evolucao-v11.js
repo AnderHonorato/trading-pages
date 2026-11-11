@@ -408,6 +408,8 @@
     a.humorNovo=humor;
     const rot=FISICA.calcularRotacaoPropria({tempo:t,velocidade:.22+(a.i%5)*.025,fase:a.rotacaoPropria||0});
     const desloc=Math.sin(rot)*p.r*.10,olhoY=p.y-p.r*.08,rOlho=Math.max(1.8,p.r*.12);
+    const piscada=Math.pow(Math.max(0,Math.sin(t*1.75+(a.seed||0)*11)),28);
+    const olharX=Math.sin(t*.65+(a.seed||0)*9)*rOlho*.23;
     ctx.save();
     ctx.lineCap='round';ctx.strokeStyle='rgba(10,15,28,.88)';ctx.fillStyle='rgba(248,251,255,.95)';
     ctx.lineWidth=Math.max(1.2,p.r*.055);
@@ -417,8 +419,8 @@
         ctx.beginPath();ctx.moveTo(x-rOlho,olhoY);ctx.lineTo(x+rOlho,olhoY);ctx.stroke();continue;
       }
       const escalaY=humor==='assustado'||humor==='panico'?1.4:humor==='feliz'?.55:1;
-      ctx.beginPath();ctx.ellipse(x,olhoY,rOlho,rOlho*escalaY,0,0,TAU);ctx.fill();ctx.stroke();
-      ctx.beginPath();ctx.arc(x,olhoY,rOlho*.42,0,TAU);ctx.fillStyle='#111827';ctx.fill();
+      ctx.beginPath();ctx.ellipse(x,olhoY,rOlho,Math.max(.5,rOlho*escalaY*(1-.92*piscada)),0,0,TAU);ctx.fill();ctx.stroke();
+      ctx.beginPath();ctx.arc(x+olharX,olhoY,rOlho*.42*(1-piscada),0,TAU);ctx.fillStyle='#111827';ctx.fill();
       ctx.fillStyle='rgba(248,251,255,.95)';
     }
     const bocaY=p.y+p.r*.30;
@@ -865,6 +867,15 @@
     const neve=['artico'],chuva=['clima'],mar=['oceano'],digital=['cyber','pixel'],folhas=['floresta','deserto','origami'],magico=['arcano','cosmos','naves','cartas','dados','voxel'];
     const qtd=W<480?40:62;
     ctx.save();
+    // Camadas atmosféricas leves: movimento contínuo sem criar novos objetos DOM.
+    for(let camada=0;camada<3;camada++){
+      const fase=t*(.09+camada*.035)+camada*2.1;
+      const x=CX+Math.sin(fase)*W*.19,y=CY+Math.cos(fase*.7)*H*.12;
+      const raio=S*(.28+camada*.14);
+      ctx.beginPath();ctx.ellipse(x,y,raio,raio*.42,fase*.18,0,TAU);
+      ctx.strokeStyle=col;ctx.globalAlpha=.025+camada*.009;
+      ctx.lineWidth=1.3+camada*.4;ctx.stroke();
+    }
     for(let i=0;i<qtd;i++){
       const q=POEIRA[i],speed=q.vel*(.33+q.z*.6);
       const sobe=mar.includes(id)||['bio','criaturas','comida'].includes(id);

@@ -2887,7 +2887,7 @@ function desenhaAgente(a,p,t){
   let look=luzD;if(a.olhar)look=a.olhar;
   if(a.carga>0&&a.pend){const A=alvoDe(a.pend.para);if(A){const ex=A.x-cx,ey=A.y-cy,ed=Math.hypot(ex,ey)||1;look={x:ex/ed,y:ey/ed};}}
   const q=posOrbita(o,a.ang+sg*.03),qd=Math.hypot(q.x-p.x,q.y-p.y)||1,dir={x:(q.x-p.x)/qd,y:(q.y-p.y)/qd};
-  const pts=[];for(let i=1;i<=26;i++)pts.push(posOrbita(o,a.ang-sg*i*.035));
+  const pts=[];for(let i=1;i<=12;i++)pts.push(posOrbita(o,a.ang-sg*i*.075));
   if(T.rastro)T.rastro(a,pts,r,al);
   else{const lw=T.rastroLargura==null?.32:T.rastroLargura;if(lw>0){let ant=p;pts.forEach((q2,i)=>{ctx.beginPath();ctx.moveTo(ant.x,ant.y);ctx.lineTo(q2.x,q2.y);ctx.lineWidth=Math.max(.5,r*lw*(1-(i+1)/27));ctx.lineCap='round';ctx.strokeStyle=hexA(a.corT,al*(1-(i+1)/27)*.5);ctx.stroke();ant=q2;});}}
   if(T.halo){const g=ctx.createRadialGradient(cx,cy,r*.2,cx,cy,r*2.4);g.addColorStop(0,hexA(a.corT,.27));g.addColorStop(1,hexA(a.corT,0));ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,r*2.4,0,TAU);ctx.fill();}
@@ -3008,7 +3008,7 @@ function quadro(t,dt,dtR){
   if(T.chao)T.chao(t,dt);
   for(let i=ondas.length-1;i>=0;i--){const w=ondas[i];w.t+=dt/1.8;if(w.t>=1){ondas.splice(i,1);continue;}if(w.t<0)continue;
     caminhoAnel(w.t*1.15,0,90);ctx.lineWidth=1+3*(1-w.t);ctx.strokeStyle=hexA(w.cor||P.onda,(1-w.t)*.6);ctx.stroke();}
-  CONFIG.orbitas.forEach(o=>{const pts=[];for(let i=0;i<=120;i++)pts.push(posOrbita(o,i/120*TAU));
+  CONFIG.orbitas.forEach(o=>{const pts=[];for(let i=0;i<=64;i++)pts.push(posOrbita(o,i/64*TAU));
     if(T.orbita)T.orbita(pts,o,t);else{ctx.setLineDash([2,8]);for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],fr=clamp((a.prof+1)/2,0,1);ctx.strokeStyle=hexA(P.texto,.05+fr*.14);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}ctx.setLineDash([]);}});
   /* simulação */
   if(!reduz)darXP(CONFIG.xp.passivo*dt);
@@ -3034,6 +3034,19 @@ function quadro(t,dt,dtR){
     const p=posOrbita(CONFIG.orbitas[a.orbita],a.ang);if(OV)OV.move(a,p,t,dt);return{a,p};
   });
   if(OV)OV.separate(lista,t,dt);
+  // A órbita é o alvo; a posição desenhada mantém continuidade mesmo ao
+  // trocar de modo ou quando a resolução de colisões muda repentinamente.
+  for(const {a,p} of lista){
+    const anterior=a.posVisual;
+    if(!anterior||!Number.isFinite(anterior.x)||!Number.isFinite(anterior.y)){
+      a.posVisual={x:p.x,y:p.y};
+    }else{
+      const suavizar=1-Math.exp(-Math.min(.05,Math.max(0,dtR))*9);
+      anterior.x+=(p.x-anterior.x)*suavizar;
+      anterior.y+=(p.y-anterior.y)*suavizar;
+      p.x=anterior.x;p.y=anterior.y;
+    }
+  }
   lista.sort((x,y)=>x.p.prof-y.p.prof);
   ondas.forEach(w=>{if(w.t<0)return;lista.forEach(({a})=>{if(Math.abs(CONFIG.orbitas[a.orbita].r-w.t*1.15)<.04)a.glow=Math.max(a.glow,.9);});});
   if(T.ligacoes!==false)lista.forEach(({a,p})=>{const g=ctx.createLinearGradient(p.x,p.y,CX,CY);g.addColorStop(0,hexA(a.corT,.25));g.addColorStop(1,hexA(a.corT,.02));
