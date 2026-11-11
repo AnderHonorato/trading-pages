@@ -90,3 +90,7 @@ Legenda: [x] feito e testado · [~] em andamento · [ ] falta · [!] decisão/li
 \n- [x] Aquario Vivo com cardume, bolhas, plantas e alimentacao por toque
 
 - [x] Oficina dos Inventos: fabrica interativa em Canvas com cinco maquinas e fabricacao por toque (branch de evolucao; deploy pendente).
+
+- [x] Deserto Vivo: caravana e oases interativos (branch de desenvolvimento)
+- [ ] Publicar e validar no dominio canonico
+

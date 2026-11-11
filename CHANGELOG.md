@@ -54,3 +54,8 @@
 ## 2026-11-11 - Oficina dos Inventos interativa
 - Nova linha de montagem 2D com cinco maquinas, engrenagens, esteira, iluminacao, faiscas e pecas fabricadas por toque.
 - Modulo independente em frontend/animacoes/oficina-viva.js, sem movimentacao orbital no cenario.
+
+## 2026-11-11 - Deserto Vivo
+- Caravana de cinco exploradores, dunas, ruinas, oases descobertos por toque e tempestade acionavel.
+- Modulo de animacao independente e painel mobile de exploracao.
+

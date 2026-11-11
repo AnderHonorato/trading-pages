@@ -78,6 +78,16 @@ async function principal(){
     await pagina.evaluate(()=>window.OficinaViva.acionar(300,400,800,600));
     const oficinaDepois=await pagina.evaluate(()=>window.OficinaViva.estado().pecas);
     if(oficinaDepois!==oficinaAntes+1)erros.push('oficina: fabricacao interativa falhou');
+    // Deserto: descoberta, caravana e tempestade devem responder ao usuario.
+    await pagina.evaluate(()=>window.AgentesOrbitais.tema('deserto'));
+    const antesDeserto=await pagina.evaluate(()=>window.DesertoVivo.estado());
+    await pagina.locator('#flow-deserto-oasis').click();
+    await pagina.locator('#flow-deserto-vento').click();
+    const depoisDeserto=await pagina.evaluate(()=>window.DesertoVivo.estado());
+    if(depoisDeserto.oases<=antesDeserto.oases||depoisDeserto.tempestade<=0)erros.push('deserto: interacao falhou');
+    if(await pagina.locator('#flow-deserto-controles').isHidden())erros.push('deserto: controles ocultos');
+    await pagina.evaluate(()=>window.AgentesOrbitais.tema('cosmos'));
+    if(!(await pagina.locator('#flow-deserto-controles').isHidden()))erros.push('deserto: controles vazam para outro tema');
     // Validação de todas as categorias e das trocas repetidas no navegador real.
     await pagina.evaluate(()=>window.AgentesOrbitais.tema('jardim'));
     await pagina.waitForTimeout(200);
