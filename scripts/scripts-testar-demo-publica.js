@@ -59,7 +59,23 @@ async function principal(){
     await pagina.locator('#flow-texto').fill('Confira as novidades da arena');
     await pagina.locator('.flow-enviar button[type="submit"]').click();
     if((await pagina.evaluate(()=>window.FlowEquipe.estado().mensagens))<4)erros.push('equipe: recado nao passou pelo orquestrador');
+    await pagina.locator('#flow-modal [data-aba="equipe"]').click();
+    await pagina.locator('.flow-ficha-lider button').click();
+    await pagina.locator('#flow-formulario input').fill('Chefinho Plus');
+    await pagina.locator('#flow-formulario button[type="submit"]').click();
+    if(await pagina.evaluate(()=>window.FlowEquipe.orquestrador().nome)!=='Chefinho Plus')erros.push('equipe: edicao do orquestrador falhou');
     await pagina.locator('#flow-equipe-fechar').click();
+    await pagina.reload({waitUntil:'networkidle'});
+    await pagina.waitForFunction(()=>window.FlowEquipe&&window.AgentesOrbitais,{timeout:10000});
+    if(await pagina.locator('#flow-inicio').isVisible())erros.push('equipe: onboarding reapareceu depois de salvar');
+    const persistido=await pagina.evaluate(()=>({
+      equipe:window.FlowEquipe.listar(),
+      nome:window.FlowEquipe.orquestrador().nome,
+      ativos:window.AgentesOrbitais.agentes().filter(a=>a.ativo).length,
+      mensagens:JSON.parse(localStorage.getItem('anderflow.equipe.v1')).mensagens
+    }));
+    if(persistido.equipe.length!==1||persistido.equipe[0].nome!=='Lupita'||persistido.nome!=='Chefinho Plus'||persistido.ativos!==1)erros.push('equipe: persistencia de nomes/ativos falhou');
+    if(persistido.mensagens.some(m=>persistido.equipe.some(a=>a.nome===m.de)&&persistido.equipe.some(a=>a.nome===m.para)))erros.push('equipe: comunicacao direta entre agentes');
     await pagina.evaluate(()=>window.AgentesOrbitais.tema('cosmos'));
     await pagina.waitForTimeout(2500);
     const desktop=await pagina.evaluate(()=>({

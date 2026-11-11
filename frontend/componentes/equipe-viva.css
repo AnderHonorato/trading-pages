@@ -47,7 +47,7 @@
 #flow-modal button.flow-perigo{color:#b23563;border-color:#ffd2e3}
 .flow-modal-cabecalho{display:flex;justify-content:space-between;align-items:start;gap:12px}
 .flow-modal-cabecalho small{font-weight:800;letter-spacing:.1em}
-#flow-fechar-modal{font-size:22px!important;min-width:42px;flex:none}
+#flow-equipe-fechar{font-size:22px!important;min-width:42px;flex:none}
 .flow-abas{display:flex;background:#efecf5;border-radius:15px;padding:4px;gap:5px;margin:11px 0 16px}
 .flow-abas button{flex:1;border:0!important;background:transparent!important}
 .flow-abas button[aria-pressed=true]{background:#fff!important;box-shadow:0 2px 9px #3e285222}

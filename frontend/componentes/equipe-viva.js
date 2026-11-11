@@ -17,7 +17,7 @@ const papeis=[
  {tipo:'suporte',indice:18,nome:'Abracinho',funcao:'Suporte',cor:'#65d9ac',simbolo:'M12 21s-9-5.5-9-12a5 5 0 0 1 9-2.5A5 5 0 0 1 21 9c0 6.5-9 12-9 12z',texto:'Estou ajudando a organizar as pendencias; contei tudo ao Chefinho.'}
 ];
 const porTipo=tipo=>papeis.find(p=>p.tipo===tipo);
-const limpar=s=>String(s||'').trim().slice(0,250);
+const limpar=s=>String(s||'').trim();
 const seguro=(texto,padrao,tamanho=32)=>limpar(texto).slice(0,tamanho)||padrao;
 let equipe=null;
 try{const dado=JSON.parse(localStorage.getItem(CHAVE)||'null');if(dado&&dado.versao===1&&Array.isArray(dado.agentes)){
@@ -25,7 +25,7 @@ try{const dado=JSON.parse(localStorage.getItem(CHAVE)||'null');if(dado&&dado.ver
   agentes:dado.agentes.filter(a=>porTipo(a.tipo)).map(a=>({tipo:a.tipo,nome:seguro(a.nome,porTipo(a.tipo).nome),personalidade:seguro(a.personalidade,'Prestativo e curioso.',220),animacao:['flutuar','pular','girar','piscar'].includes(a.animacao)?a.animacao:'flutuar'})).filter((a,i,arr)=>arr.findIndex(x=>x.tipo===a.tipo)===i),
   mensagens:Array.isArray(dado.mensagens)?dado.mensagens.slice(-100):[]};
 }}catch(_){}
-const novo=!equipe;
+let novo=!equipe;
 if(!equipe)equipe={versao:1,orquestrador:{nome:'Chefinho',personalidade:'Gentil, organizado e prestativo.'},agentes:[],mensagens:[]};
 function guardar(){try{localStorage.setItem(CHAVE,JSON.stringify(equipe));}catch(_){aviso('Armazenamento indisponivel: as alteracoes podem nao permanecer.');}}
 function avatar(tipo,animacao='flutuar'){
@@ -62,7 +62,7 @@ function trocarAba(aba){modal.querySelectorAll('[data-aba]').forEach(b=>b.setAtt
 botoes.querySelector('#flow-abrir-equipe').addEventListener('click',()=>abrir('equipe'));botoes.querySelector('#flow-abrir-conversa').addEventListener('click',()=>abrir('conversas'));
 modal.querySelector('#flow-equipe-fechar').addEventListener('click',fechar);
 modal.querySelectorAll('[data-aba]').forEach(b=>b.addEventListener('click',()=>trocarAba(b.dataset.aba)));
-inicio.querySelector('form').addEventListener('submit',e=>{e.preventDefault();equipe.orquestrador.nome=seguro(inicio.querySelector('#flow-nome-inicial').value,'Chefinho');equipe.orquestrador.personalidade=seguro(inicio.querySelector('#flow-personalidade-inicial').value,'Gentil, organizado e prestativo.',220);guardar();sincronizar();atualizarCabecalho();inicio.close();abrir('equipe');});
+inicio.querySelector('form').addEventListener('submit',e=>{e.preventDefault();equipe.orquestrador.nome=seguro(inicio.querySelector('#flow-nome-inicial').value,'Chefinho');equipe.orquestrador.personalidade=seguro(inicio.querySelector('#flow-personalidade-inicial').value,'Gentil, organizado e prestativo.',220);novo=false;guardar();sincronizar();atualizarCabecalho();inicio.close();abrir('equipe');});
 function elemento(tag,classe,conteudo){const e=document.createElement(tag);if(classe)e.className=classe;if(conteudo!=null)e.textContent=conteudo;return e;}
 function acao(rotulo,fn,classe=''){const b=elemento('button',classe,rotulo);b.type='button';b.addEventListener('click',fn);return b;}
 let editando=null;

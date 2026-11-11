@@ -3305,7 +3305,7 @@ window.AgentesOrbitais={
   tema:id=>setTema(id),temas:()=>Object.keys(TEMAS),grupo:id=>selecionaGrupo(id,true),
   setStatus(n,s){const a=AG.find(x=>x.nome===n);if(a)a.status=s;},
   pulso(n){dispararDe(AG.find(x=>x.nome===n),'sinal','nucleo');},
-  passe(de,para){dispararDe(AG.find(x=>x.nome===de),'passe',AG.find(x=>x.nome===para));},
+  passe(de,para){return window.FlowEquipe?.encaminhar(de,para,'Pedido de transferencia do agente '+de)||false;},
   ordem(n){nucleoOrdem(AG.find(x=>x.nome===n));},
   mercado(n){dispararDe(AG.find(x=>x.nome===n),'mercado',null);},
   ataque(n){if(ameaca.fase===0)iniciaAmeaca(n);},

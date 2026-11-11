@@ -1,5 +1,10 @@
 # Trading Pages v12 — Ander Quant OS
 
+## Equipe Viva (em desenvolvimento)
+
+Ao abrir pela primeira vez, a arena inicia **sem agentes auxiliares** e pergunta o nome do orquestrador fixo (padrão **Chefinho**). No painel **Equipe**, crie ajudantes por função, personalize nome, personalidade e animação e altere-os quando quiser. O painel **Conversas** encaminha recados exclusivamente pelo orquestrador: agentes não conversam diretamente entre si. As respostas são simulações locais, ainda sem IA conectada. Perfis e histórico ficam salvos no navegador atual; não insira informações confidenciais. Veja `docs/arquitetura.md`.
+
+
 Painel orbital visual para orquestração demonstrativa de agentes, com múltiplos estilos, progressão, eventos animados e área administrativa segura.
 A base v11 adicionou o **Cosmo vivo**, autenticação real, 2FA, configuração criptografada de provedores de IA e acesso pela rede local. A v12 acrescenta gestão de sessões/dispositivos, health check, métricas de diagnóstico e request IDs.
 O projeto permanece em **modo demonstrativo**: não envia ordens financeiras reais e não está conectado a corretora.

@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Não lançado — 2026-11-11 — Equipe Viva
+- Primeiro acesso sem agentes auxiliares, com onboarding para nome/personalidade do orquestrador fixo (padrão Chefinho).
+- Criação, personalização e remoção de agentes por função, com mascotes 2D e animações individuais.
+- Nova interface Equipe e Conversas, com recados obrigatoriamente mediados pelo orquestrador e histórico local.
+- Central de Missões conectada ao novo catálogo, removendo transferências diretas agente-agente.
+- Teste no Chrome cobrindo cadastro vazio, personalização, persistência e fluxo das mensagens.
+- Conversas demonstrativas e armazenamento local; ainda sem integração de IA remota.
+
 ## 12.0.0 — 2026-11-10
 ### Adicionado
 - Gestão visual de sessões/dispositivos.
