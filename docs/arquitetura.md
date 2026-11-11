@@ -37,3 +37,7 @@ O Atelie agora registra acoes manuais de criacao, avancos, retornos e exclusoes 
 
 ## Mural de missoes
 Criar `frontend/componentes/mural-missoes.js` e `mural-missoes.css` na pasta existente. Importar CSS apos `acompanhamento-missoes.css` e JS apos `acompanhamento-missoes.js` no `agentes-orbitais.html`; copiar ambos no gerador de demo. O modulo consome `window.FlowTarefas` e `window.FlowEquipe`, sem duplicar persistencia, autenticar ou chamar provedores. `FlowMural.mover(id,estado)` utiliza `avancar/voltar` e gera eventos de historico. Testar com `npm run testar:demo-publica` e `npm run testar`. O arrastar HTML nativo atende mouse; botoes atendem toque e teclado. Sem dados de corretora.
+
+
+## Sala de Comando — 11/11/2026
+Arquivos novos: `frontend/componentes/sala-comando.js` e `frontend/componentes/sala-comando.css`, carregados apos o mural no HTML e copiados pelo gerador da demo. O modulo consome apenas `window.FlowTarefas` e `window.FlowEquipe`; nao cria nova persistencia. Para criar os arquivos, coloque JS/CSS em `frontend/componentes/`, importe CSS no `<head>` e JS apos `mural-missoes.js`. Exemplo: `window.FlowSala.abrir()` abre painel; `window.FlowTarefas.avancar(id)` atualiza etapa e diario. Inclui busca, filtro por responsavel, indicadores, progresso, retorno/avanco, historico por missao e exportacao JSON. Nao realiza execucao real de IA nem trading. Validar em navegador, desktop e 360px; observar reduced-motion.
