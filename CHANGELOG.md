@@ -69,3 +69,8 @@
 
 
 - 2026-11-11: Atelie de missoes, quadro touch com criacao e progresso manual de tarefas, personagens 2D por estado e persistencia local; demonstrativo sem IA executora.
+
+## Onda 2026-11-11 — Central de acompanhamento
+- Indicadores de etapas clicaveis e reativos, pesquisa, filtros por agente e etapa, limpar filtros e exportacao JSON das tarefas locais.
+- Cartoes de missao com identificador estavel para filtragem sem reescrever o quadro.
+- Responsividade em 360px, alvos de toque e atualizacao por MutationObserver; sem execucao financeira ou IA simulada.

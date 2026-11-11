@@ -84,3 +84,9 @@ Atualizado na v12. A prioridade muda a cada ciclo com base em risco, valor e evi
 - [x] Produto/Frontend: Oficina interativa com esteira e pecas acionadas por toque.
 - [ ] UX: avaliar sobreposicao de agentes e esteira em celulares reais.
 - [ ] DevOps: publicar demo canonica apos revisao e verificacao dos gates.
+
+## Reavaliacao 2026-11-11
+- [x] Produto/Frontend: central de acompanhamento local com busca, filtros, indicadores e exportacao.
+- [P1] Integrar tarefas com execucoes REAIS de agentes, exigindo integracao autorizada e trilha auditavel.
+- [P1] Testes/QA: validar acessibilidade e orientacao paisagem com capturas de tela.
+- [P2] Banco/API: persistencia opcional autenticada e migracao dos dados locais sem perda.

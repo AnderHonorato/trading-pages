@@ -47,7 +47,7 @@ function renderizar(){
  area.querySelector('#flow-tarefa-resumo').textContent=tarefas.length+' tarefas • '+abertas+' abertas • '+(tarefas.length-abertas)+' concluidas';
  if(!tarefas.length){const vazio=document.createElement('p');vazio.className='flow-quadro-vazio';vazio.textContent='Seu atelie esta vazio. Crie uma missao para acompanhar a equipe!';lista.append(vazio);return;}
  for(const t of tarefas.slice().reverse()){
-  const item=document.createElement('article');item.className='flow-tarefa flow-tarefa--'+t.estado;
+  const item=document.createElement('article');item.className='flow-tarefa flow-tarefa--'+t.estado;item.dataset.tarefaId=t.id;
   const cab=document.createElement('div');cab.className='flow-tarefa-cab';
   const figura=document.createElement('span');figura.className='flow-tarefa-personagem';figura.setAttribute('aria-hidden','true');figura.innerHTML='<i class="flow-tarefa-olho"></i><i class="flow-tarefa-olho"></i><i class="flow-tarefa-sorriso"></i>';
   const info=document.createElement('div');info.className='flow-tarefa-info';

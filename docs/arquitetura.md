@@ -27,3 +27,7 @@ Exemplo de uso: crie Lupinha para análise e Escudinho para segurança, personal
 
 ## Testes
 Na raiz do repositório: `npm run testar:demo-publica`, `npm run testar`, `npm run verificar`. Capturas de desktop/mobile são gravadas apenas em `.execucao/`.
+
+## Modulo de acompanhamento de missoes
+
+`frontend/componentes/acompanhamento-missoes.js` depende de `window.FlowTarefas` e `window.FlowEquipe`, sendo carregado apos `atelie-missoes.js`. Renderiza indicadores, filtros, busca e exportacao JSON no painel existente. `frontend/componentes/acompanhamento-missoes.css` isola o estilo responsivo. O Atelie identifica cada cartao pelo atributo `data-tarefa-id`; um MutationObserver acompanha apenas alteracoes na lista. Para criar extensoes, use as APIs publicas e eventos, sem alterar o armazenamento diretamente. Dados exportados permanecem locais, sem envio ao servidor. Teste com `npm run testar:demo-publica`.

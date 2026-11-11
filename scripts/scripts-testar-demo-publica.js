@@ -73,6 +73,12 @@ async function principal(){
     if((await pagina.evaluate(()=>window.FlowTarefas.listar().length))!==1)erros.push('atelie: criacao falhou');
     for(let i=0;i<3;i++)await pagina.locator('.flow-tarefa-acoes button').first().click();
     if((await pagina.evaluate(()=>window.FlowTarefas.listar()[0]?.estado))!=='concluida')erros.push('atelie: etapas nao avancaram');
+    if(!(await pagina.locator('#flow-acompanhamento').isVisible()))erros.push('acompanhamento: painel ausente');
+    if((await pagina.evaluate(()=>window.FlowAcompanhamento?.contagens().concluida))!==1)erros.push('acompanhamento: indicador incorreto');
+    await pagina.locator('#flow-acomp-estado').selectOption('fila');
+    if(await pagina.locator('.flow-tarefa:visible').count())erros.push('acompanhamento: filtro de etapa falhou');
+    await pagina.locator('#flow-acomp-limpar').click();
+    if((await pagina.locator('.flow-tarefa:visible').count())!==1)erros.push('acompanhamento: limpar filtros falhou');
     await pagina.locator('#flow-quadro-fechar').click();
     await pagina.reload({waitUntil:'networkidle'});
     await pagina.waitForFunction(()=>window.FlowEquipe&&window.AgentesOrbitais,{timeout:10000});

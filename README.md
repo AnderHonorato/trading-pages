@@ -304,3 +304,7 @@ Painel demonstrativo interativo: selecao de agentes, ativacao/reserva, pulsos, c
 ## Deserto Vivo (branch de desenvolvimento)
 A categoria Deserto tem exploracao por toque, caravana, oases e tempestade. Detalhes em docs/deserto-vivo.md.
 
+
+## Central de acompanhamento (onda 11/11)
+
+No Atelie de missoes, o painel de acompanhamento apresenta quatro indicadores clicaveis de etapas, pesquisa textual, filtros por agente e estado, limpeza de filtros e exportacao JSON local. Os indicadores refletem tarefas registradas e alteradas pelo usuario, sem executar IA automaticamente. O modulo `frontend/componentes/acompanhamento-missoes.js` observa a lista do Atelie e atualiza o painel sem polling.
