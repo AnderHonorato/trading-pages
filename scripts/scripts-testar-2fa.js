@@ -3,7 +3,7 @@ const crypto=require('node:crypto');
 const autenticacao=require('../servidor/rotas/autenticacao/autenticacao-servico.js');
 const dois=require('../servidor/seguranca/seguranca-2fa.js');
 const {obterBanco,fecharBanco}=require('../banco/banco.js');
-const origem='http://127.0.0.1:4312';
+const origem=process.env.ORIGEM_SMOKE||'http://127.0.0.1:4312';
 
 function cookies(headers){
   const arr=headers.getSetCookie?headers.getSetCookie():[headers.get('set-cookie')];

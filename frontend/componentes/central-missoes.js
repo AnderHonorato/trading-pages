@@ -7,9 +7,9 @@ const painel=document.createElement('aside');painel.id='flow-missoes';
 painel.innerHTML=`<button id="flow-abrir" type="button" aria-expanded="false" aria-controls="flow-corpo">✦ MISSÕES <span id="flow-total">0</span></button><section id="flow-corpo" hidden><header><div><small>ANDER FLOW · SIMULAÇÃO</small><h2>Central de missões</h2><p>Comande seus agentes em tempo real.</p></div><button id="flow-fechar" type="button" aria-label="Fechar">×</button></header><div class="flow-indices"><div><strong id="flow-ativos">0</strong><small>Ativos</small></div><div><strong id="flow-eventos">0</strong><small>Comandos</small></div><div><strong id="flow-nivel">1</strong><small>Nível</small></div></div><label for="flow-agente">Agente selecionado</label><select id="flow-agente"></select><div class="flow-ficha"><span id="flow-ponto"></span><div><strong id="flow-nome"></strong><small id="flow-papel"></small></div><b id="flow-situacao"></b></div><div class="flow-comandos"><button data-acao="pulso">✦ Emitir pulso</button><button data-acao="ordem">◎ Convocar núcleo</button><button data-acao="passe">⇢ Transferir sinal</button><button data-acao="ataque">⚡ Desafio</button><button data-acao="alternar" class="flow-alternar">Alternar agente</button></div><div class="flow-historico-titulo"><strong>Atividade recente</strong><button id="flow-limpar">Limpar</button></div><ol id="flow-historico" aria-live="polite"><li>Selecione um agente para começar.</li></ol><small class="flow-aviso">Ações demonstrativas: nenhuma ordem financeira real.</small></section>`;
 root.append(painel);const $=s=>painel.querySelector(s),select=$('#flow-agente'),lista=$('#flow-historico');
 let aberto=false,comandos=0;
-const agentes=()=>api.agentes(),escolhido=()=>agentes().find(a=>a.nome===select.value);
+const agentes=()=>api.agentes().filter(a=>a.ativo),escolhido=()=>agentes().find(a=>a.nome===select.value);
 function atualizar(){
- const todos=agentes(),atual=select.value,chave=todos.map(a=>a.nome+':'+a.ativo).join('|');
+ const todos=agentes(),atual=select.value,chave=todos.map(a=>a.nome+':'+a.ativo).join('|');painel.hidden=!todos.length;
  if(select.dataset.chave!==chave){
   select.replaceChildren();todos.forEach(a=>{const o=document.createElement('option');o.value=a.nome;o.textContent=(a.ativo?'● ':'○ ')+a.nome+' · '+a.papel;select.append(o);});
   select.value=todos.some(a=>a.nome===atual)?atual:(todos.find(a=>a.ativo)||todos[0]||{}).nome||'';select.dataset.chave=chave;
@@ -29,7 +29,7 @@ function comando(tipo){
  if(tipo==='pulso'){api.pulso(a.nome);registrar(a.nome+' emitiu pulso ao núcleo.');}
  if(tipo==='ordem'){api.ordem(a.nome);registrar(a.nome+' convocou o núcleo.');}
  if(tipo==='ataque'){api.ataque(a.nome);registrar(a.nome+' iniciou desafio.');}
- if(tipo==='passe'){const outros=agentes().filter(x=>x.ativo&&x.nome!==a.nome);if(!outros.length){registrar('Ative outro agente para transferir.');return;}const destino=outros[comandos%outros.length];api.passe(a.nome,destino.nome);registrar(a.nome+' transferiu sinal para '+destino.nome+'.');}
+ if(tipo==='passe'){const outros=agentes().filter(x=>x.ativo&&x.nome!==a.nome);if(!outros.length){registrar('Ative outro agente para transferir.');return;}const destino=outros[comandos%outros.length];if(window.FlowEquipe?.encaminhar(a.nome,destino.nome,'Solicitacao de transferencia de sinal'))registrar('O orquestrador encaminhou o pedido de '+a.nome+' para '+destino.nome+'.');else registrar('Abra Conversas para configurar a equipe.');}
 }
 function abrir(valor){aberto=valor;$('#flow-corpo').hidden=!valor;$('#flow-abrir').setAttribute('aria-expanded',String(valor));painel.classList.toggle('flow-aberto',valor);if(valor)atualizar();}
 $('#flow-abrir').addEventListener('click',()=>abrir(!aberto));$('#flow-fechar').addEventListener('click',()=>abrir(false));select.addEventListener('change',atualizar);

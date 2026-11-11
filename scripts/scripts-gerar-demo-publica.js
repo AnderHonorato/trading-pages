@@ -29,6 +29,16 @@ function gerar(){
   copiar('frontend/paginas/painel/controle-vivo.css');
   copiar('frontend/componentes/central-missoes.css');
   copiar('frontend/componentes/central-missoes.js');
+  copiar('frontend/componentes/equipe-viva.js');
+  copiar('frontend/componentes/equipe-viva.css');
+  copiar('frontend/componentes/atelie-missoes.js');
+  copiar('frontend/componentes/acompanhamento-missoes.js');
+  copiar('frontend/componentes/mural-missoes.js');
+  copiar('frontend/componentes/mural-missoes.css');
+  copiar('frontend/componentes/sala-comando.js');
+  copiar('frontend/componentes/sala-comando.css');
+  copiar('frontend/componentes/acompanhamento-missoes.css');
+  copiar('frontend/componentes/atelie-missoes.css');
   copiar('frontend/animacoes/aquario-vivo.js');
   copiar('frontend/animacoes/oficina-viva.js');
   copiar('frontend/animacoes/jardim-vivo.js');

@@ -1,0 +1,27 @@
+/* Mural responsivo de missoes — identidade 2D Ander Flow. */
+#flow-mural[hidden],#flow-mural-abrir[hidden],#flow-quadro.flow-quadro-mural #flow-tarefa-lista[hidden],#flow-quadro.flow-quadro-mural #flow-acompanhamento[hidden],#flow-quadro.flow-quadro-mural #flow-historico-painel[hidden]{display:none!important}
+#flow-quadro.flow-quadro-mural{width:min(1100px,100vw)}
+#flow-mural-abrir{width:100%;margin:12px 0;background:#eadfff!important;border:1px solid #bda1e9!important;color:#56349b!important}
+.flow-mural-topo{display:flex;align-items:start;justify-content:space-between;gap:12px;margin:16px 0}
+.flow-mural-topo h4{font-size:21px;margin:3px 0;color:#38274c}
+.flow-mural-topo small{letter-spacing:.12em;color:#805eaa;font-size:10px;font-weight:800}
+.flow-mural-topo p{font-size:12px;color:#736382;margin:4px 0}
+.flow-mural-colunas{display:grid;grid-template-columns:repeat(4,minmax(170px,1fr));gap:12px;overflow-x:auto;padding:5px 2px 15px;scroll-snap-type:x proximity}
+.flow-mural-coluna{background:#eee7f9;border:2px solid transparent;border-radius:18px;padding:10px;min-height:180px;scroll-snap-align:start;transition:background .2s,border-color .2s}
+.flow-mural-coluna:nth-child(2){background:#fff1db}.flow-mural-coluna:nth-child(3){background:#e3f0ff}.flow-mural-coluna:nth-child(4){background:#e3f6e9}
+.flow-mural-coluna.flow-mural-alvo{border-color:#8054ce;background:#ddd0f9}
+.flow-mural-coluna h5{font-size:12px;margin:3px 0 13px;color:#453256}
+.flow-mural-vazio{font-size:11px;color:#776b87;border:1px dashed #c7b6db;border-radius:12px;padding:14px;text-align:center}
+.flow-mural-cartao{display:flex;align-items:center;flex-wrap:wrap;gap:8px;background:#fff;border:1px solid #ded3eb;border-radius:15px;padding:10px;margin:8px 0;box-shadow:0 5px 12px #30204812;cursor:grab;transition:transform .2s,box-shadow .2s}
+.flow-mural-cartao:hover{transform:translateY(-2px);box-shadow:0 8px 18px #30204822}
+.flow-mural-cartao.flow-mural-arrastando{opacity:.5;transform:scale(.96)}
+.flow-mural-rosto{width:38px;height:38px;flex:none;border-radius:46% 52% 42% 55%;background:#9d7add;position:relative;box-shadow:inset -6px -5px #3c226b24;animation:flow-mural-respirar 2.5s ease-in-out infinite}
+.flow-mural-rosto i{position:absolute;top:13px;left:10px;width:5px;height:7px;border-radius:50%;background:#2e2147;animation:flow-mural-piscar 4.5s infinite}
+.flow-mural-rosto i:nth-child(2){left:24px}
+.flow-mural-rosto b{position:absolute;top:23px;left:15px;width:10px;height:5px;border-bottom:2px solid #3e285b;border-radius:50%}
+.flow-mural-conteudo{min-width:0;flex:1}.flow-mural-conteudo strong{font-size:12px;display:block;overflow-wrap:anywhere}.flow-mural-conteudo small{font-size:10px;color:#786c83}
+.flow-mural-acoes{width:100%;display:flex;gap:6px}.flow-mural-acoes button{flex:1;min-height:44px!important;padding:7px!important}
+.flow-mural-aviso{font-size:12px;color:#62428c}
+@keyframes flow-mural-respirar{50%{transform:translateY(-3px) rotate(2deg)}}@keyframes flow-mural-piscar{0%,91%,95%,100%{transform:scaleY(1)}93%{transform:scaleY(.1)}}
+@media(max-width:640px){.flow-mural-colunas{grid-template-columns:repeat(4,minmax(210px,76vw))}.flow-mural-topo h4{font-size:18px}}
+@media(prefers-reduced-motion:reduce){.flow-mural-rosto,.flow-mural-rosto i{animation:none!important}.flow-mural-cartao{transition:none!important}}

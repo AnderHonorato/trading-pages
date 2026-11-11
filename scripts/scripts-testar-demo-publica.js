@@ -44,7 +44,71 @@ async function principal(){
     pagina.on('console',m=>{if(m.type()==='error')erros.push('console: '+m.text());});
     pagina.on('pageerror',e=>erros.push('page: '+(e.stack||e.message)));
     await pagina.goto(origem+'/',{waitUntil:'networkidle'});
-    await pagina.waitForFunction(()=>window.AgentesOrbitais&&window.AgentesOrbitais.tema,{timeout:10000});
+    await pagina.waitForFunction(()=>window.AgentesOrbitais&&window.FlowEquipe,{timeout:10000});
+    // Primeiro acesso sem ajudantes e com o Chefinho configuravel.
+    if(!(await pagina.locator('#flow-inicio').isVisible()))erros.push('equipe: onboarding nao abriu');
+    if(await pagina.evaluate(()=>window.AgentesOrbitais.agentes().some(a=>a.ativo)))erros.push('equipe: iniciou com agentes ativos');
+    await pagina.locator('#flow-form-inicio button[type="submit"]').click();
+    if(await pagina.evaluate(()=>window.FlowEquipe.orquestrador().nome)!=='Chefinho')erros.push('equipe: nome padrao incorreto');
+    await pagina.locator('#flow-aba-equipe button.flow-principal').first().click();
+    await pagina.locator('#flow-formulario input').fill('Lupita');
+    await pagina.locator('#flow-formulario textarea').fill('Curiosa, delicada e detalhista');
+    await pagina.locator('#flow-formulario button[type="submit"]').click();
+    if(await pagina.evaluate(()=>window.FlowEquipe.listar().length)!==1)erros.push('equipe: criacao nao registrada');
+    await pagina.locator('#flow-modal [data-aba="conversas"]').click();
+    await pagina.locator('#flow-texto').fill('Confira as novidades da arena');
+    await pagina.locator('.flow-enviar button[type="submit"]').click();
+    if((await pagina.evaluate(()=>window.FlowEquipe.estado().mensagens))<4)erros.push('equipe: recado nao passou pelo orquestrador');
+    await pagina.locator('#flow-modal [data-aba="equipe"]').click();
+    await pagina.locator('.flow-ficha-lider button').click();
+    await pagina.locator('#flow-formulario input').fill('Chefinho Plus');
+    await pagina.locator('#flow-formulario button[type="submit"]').click();
+    if(await pagina.evaluate(()=>window.FlowEquipe.orquestrador().nome)!=='Chefinho Plus')erros.push('equipe: edicao do orquestrador falhou');
+    await pagina.locator('#flow-equipe-fechar').click();
+    // Atelie: criacao e progresso acionados pelo usuario, sem simular trabalho de IA.
+    await pagina.locator('#flow-abrir-quadro').click();
+    await pagina.locator('#flow-tarefa-titulo').fill('Revisar jardim vivo');
+    await pagina.locator('#flow-tarefa-responsavel').selectOption('analise');
+    await pagina.locator('#flow-tarefa-criar button[type="submit"]').click();
+    if((await pagina.evaluate(()=>window.FlowTarefas.listar().length))!==1)erros.push('atelie: criacao falhou');
+    for(let i=0;i<3;i++)await pagina.locator('.flow-tarefa-acoes button').filter({hasNotText:'Voltar etapa'}).first().click();
+    if((await pagina.evaluate(()=>window.FlowTarefas.historico().length))<4)erros.push('diario: nao registrou criacao e transicoes');
+    await pagina.locator('.flow-tarefa-acoes button').filter({hasText:'Voltar etapa'}).click();
+    if((await pagina.evaluate(()=>window.FlowTarefas.listar()[0]?.estado))!=='revisao')erros.push('diario: retorno de etapa falhou');
+    await pagina.locator('.flow-tarefa-acoes button').filter({hasText:'Aprovar e concluir'}).click();
+    if((await pagina.evaluate(()=>window.FlowTarefas.listar()[0]?.estado))!=='concluida')erros.push('atelie: etapas nao avancaram');
+    if(!(await pagina.locator('#flow-acompanhamento').isVisible()))erros.push('acompanhamento: painel ausente');
+    if((await pagina.evaluate(()=>window.FlowAcompanhamento?.contagens().concluida))!==1)erros.push('acompanhamento: indicador incorreto');
+    await pagina.locator('#flow-acomp-estado').selectOption('fila');
+    if(await pagina.locator('.flow-tarefa:visible').count())erros.push('acompanhamento: filtro de etapa falhou');
+    await pagina.locator('#flow-acomp-limpar').click();
+    if((await pagina.locator('.flow-tarefa:visible').count())!==1)erros.push('acompanhamento: limpar filtros falhou');
+    // Mural vivo: abrir, visualizar quatro colunas e mover por controle touch.
+    await pagina.locator('#flow-mural-abrir').click();
+    if(!(await pagina.locator('#flow-mural').isVisible()))erros.push('mural: nao abriu');
+    if((await pagina.locator('.flow-mural-coluna').count())!==4)erros.push('mural: etapas incompletas');
+    await pagina.locator('.flow-mural-cartao button').filter({hasText:'Anterior'}).click();
+    if((await pagina.evaluate(()=>window.FlowTarefas.listar()[0]?.estado))!=='revisao')erros.push('mural: toque para voltar nao funcionou');
+    await pagina.evaluate(()=>window.FlowMural.mover(window.FlowTarefas.listar()[0].id,'fila'));
+    if((await pagina.evaluate(()=>window.FlowTarefas.listar()[0]?.estado))!=='fila')erros.push('mural: movimentacao entre colunas falhou');
+    await pagina.screenshot({path:path.join(execucao,'mural-missoes-desktop.png')});
+    await pagina.setViewportSize({width:360,height:780});
+    if(!(await pagina.locator('.flow-mural-cartao').isVisible()))erros.push('mural: cartao invisivel no mobile');
+    await pagina.screenshot({path:path.join(execucao,'mural-missoes-mobile.png')});
+    await pagina.setViewportSize({width:1280,height:800});
+    await pagina.locator('#flow-mural-voltar').click();
+    await pagina.locator('#flow-quadro-fechar').click();
+    await pagina.reload({waitUntil:'networkidle'});
+    await pagina.waitForFunction(()=>window.FlowEquipe&&window.AgentesOrbitais,{timeout:10000});
+    if(await pagina.locator('#flow-inicio').isVisible())erros.push('equipe: onboarding reapareceu depois de salvar');
+    const persistido=await pagina.evaluate(()=>({
+      equipe:window.FlowEquipe.listar(),
+      nome:window.FlowEquipe.orquestrador().nome,
+      ativos:window.AgentesOrbitais.agentes().filter(a=>a.ativo).length,
+      mensagens:JSON.parse(localStorage.getItem('anderflow.equipe.v1')).mensagens
+    }));
+    if(persistido.equipe.length!==1||persistido.equipe[0].nome!=='Lupita'||persistido.nome!=='Chefinho Plus'||persistido.ativos!==1)erros.push('equipe: persistencia de nomes/ativos falhou');
+    if(persistido.mensagens.some(m=>persistido.equipe.some(a=>a.nome===m.de)&&persistido.equipe.some(a=>a.nome===m.para)))erros.push('equipe: comunicacao direta entre agentes');
     await pagina.evaluate(()=>window.AgentesOrbitais.tema('cosmos'));
     await pagina.waitForTimeout(2500);
     const desktop=await pagina.evaluate(()=>({

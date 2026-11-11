@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Não lançado — 2026-11-11 — Equipe Viva
+- Primeiro acesso sem agentes auxiliares, com onboarding para nome/personalidade do orquestrador fixo (padrão Chefinho).
+- Criação, personalização e remoção de agentes por função, com mascotes 2D e animações individuais.
+- Nova interface Equipe e Conversas, com recados obrigatoriamente mediados pelo orquestrador e histórico local.
+- Central de Missões conectada ao novo catálogo, removendo transferências diretas agente-agente.
+- Teste no Chrome cobrindo cadastro vazio, personalização, persistência e fluxo das mensagens.
+- Conversas demonstrativas e armazenamento local; ainda sem integração de IA remota.
+
 ## 12.0.0 — 2026-11-10
 ### Adicionado
 - Gestão visual de sessões/dispositivos.
@@ -59,3 +67,20 @@
 - Caravana de cinco exploradores, dunas, ruinas, oases descobertos por toque e tempestade acionavel.
 - Modulo de animacao independente e painel mobile de exploracao.
 
+
+- 2026-11-11: Atelie de missoes, quadro touch com criacao e progresso manual de tarefas, personagens 2D por estado e persistencia local; demonstrativo sem IA executora.
+
+## Onda 2026-11-11 — Central de acompanhamento
+- Indicadores de etapas clicaveis e reativos, pesquisa, filtros por agente e etapa, limpar filtros e exportacao JSON das tarefas locais.
+- Cartoes de missao com identificador estavel para filtragem sem reescrever o quadro.
+- Responsividade em 360px, alvos de toque e atualizacao por MutationObserver; sem execucao financeira ou IA simulada.
+
+## 2026-11-11 - Diario visual do Chefinho
+- Atelie ganhou diario cronologico persistente de atividades manuais, exportacao JSON e retorno de etapa.
+- Eventos locais `flow:historico` permitem integrar futuros indicadores, sem afirmar que agentes executaram trabalho autonomo.
+
+## 2026-11-11 — Mural vivo de missoes (branch feat/equipe-viva-chefinho-20261111)
+- Novo mural de quatro etapas com cartoes de personagens 2D, arrastar desktop, botoes acessiveis para toque/teclado e modo responsivo.
+- Reutiliza persistencia do Atelie, atualiza Diario do Chefinho e indicadores, sem inventar execucao de IA.
+- Playwright: validacao de transicao, visual desktop/mobile e capturas. 49 testes unitarios passaram; npm audit de producao: zero vulnerabilidades.
+- Smoke HTTP e 2FA isolados pendentes: ambiente local sem migracao `usuarios` e sem servidor de teste ativo.

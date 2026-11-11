@@ -94,3 +94,16 @@ Legenda: [x] feito e testado · [~] em andamento · [ ] falta · [!] decisão/li
 - [x] Deserto Vivo: caravana e oases interativos (branch de desenvolvimento)
 - [ ] Publicar e validar no dominio canonico
 
+
+## Mural vivo (11/11/2026)
+- [x] Quatro colunas interativas e animacao 2D de personagem por missao
+- [x] Movimento desktop por arrastar e toque mobile por botoes de 44px
+- [x] Persistencia de etapa e registro no Diario do Chefinho
+- [x] Teste Playwright do fluxo e capturas desktop/mobile
+- [ ] Arrastar por gesto de toque nativo; controles acessiveis substituem gesto por enquanto
+
+
+## Sala de Comando — 11/11/2026
+- [x] Sala de Comando: nova interface de acompanhamento, filtros, indicadores, progresso e exportacao integrados ao codigo de producao da branch.
+- [ ] Validar interacoes desktop/mobile, teste E2E e publicacao canonica (PC offline nesta execucao).
+- [ ] Entrega versionada no Drive apos gates verdes.

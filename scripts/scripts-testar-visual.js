@@ -29,7 +29,7 @@ async function principal(){
     const pagina=await contexto.newPage();
     pagina.on('console',m=>{if(m.type()==='error')erros.push('console: '+m.text());});
     pagina.on('pageerror',e=>erros.push('page: '+e.message));
-    await pagina.goto('http://127.0.0.1:4312/entrar',{waitUntil:'networkidle'});
+    await pagina.goto((process.env.ORIGEM_SMOKE||'http://127.0.0.1:4312')+'/entrar',{waitUntil:'networkidle'});
     await pagina.fill('#usuario',usuario);await pagina.fill('#senha',senha);
     await pagina.click('button[type="submit"]');
     await pagina.waitForURL('**/painel',{timeout:10000});
@@ -46,7 +46,7 @@ async function principal(){
     const mobile=await pagina.evaluate(()=>({largura:innerWidth,scroll:document.documentElement.scrollWidth,altura:innerHeight,scrollAltura:document.documentElement.scrollHeight}));
     await pagina.screenshot({path:path.join(execucao,'cosmo-mobile.png'),fullPage:true});
 
-    await pagina.goto('http://127.0.0.1:4312/configuracoes/apis',{waitUntil:'networkidle'});
+    await pagina.goto((process.env.ORIGEM_SMOKE||'http://127.0.0.1:4312')+'/configuracoes/apis',{waitUntil:'networkidle'});
     await pagina.waitForSelector('.sessao',{timeout:10000});
     const configuracoesMobile=await pagina.evaluate(()=>({
       largura:innerWidth,

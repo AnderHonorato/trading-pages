@@ -38,3 +38,6 @@ A API retorna códigos como `credenciais_invalidas`, `csrf_invalido`, `2fa_neces
 - `GET /api/diagnostico` → exige autenticação e retorna métricas agregadas de requisições, processo e banco.
 - Todas as respostas passam pelo middleware de `X-Request-Id`.
 `nAquarioVivo.desenhar(ctx, largura, altura, tempo, delta): renderiza apenas cena visual; alimentar(x,y): adiciona alimento; estado(): retorna contagens, sem backend.
+
+### Contrato publico do mural (2026-11-11)
+`window.FlowMural.abrir()` abre o Atelie em modo mural. `window.FlowMural.listar()` retorna copias de tarefas locais. `window.FlowMural.mover(id,estado)` aceita `fila`, `andamento`, `revisao` e `concluida`, devolvendo booleano; cada transicao usa `FlowTarefas.avancar/voltar`, sem acesso a corretora ou IA. Nenhuma rota REST nova.

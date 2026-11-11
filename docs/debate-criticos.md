@@ -16,3 +16,6 @@
 - [MÉDIA → corrigido] navegação mobile estava apertada. Temas usam duas faixas roláveis e agentes usam uma faixa horizontal compacta.
 - [MÉDIA → pendente] inglês completo do painel legado ainda não foi migrado nesta onda.
 `n2026-11-11: aquario sem novas dependencias, limites de 11 peixes e 12 alimentos; riscos: sobreposicao de elementos em telas pequenas e FPS a medir em dispositivo real.
+
+### Revisao cruzada — mural de missoes (2026-11-11)
+Produto: mudanca perceptivel em quatro colunas, nao apenas testes. Frontend: modulos separados, UI responsiva e sem orbita fora do Cosmos. Acessibilidade: botoes 44px, avisos em role=status, reduced-motion; gesto touch de arrastar pendente. Seguranca: texto das tarefas inserido via textContent; sem chamadas financeiras. Dados: reutiliza localStorage do Atelie e seu historico; persistencia entre dispositivos nao existe. QA: validar criar, avancar, voltar, mover por coluna, recarregar e 360px.

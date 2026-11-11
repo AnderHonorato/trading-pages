@@ -1,0 +1,6 @@
+{
+  "version": 2,
+  "framework": null,
+  "buildCommand": "npm run gerar:demo-publica",
+  "outputDirectory": ".site-publico"
+}

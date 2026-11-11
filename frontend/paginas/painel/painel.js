@@ -3284,7 +3284,7 @@ function atualizaChips(){chipsEl.querySelectorAll('.ao-chip').forEach(b=>b.setAt
 function montaChips(){
   if(!CONFIG.mostrarReserva){chipsEl.hidden=true;return;}
   AG.forEach(a=>{const b=document.createElement('button');b.className='ao-chip';b.type='button';b.dataset.n=a.nome;b.title=a.papel+' — '+a.status;
-    b.style.setProperty('--c',a.corT);b.innerHTML='<i></i>'+a.nome;b.addEventListener('click',()=>a.ativo?desativar(a.nome):ativar(a.nome));chipsEl.appendChild(b);});
+    b.style.setProperty('--c',a.corT);b.dataset.indice=String(a.i);b.innerHTML='<i></i>'+a.nome;b.addEventListener('click',()=>a.ativo?desativar(a.nome):ativar(a.nome));chipsEl.appendChild(b);});
   atualizaChips();
 }
 
@@ -3305,11 +3305,20 @@ window.AgentesOrbitais={
   tema:id=>setTema(id),temas:()=>Object.keys(TEMAS),grupo:id=>selecionaGrupo(id,true),
   setStatus(n,s){const a=AG.find(x=>x.nome===n);if(a)a.status=s;},
   pulso(n){dispararDe(AG.find(x=>x.nome===n),'sinal','nucleo');},
-  passe(de,para){dispararDe(AG.find(x=>x.nome===de),'passe',AG.find(x=>x.nome===para));},
+  passe(de,para){return window.FlowEquipe?.encaminhar(de,para,'Pedido de transferencia do agente '+de)||false;},
   ordem(n){nucleoOrdem(AG.find(x=>x.nome===n));},
   mercado(n){dispararDe(AG.find(x=>x.nome===n),'mercado',null);},
   ataque(n){if(ameaca.fase===0)iniciaAmeaca(n);},
   darXP(v){darXP(v);},setNivel,ativar,desativar,
+  desligarTodos(){AG.forEach(a=>{a.ativo=false;a.p=null;});atualizaChips();},
+  configurarAgente(indice,dados){const a=AG[indice];if(!a||!dados)return false;
+    if(dados.nome)a.nome=String(dados.nome).slice(0,32);
+    if(dados.papel)a.papel=String(dados.papel).slice(0,48);
+    if(dados.status)a.status=String(dados.status).slice(0,120);
+    if(dados.personalidade)a.personalidade=String(dados.personalidade).slice(0,220);
+    const b=[...chipsEl.querySelectorAll('.ao-chip')].find(x=>x.dataset.indice===String(indice));if(b){b.dataset.n=a.nome;b.textContent=a.nome;}
+    return true;
+  },
   estado(){return{tema:TEMA.id,nivel:nuc.nivel,xp:Math.floor(nuc.xp),sinais:nuc.sinais,defesas:nuc.defesas};},
   agentes(){return AG.map(a=>({nome:a.nome,papel:a.papel,status:a.status,ativo:!!a.ativo,cor:a.corT,orbita:a.orbita}));},
   config:CONFIG,TEMAS,
