@@ -31,3 +31,6 @@ Na raiz do repositório: `npm run testar:demo-publica`, `npm run testar`, `npm r
 ## Modulo de acompanhamento de missoes
 
 `frontend/componentes/acompanhamento-missoes.js` depende de `window.FlowTarefas` e `window.FlowEquipe`, sendo carregado apos `atelie-missoes.js`. Renderiza indicadores, filtros, busca e exportacao JSON no painel existente. `frontend/componentes/acompanhamento-missoes.css` isola o estilo responsivo. O Atelie identifica cada cartao pelo atributo `data-tarefa-id`; um MutationObserver acompanha apenas alteracoes na lista. Para criar extensoes, use as APIs publicas e eventos, sem alterar o armazenamento diretamente. Dados exportados permanecem locais, sem envio ao servidor. Teste com `npm run testar:demo-publica`.
+
+## Diario de missoes (11/11/2026)
+O Atelie agora registra acoes manuais de criacao, avancos, retornos e exclusoes em `anderflow.historico-missoes.v1`, separado das tarefas. O Chefinho aparece como mediador nos registros; isso NAO representa comunicacao com IA externa. O historico fica no navegador (maximo 120 eventos) e pode ser exportado como JSON. O painel oferece retorno de etapa, sem automatizar tarefas. Codigo: `frontend/componentes/atelie-missoes.js` e estilos em `frontend/componentes/atelie-missoes.css`. Validar no teste `npm run testar:demo-publica`.

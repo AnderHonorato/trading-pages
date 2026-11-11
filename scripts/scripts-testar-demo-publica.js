@@ -71,7 +71,11 @@ async function principal(){
     await pagina.locator('#flow-tarefa-responsavel').selectOption('analise');
     await pagina.locator('#flow-tarefa-criar button[type="submit"]').click();
     if((await pagina.evaluate(()=>window.FlowTarefas.listar().length))!==1)erros.push('atelie: criacao falhou');
-    for(let i=0;i<3;i++)await pagina.locator('.flow-tarefa-acoes button').first().click();
+    for(let i=0;i<3;i++)await pagina.locator('.flow-tarefa-acoes button').filter({hasNotText:'Voltar etapa'}).first().click();
+    if((await pagina.evaluate(()=>window.FlowTarefas.historico().length))<4)erros.push('diario: nao registrou criacao e transicoes');
+    await pagina.locator('.flow-tarefa-acoes button').filter({hasText:'Voltar etapa'}).click();
+    if((await pagina.evaluate(()=>window.FlowTarefas.listar()[0]?.estado))!=='revisao')erros.push('diario: retorno de etapa falhou');
+    await pagina.locator('.flow-tarefa-acoes button').filter({hasText:'Aprovar e concluir'}).click();
     if((await pagina.evaluate(()=>window.FlowTarefas.listar()[0]?.estado))!=='concluida')erros.push('atelie: etapas nao avancaram');
     if(!(await pagina.locator('#flow-acompanhamento').isVisible()))erros.push('acompanhamento: painel ausente');
     if((await pagina.evaluate(()=>window.FlowAcompanhamento?.contagens().concluida))!==1)erros.push('acompanhamento: indicador incorreto');

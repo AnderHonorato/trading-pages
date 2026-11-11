@@ -74,3 +74,7 @@
 - Indicadores de etapas clicaveis e reativos, pesquisa, filtros por agente e etapa, limpar filtros e exportacao JSON das tarefas locais.
 - Cartoes de missao com identificador estavel para filtragem sem reescrever o quadro.
 - Responsividade em 360px, alvos de toque e atualizacao por MutationObserver; sem execucao financeira ou IA simulada.
+
+## 2026-11-11 - Diario visual do Chefinho
+- Atelie ganhou diario cronologico persistente de atividades manuais, exportacao JSON e retorno de etapa.
+- Eventos locais `flow:historico` permitem integrar futuros indicadores, sem afirmar que agentes executaram trabalho autonomo.

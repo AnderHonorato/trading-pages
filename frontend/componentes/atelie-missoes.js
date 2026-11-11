@@ -4,6 +4,10 @@
 const api=window.FlowEquipe;
 if(!api)return;
 const CHAVE='anderflow.tarefas.v1';
+const CHAVE_HISTORICO='anderflow.historico-missoes.v1';
+let historico=[];
+try{const salvo=JSON.parse(localStorage.getItem(CHAVE_HISTORICO)||'[]');if(Array.isArray(salvo))historico=salvo.filter(e=>e&&typeof e.texto==='string').slice(-120);}catch(_){}
+const registrar=(texto,tarefa,acao)=>{historico.push({id:Date.now()+'-'+Math.random().toString(36).slice(2,5),texto,tarefa,acao,data:new Date().toISOString()});historico=historico.slice(-120);try{localStorage.setItem(CHAVE_HISTORICO,JSON.stringify(historico));}catch(_){};document.dispatchEvent(new CustomEvent('flow:historico',{detail:{texto,tarefa,acao}}));};
 let tarefas=[];
 try{const dados=JSON.parse(localStorage.getItem(CHAVE)||'[]');if(Array.isArray(dados))tarefas=dados.filter(t=>t&&typeof t.titulo==='string'&&['fila','andamento','revisao','concluida'].includes(t.estado)).slice(-50);}catch(_){}
 const estados=['fila','andamento','revisao','concluida'];
@@ -11,6 +15,8 @@ const rotulos={fila:'Aguardando',andamento:'Em andamento',revisao:'Revisao do Ch
 const salvar=()=>{try{localStorage.setItem(CHAVE,JSON.stringify(tarefas.slice(-50)));}catch(_){}};
 const area=document.createElement('section');area.id='flow-quadro';area.setAttribute('aria-label','Quadro de tarefas da equipe');
 area.innerHTML='<div class="flow-quadro-topo"><div><small>FLUXO DE TRABALHO</small><h3>Atelie de missoes</h3><p>Crie tarefas e acompanhe as etapas reais. Nenhuma execucao automatica e simulada.</p></div><button type="button" id="flow-quadro-fechar" aria-label="Fechar atelie">×</button></div><form id="flow-tarefa-criar"><label>Nova tarefa<input id="flow-tarefa-titulo" maxlength="90" required placeholder="Ex.: revisar o visual do jardim"></label><label>Responsavel<select id="flow-tarefa-responsavel"></select></label><button type="submit">Criar tarefa</button></form><div id="flow-tarefa-resumo" role="status"></div><div id="flow-tarefa-lista"></div>';
+const painel=document.createElement('section');painel.id='flow-historico-painel';painel.innerHTML='<div class="flow-historico-topo"><h4>Diario do Chefinho</h4><button type="button" id="flow-historico-exportar">Exportar diario</button></div><p>Registro local de acoes manuais. Nenhuma IA executou essas tarefas.</p><div class="flow-historico-lista" role="log" aria-live="polite"></div>';
+area.append(painel);
 document.body.append(area);
 const botao=document.createElement('button');botao.type='button';botao.id='flow-abrir-quadro';botao.textContent='✦ Missoes';document.getElementById('flow-atalhos')?.append(botao);
 const obter=()=>api.listar();
@@ -26,21 +32,25 @@ function tituloResp(t){
  if(t.responsavel==='chefe')return nomeChefe();
  return obter().find(a=>a.tipo===t.responsavel)?.nome||'Agente removido';
 }
+function desenharHistorico(){const lista=painel.querySelector('.flow-historico-lista');lista.replaceChildren();if(!historico.length){const vazio=document.createElement('p');vazio.textContent='Ainda nao ha movimentacoes. Crie sua primeira missao!';lista.append(vazio);return;}historico.slice(-18).reverse().forEach(e=>{const item=document.createElement('article');item.className='flow-historico-item';const data=document.createElement('time');data.dateTime=e.data;data.textContent=new Date(e.data).toLocaleString('pt-BR');const texto=document.createElement('span');texto.textContent=e.texto;item.append(data,texto);lista.append(item);});}
+painel.querySelector('#flow-historico-exportar').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({autor:'Ander Flow',tipo:'historico-demonstrativo',eventos:historico},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='ander-flow-diario-missoes.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
 function emitir(t,anterior){
  area.dispatchEvent(new CustomEvent('flow:tarefa',{detail:{id:t.id,estado:t.estado,anterior},bubbles:true}));
 }
 function criar(titulo,responsavel){
  const novo={id:String(Date.now())+'-'+Math.random().toString(36).slice(2,7),titulo:String(titulo).trim().slice(0,90),responsavel,estado:'fila',criado:new Date().toISOString()};
  if(!novo.titulo)return false;
- tarefas.push(novo);tarefas=tarefas.slice(-50);salvar();emitir(novo,null);renderizar();return true;
+ tarefas.push(novo);tarefas=tarefas.slice(-50);salvar();registrar(nomeChefe()+' recebeu a missao "'+novo.titulo+'" e a encaminhou para '+tituloResp(novo)+'.',novo.id,'criar');emitir(novo,null);renderizar();return true;
 }
 function avancar(id){
  const t=tarefas.find(x=>x.id===id);if(!t)return;
  const pos=estados.indexOf(t.estado);if(pos===3)return;
- const anterior=t.estado;t.estado=estados[pos+1];salvar();emitir(t,anterior);renderizar();
+ const anterior=t.estado;t.estado=estados[pos+1];salvar();registrar(nomeChefe()+' registrou a passagem de "'+t.titulo+'" para '+rotulos[t.estado]+' ('+tituloResp(t)+').',t.id,'avancar');emitir(t,anterior);renderizar();
 }
-function excluir(id){tarefas=tarefas.filter(t=>t.id!==id);salvar();renderizar();}
+function excluir(id){const t=tarefas.find(t=>t.id===id);if(t)registrar(nomeChefe()+' removeu a missao "'+t.titulo+'".',id,'excluir');tarefas=tarefas.filter(t=>t.id!==id);salvar();renderizar();}
+function voltar(id){const t=tarefas.find(x=>x.id===id);if(!t)return;const pos=estados.indexOf(t.estado);if(pos<1)return;t.estado=estados[pos-1];salvar();registrar(nomeChefe()+' devolveu "'+t.titulo+'" para '+rotulos[t.estado]+'.',id,'voltar');renderizar();}
 function renderizar(){
+ desenharHistorico();
  atualizaResponsaveis();
  const lista=area.querySelector('#flow-tarefa-lista');lista.replaceChildren();
  const abertas=tarefas.filter(t=>t.estado!=='concluida').length;
@@ -59,6 +69,7 @@ function renderizar(){
   estados.forEach((estado,i)=>{const etapa=document.createElement('span');etapa.className='flow-etapa'+(i<=idx?' flow-etapa-feita':'');etapa.title=rotulos[estado];trilha.append(etapa);});
   item.append(trilha);
   const acoes=document.createElement('div');acoes.className='flow-tarefa-acoes';
+  if(idx>0){const voltarBtn=document.createElement('button');voltarBtn.type='button';voltarBtn.textContent='Voltar etapa';voltarBtn.addEventListener('click',()=>voltar(t.id));acoes.append(voltarBtn);}
   if(idx<3){const avancarBtn=document.createElement('button');avancarBtn.type='button';avancarBtn.textContent=['Iniciar','Enviar para revisao','Aprovar e concluir'][idx];avancarBtn.addEventListener('click',()=>avancar(t.id));acoes.append(avancarBtn);}
   const remover=document.createElement('button');remover.type='button';remover.className='flow-tarefa-excluir';remover.textContent='Excluir';remover.setAttribute('aria-label','Excluir tarefa '+t.titulo);remover.addEventListener('click',()=>excluir(t.id));acoes.append(remover);item.append(acoes);lista.append(item);
  }
@@ -67,6 +78,6 @@ area.querySelector('#flow-tarefa-criar').addEventListener('submit',e=>{e.prevent
 botao?.addEventListener('click',()=>{area.classList.add('flow-quadro-aberto');renderizar();});
 area.querySelector('#flow-quadro-fechar').addEventListener('click',()=>area.classList.remove('flow-quadro-aberto'));
 document.addEventListener('keydown',e=>{if(e.key==='Escape')area.classList.remove('flow-quadro-aberto');});
-window.FlowTarefas={listar:()=>tarefas.map(t=>({...t})),criar,avancar,excluir,abrir:()=>botao.click()};
+window.FlowTarefas={listar:()=>tarefas.map(t=>({...t})),historico:()=>historico.map(e=>({...e})),criar,avancar,voltar,excluir,abrir:()=>botao.click()};
 renderizar();
 })();
