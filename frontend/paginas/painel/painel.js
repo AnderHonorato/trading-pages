@@ -2777,7 +2777,7 @@ function desenhaAmbiente(t){
       ctx.strokeStyle=hexA(cor,.12);ctx.stroke();}
   }else if(id==='musica'){
     for(let k=0;k<24;k++){const x=(k+.5)/24*W,altura=(.06+.14*Math.abs(Math.sin(t*1.6+k*.7)))*H;
-      ctx.fillStyle=hexA(cor,.09);ctx.fillRect(x,H*.9-alt,Math.max(2,W/50),altura);}
+      ctx.fillStyle=hexA(cor,.09);ctx.fillRect(x,H*.9-altura,Math.max(2,W/50),altura);}
   }else{
     for(let k=0;k<12;k++){const x=(k+.5)/12*W,y=H*(.25+.6*((k*7)%12)/12);
       ctx.beginPath();ctx.arc(x,y,S*(.01+.006*Math.sin(t*.5+k)**2),0,TAU);

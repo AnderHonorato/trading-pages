@@ -42,7 +42,7 @@ async function principal(){
     const contexto=await navegador.newContext({viewport:{width:1440,height:900}});
     const pagina=await contexto.newPage();
     pagina.on('console',m=>{if(m.type()==='error')erros.push('console: '+m.text());});
-    pagina.on('pageerror',e=>erros.push('page: '+e.message));
+    pagina.on('pageerror',e=>erros.push('page: '+(e.stack||e.message)));
     await pagina.goto(origem+'/',{waitUntil:'networkidle'});
     await pagina.waitForFunction(()=>window.AgentesOrbitais&&window.AgentesOrbitais.tema,{timeout:10000});
     await pagina.evaluate(()=>window.AgentesOrbitais.tema('cosmos'));
@@ -53,12 +53,24 @@ async function principal(){
       conta:Boolean(document.querySelector('#painel-conta')),
       tema:window.AgentesOrbitais.estado().tema
     }));
+    // Validação de todas as categorias e das trocas repetidas no navegador real.
+    const temas=['pixel','dados','naves','cartas','voxel','criaturas','cosmos','cyber','bio','arcano','oceano','floresta','clima','deserto','artico','comida','musica','esportes','origami','brinquedos','jardim','aquario','oficina'];
+    const categorias=[];
+    for(const tema of temas){
+      await pagina.evaluate(id=>window.AgentesOrbitais.tema(id),tema);
+      await pagina.waitForTimeout(110);
+      const atual=await pagina.evaluate(()=>window.AgentesOrbitais.estado().tema);
+      categorias.push({tema,atual,ok:atual===tema});
+      if(atual!==tema)erros.push('tema: '+tema+' retornou '+atual);
+    }
+    await pagina.evaluate(()=>window.AgentesOrbitais.tema('cosmos'));
+    await pagina.waitForTimeout(500);
     await pagina.screenshot({path:path.join(execucao,'demo-publica-desktop.png'),fullPage:true});
     await pagina.setViewportSize({width:390,height:844});
     await pagina.waitForTimeout(800);
     const mobile=await pagina.evaluate(()=>({largura:innerWidth,scroll:document.documentElement.scrollWidth,altura:innerHeight,scrollAltura:document.documentElement.scrollHeight}));
     await pagina.screenshot({path:path.join(execucao,'demo-publica-mobile.png'),fullPage:true});
-    console.log(JSON.stringify({desktop,mobile,erros},null,2));
+    console.log(JSON.stringify({desktop,mobile,categorias,erros},null,2));
     if(!desktop.demo||desktop.conta||desktop.scroll>desktop.largura+1||mobile.scroll>mobile.largura+1||erros.length)process.exitCode=1;
     await contexto.close();
   }finally{
