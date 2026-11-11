@@ -803,7 +803,7 @@
     for(let i=0;i<n;i++){
       const e=lista[i],prevX=e.a.antiColX||0,prevY=e.a.antiColY||0;
       const x=clamp(e.p.x-antes[i].x,-S*.22,S*.22),y=clamp(e.p.y-antes[i].y,-S*.22,S*.22);
-      const a=Math.min(1,Math.max(.14,dt*8));
+      const a=1-Math.exp(-Math.max(0,Math.min(dt,.05))*8);
       e.a.antiColX=prevX+(x-prevX)*a;
       e.a.antiColY=prevY+(y-prevY)*a;
       e.p.x=clamp(antes[i].x+e.a.antiColX,margin,W-margin);

@@ -3001,7 +3001,7 @@ function quadro(t,dt,dtR){
   cam.encaixe=cam.encaixe==null?zoomDesejado:lerp(cam.encaixe,zoomDesejado,Math.min(1,dtR*2.5));
   cam.zoom=(1+.25*easeInOut(cam.voo)+cam.pulso)*cam.encaixe;
   ctx.clearRect(0,0,W,H);ctx.save();
-  if(nuc.shake>0){nuc.shake=Math.max(0,nuc.shake-dtR);const am=S*.012*nuc.shake;ctx.translate((Math.random()-.5)*am,(Math.random()-.5)*am);}
+  if(nuc.shake>0){nuc.shake=Math.max(0,nuc.shake-dtR);const am=S*.012*nuc.shake;ctx.translate(Math.sin(t*31)*am*.5,Math.cos(t*27)*am*.5);}
   ctx.drawImage(fundoImg,-W*.05-par.x*S*.03,-H*.05-par.y*S*.03,W*1.1,H*1.1);
   if(T.fundo)T.fundo(t,dt);
   if(OV)OV.drawBackground(t,dt);
