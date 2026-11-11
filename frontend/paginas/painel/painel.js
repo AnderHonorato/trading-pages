@@ -275,13 +275,47 @@ function orbW(o,ang){
   return{x:px*Math.cos(no)-pz*Math.sin(no),y:py,z:px*Math.sin(no)+pz*Math.cos(no)};
 }
 function posOrbita(o,ang){const w=orbW(o,ang),p=proj3(w.x,w.y,w.z);p.prof=-p.z;return p;}
-function posCenario(a,t){
-  const i=a.i,cols=W<570?3:5,row=Math.floor(i/cols),col=i%cols;
-  const x=W*(col+.5)/cols,y=H*(.24+(row+.5)*.13);
-  const estilo=TEMA.id;
-  const dx=['oceano','aquario','floresta','jardim'].includes(estilo)?Math.sin(t*.45+i)*S*.014:0;
-  const dy=estilo==='musica'?Math.sin(t*1.6+i)*S*.03:Math.sin(t*.65+i)*S*.01;
-  return{x:clamp(x+dx,S*.07,W-S*.07),y:clamp(y+dy,H*.2,H*.83),z:0,prof:0,f:1};
+function posCenario(a,t,indice,total){
+  // Distribuição baseada nos agentes ativos: reservas não deixam espaços vazios.
+  const id=TEMA.id,n=Math.max(1,total),i=indice;
+  const colunas=W<570?Math.min(3,n):Math.min(5,n);
+  const linhas=Math.ceil(n/colunas),col=i%colunas,row=Math.floor(i/colunas);
+  const xBase=W*(col+.5)/colunas,yBase=H*(.27+.53*(row+.5)/linhas);
+  const fase=a.seed*4.3,osc=Math.sin(t*.8+fase),grupo=i%3;
+  let x=xBase,y=yBase;
+  if(['oceano','aquario'].includes(id)){
+    // Cardume em faixas de profundidade, sem círculos orbitais.
+    x+=Math.sin(t*.35+fase)*S*.025;
+    y+=Math.sin(t*.65+i*1.2)*S*.015;
+  }else if(['floresta','jardim','bio'].includes(id)){
+    // Bosque: personagens sobre clareiras, balançando como folhas.
+    x+=Math.sin(t*.3+fase)*S*.014;
+    y+=Math.cos(t*.42+fase)*S*.007;
+  }else if(id==='musica'){
+    // Palco: cada integrante responde a uma batida distinta.
+    y-=Math.abs(Math.sin(t*(1.25+grupo*.15)+fase))*S*.035;
+  }else if(['pixel','cyber','voxel','oficina'].includes(id)){
+    // Bancadas digitais: linhas estáveis e microanimações de atividade.
+    x+=Math.sin(t*.35+fase)*S*.005;
+    y+=Math.sin(t*.55+fase)*S*.005;
+  }else if(['esportes','brinquedos'].includes(id)){
+    // Arena e parque: pequenos saltos alternados.
+    y-=Math.abs(Math.sin(t*.9+fase))*S*.025;
+  }else if(['clima','artico'].includes(id)){
+    x+=Math.sin(t*.42+fase)*S*.02;
+    y+=Math.sin(t*.25+fase)*S*.012;
+  }else if(id==='origami'){
+    // Dobraduras organizadas em zigue-zague.
+    x+=(row%2?1:-1)*S*.025;
+    y+=Math.sin(t*.45+fase)*S*.008;
+  }else if(id==='cartas'||id==='dados'){
+    // Mesa de jogo: participantes em leque, com inclinação suave.
+    x+=Math.sin((i+.5)/n*PI)*S*.015;
+    y+=Math.cos((i+.5)/n*PI)*S*.02;
+  }else{
+    y+=osc*S*.012;
+  }
+  return{x:clamp(x,S*.075,W-S*.075),y:clamp(y,H*.2,H*.83),z:0,prof:0,f:1};
 }
 /* anel no plano horizontal (raio em unidades do mundo) */
 function caminhoAnel(rr,y,n){
@@ -3067,7 +3101,8 @@ function quadro(t,dt,dtR){
   cam.encaixe=cam.encaixe==null?zoomDesejado:lerp(cam.encaixe,zoomDesejado,Math.min(1,dtR*2.5));
   cam.zoom=(1+.25*easeInOut(cam.voo)+cam.pulso)*cam.encaixe;
   ctx.clearRect(0,0,W,H);ctx.save();
-  if(nuc.shake>0){nuc.shake=Math.max(0,nuc.shake-dtR);const am=S*.012*nuc.shake;ctx.translate(Math.sin(t*31)*am*.5,Math.cos(t*27)*am*.5);}
+  // Impactos afetam efeitos locais, nunca deslocam a câmera inteira.
+  nuc.shake=Math.max(0,nuc.shake-dtR);
   ctx.drawImage(fundoImg,-W*.05-par.x*S*.03,-H*.05-par.y*S*.03,W*1.1,H*1.1);
   if(T.fundo)T.fundo(t,dt);
   if(OV)OV.drawBackground(t,dt);
@@ -3089,7 +3124,8 @@ function quadro(t,dt,dtR){
   nuc.flash=Math.max(0,nuc.flash-dt*2.2);nuc.comboPop=Math.max(0,nuc.comboPop-dt*3);
   nuc.lookX+=(nuc.alvoX-nuc.lookX)*Math.min(1,dt*4);nuc.lookY+=(nuc.alvoY-nuc.lookY)*Math.min(1,dt*4);
   for(let i=agenda.length-1;i>=0;i--){agenda[i].t-=dt;if(agenda[i].t<=0){const f=agenda[i].fn;agenda.splice(i,1);f();}}
-  const lista=ativos().map(a=>{
+  const agentesAtivos=ativos();
+  const lista=agentesAtivos.map((a,indice)=>{
     const velOrbital=CONFIG.orbitas[a.orbita].vel;
     a.ang+=(TEMA.id==='cosmos'?Math.abs(velOrbital):velOrbital)*TAU*dt;
     a.bounce=Math.max(0,a.bounce-dt*1.6);a.happy=Math.max(0,a.happy-dt);a.nasc=Math.max(0,a.nasc-dt*1.8);a.glow=Math.max(0,a.glow-dt*1.4);
@@ -3098,7 +3134,7 @@ function quadro(t,dt,dtR){
     a.olharT-=dt;if(a.olhar){a.olhar.t-=dt;if(a.olhar.t<=0)a.olhar=null;}
     if(a.olharT<=0){const ang=Math.random()*TAU;a.olhar={x:Math.cos(ang),y:Math.sin(ang),t:.9};a.olharT=3+Math.random()*4;}
     if(a.carga>0){a.carga-=dt;if(a.carga<=0)liberar(a);}
-    const p=TEMA.id==='cosmos'?posOrbita(CONFIG.orbitas[a.orbita],a.ang):posCenario(a,t);if(OV&&TEMA.id==='cosmos')OV.move(a,p,t,dt);return{a,p};
+    const p=TEMA.id==='cosmos'?posOrbita(CONFIG.orbitas[a.orbita],a.ang):posCenario(a,t,indice,agentesAtivos.length);if(OV&&TEMA.id==='cosmos')OV.move(a,p,t,dt);return{a,p};
   });
   if(OV&&TEMA.id==='cosmos')OV.separate(lista,t,dt);
   // A órbita é o alvo; a posição desenhada mantém continuidade mesmo ao
