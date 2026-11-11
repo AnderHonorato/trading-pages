@@ -35,6 +35,8 @@ function gerar(){
   copiar('frontend/componentes/acompanhamento-missoes.js');
   copiar('frontend/componentes/mural-missoes.js');
   copiar('frontend/componentes/mural-missoes.css');
+  copiar('frontend/componentes/sala-comando.js');
+  copiar('frontend/componentes/sala-comando.css');
   copiar('frontend/componentes/acompanhamento-missoes.css');
   copiar('frontend/componentes/atelie-missoes.css');
   copiar('frontend/animacoes/aquario-vivo.js');
