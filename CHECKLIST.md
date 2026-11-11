@@ -101,3 +101,9 @@ Legenda: [x] feito e testado · [~] em andamento · [ ] falta · [!] decisão/li
 - [x] Persistencia de etapa e registro no Diario do Chefinho
 - [x] Teste Playwright do fluxo e capturas desktop/mobile
 - [ ] Arrastar por gesto de toque nativo; controles acessiveis substituem gesto por enquanto
+
+
+## Sala de Comando — 11/11/2026
+- [x] Sala de Comando: nova interface de acompanhamento, filtros, indicadores, progresso e exportacao integrados ao codigo de producao da branch.
+- [ ] Validar interacoes desktop/mobile, teste E2E e publicacao canonica (PC offline nesta execucao).
+- [ ] Entrega versionada no Drive apos gates verdes.
