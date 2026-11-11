@@ -83,6 +83,20 @@ async function principal(){
     if(await pagina.locator('.flow-tarefa:visible').count())erros.push('acompanhamento: filtro de etapa falhou');
     await pagina.locator('#flow-acomp-limpar').click();
     if((await pagina.locator('.flow-tarefa:visible').count())!==1)erros.push('acompanhamento: limpar filtros falhou');
+    // Mural vivo: abrir, visualizar quatro colunas e mover por controle touch.
+    await pagina.locator('#flow-mural-abrir').click();
+    if(!(await pagina.locator('#flow-mural').isVisible()))erros.push('mural: nao abriu');
+    if((await pagina.locator('.flow-mural-coluna').count())!==4)erros.push('mural: etapas incompletas');
+    await pagina.locator('.flow-mural-cartao button').filter({hasText:'Anterior'}).click();
+    if((await pagina.evaluate(()=>window.FlowTarefas.listar()[0]?.estado))!=='revisao')erros.push('mural: toque para voltar nao funcionou');
+    await pagina.evaluate(()=>window.FlowMural.mover(window.FlowTarefas.listar()[0].id,'fila'));
+    if((await pagina.evaluate(()=>window.FlowTarefas.listar()[0]?.estado))!=='fila')erros.push('mural: movimentacao entre colunas falhou');
+    await pagina.screenshot({path:path.join(execucao,'mural-missoes-desktop.png')});
+    await pagina.setViewportSize({width:360,height:780});
+    if(!(await pagina.locator('.flow-mural-cartao').isVisible()))erros.push('mural: cartao invisivel no mobile');
+    await pagina.screenshot({path:path.join(execucao,'mural-missoes-mobile.png')});
+    await pagina.setViewportSize({width:1280,height:800});
+    await pagina.locator('#flow-mural-voltar').click();
     await pagina.locator('#flow-quadro-fechar').click();
     await pagina.reload({waitUntil:'networkidle'});
     await pagina.waitForFunction(()=>window.FlowEquipe&&window.AgentesOrbitais,{timeout:10000});

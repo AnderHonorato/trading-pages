@@ -29,3 +29,6 @@ Modulo separado frontend/componentes/central-missoes.js e .css; utiliza apenas A
 \n`n## 2026-11-11 - Aquario Vivo`nNovo modulo frontend/animacoes/aquario-vivo.js com cardume independente, plantas, raios e bolhas deterministas. Toque na arena cria alimento; peixes proximos reagem. Integrado ao Canvas apenas no tema aquario; Cosmos preserva orbitas. Demo publica copia o modulo. Teste E2E valida cardume e toque.`n
 
 10. **Oficina:** animacao em modulo proprio `frontend/animacoes/oficina-viva.js`, mantendo simulacao financeira separada e sem acionar APIs externas.
+
+### 2026-11-11 — Mural de missoes
+Decisao: aproveitar FlowTarefas como fonte unica, em vez de criar outro banco. Quatro colunas com drag/drop desktop e botoes touch/teclado, registrando todas as transicoes no diario. Alternativa rejeitada: nova API de missao sem autenticar e com estado duplicado. Risco: arrastar nativo nao funciona em todos os navegadores moveis; manter controles por botoes.

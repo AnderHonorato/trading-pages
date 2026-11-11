@@ -308,3 +308,6 @@ A categoria Deserto tem exploracao por toque, caravana, oases e tempestade. Deta
 ## Central de acompanhamento (onda 11/11)
 
 No Atelie de missoes, o painel de acompanhamento apresenta quatro indicadores clicaveis de etapas, pesquisa textual, filtros por agente e estado, limpeza de filtros e exportacao JSON local. Os indicadores refletem tarefas registradas e alteradas pelo usuario, sem executar IA automaticamente. O modulo `frontend/componentes/acompanhamento-missoes.js` observa a lista do Atelie e atualiza o painel sem polling.
+
+## Mural vivo de missoes (onda 11/11/2026)
+No Atelie, use **Ver mural de missoes** para organizar tarefas em quatro colunas. No desktop, arraste cartoes; no celular, use os botoes **Anterior** e **Proxima** (44 px). Cada movimento altera a mesma tarefa persistida, atualiza o Diario do Chefinho e os indicadores. Nao existe execucao automatica de agentes.

@@ -90,3 +90,6 @@ Atualizado na v12. A prioridade muda a cada ciclo com base em risco, valor e evi
 - [P1] Integrar tarefas com execucoes REAIS de agentes, exigindo integracao autorizada e trilha auditavel.
 - [P1] Testes/QA: validar acessibilidade e orientacao paisagem com capturas de tela.
 - [P2] Banco/API: persistencia opcional autenticada e migracao dos dados locais sem perda.
+
+### Onda mural (2026-11-11)
+Produto/Frontend: mural quatro colunas entregue em branch. Acessibilidade/UX: estudar arrastar touch via Pointer Events e teste em Android real. Backend/API: integrar somente eventos autenticados quando autorizados. Banco/Dados: sincronizacao entre dispositivos pendente. Seguranca: manter demonstracao isolada. Testes/QA: ampliar E2E de drag desktop. Performance: medir longas listas. Observabilidade: metricas de eventos reais pendentes. DevOps/CI-CD: validar URL publica canonica. Documentacao: contrato FlowMural. Escalabilidade/Divida Tecnica: limitar renderizacao com 50+ tarefas. Python/Quant: sem necessidade nesta onda.

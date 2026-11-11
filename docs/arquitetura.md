@@ -34,3 +34,6 @@ Na raiz do repositório: `npm run testar:demo-publica`, `npm run testar`, `npm r
 
 ## Diario de missoes (11/11/2026)
 O Atelie agora registra acoes manuais de criacao, avancos, retornos e exclusoes em `anderflow.historico-missoes.v1`, separado das tarefas. O Chefinho aparece como mediador nos registros; isso NAO representa comunicacao com IA externa. O historico fica no navegador (maximo 120 eventos) e pode ser exportado como JSON. O painel oferece retorno de etapa, sem automatizar tarefas. Codigo: `frontend/componentes/atelie-missoes.js` e estilos em `frontend/componentes/atelie-missoes.css`. Validar no teste `npm run testar:demo-publica`.
+
+## Mural de missoes
+Criar `frontend/componentes/mural-missoes.js` e `mural-missoes.css` na pasta existente. Importar CSS apos `acompanhamento-missoes.css` e JS apos `acompanhamento-missoes.js` no `agentes-orbitais.html`; copiar ambos no gerador de demo. O modulo consome `window.FlowTarefas` e `window.FlowEquipe`, sem duplicar persistencia, autenticar ou chamar provedores. `FlowMural.mover(id,estado)` utiliza `avancar/voltar` e gera eventos de historico. Testar com `npm run testar:demo-publica` e `npm run testar`. O arrastar HTML nativo atende mouse; botoes atendem toque e teclado. Sem dados de corretora.
