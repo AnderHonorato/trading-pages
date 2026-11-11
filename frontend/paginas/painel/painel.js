@@ -2723,6 +2723,34 @@ for(const c of CENARIOS_NOVOS){
   };
 }
 
+function desenhaAmbiente(t){
+  if(TEMA.id==='cosmos')return;
+  const id=TEMA.id,cor=TEMA.pal.destaque;
+  ctx.save();ctx.lineWidth=1;
+  if(['pixel','cyber','oficina','voxel'].includes(id)){
+    const passo=Math.max(34,S*.095),desloc=t*6%passo;
+    ctx.strokeStyle=hexA(cor,.09);
+    for(let x=desloc;x<W;x+=passo){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+    for(let y=desloc;y<H;y+=passo){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  }else if(['oceano','aquario','clima','artico'].includes(id)){
+    for(let k=0;k<7;k++){ctx.beginPath();const y=H*(.22+k*.1);
+      for(let x=0;x<=W+14;x+=14){const yy=y+Math.sin(x*.018+t*.6+k*.8)*S*.012;
+        if(x===0)ctx.moveTo(x,yy);else ctx.lineTo(x,yy);}
+      ctx.strokeStyle=hexA(cor,.06+k*.008);ctx.stroke();}
+  }else if(['jardim','floresta','bio','origami'].includes(id)){
+    for(let k=0;k<18;k++){const x=(k+.5)/18*W,y=H*.9+Math.sin(k*1.7)*S*.04;
+      ctx.beginPath();ctx.moveTo(x,H);ctx.quadraticCurveTo(x+Math.sin(t*.6+k)*S*.035,y-S*.04,x+Math.sin(t*.5+k)*S*.025,y-S*.11);
+      ctx.strokeStyle=hexA(cor,.12);ctx.stroke();}
+  }else if(id==='musica'){
+    for(let k=0;k<24;k++){const x=(k+.5)/24*W,altura=(.06+.14*Math.abs(Math.sin(t*1.6+k*.7)))*H;
+      ctx.fillStyle=hexA(cor,.09);ctx.fillRect(x,H*.9-alt,Math.max(2,W/50),altura);}
+  }else{
+    for(let k=0;k<12;k++){const x=(k+.5)/12*W,y=H*(.25+.6*((k*7)%12)/12);
+      ctx.beginPath();ctx.arc(x,y,S*(.01+.006*Math.sin(t*.5+k)**2),0,TAU);
+      ctx.strokeStyle=hexA(cor,.11);ctx.stroke();}
+  }
+  ctx.restore();
+}
 /* ================= MOTOR (lógica comum a todos os temas) ================= */
 const nomeNivel=n=>{
   if(n<=5)return (NIV[n-1]&&NIV[n-1].nome)||(TEMA&&TEMA.niveis[n-1])||('Nível '+n);
@@ -3043,7 +3071,8 @@ function quadro(t,dt,dtR){
   ctx.drawImage(fundoImg,-W*.05-par.x*S*.03,-H*.05-par.y*S*.03,W*1.1,H*1.1);
   if(T.fundo)T.fundo(t,dt);
   if(OV)OV.drawBackground(t,dt);
-  if(T.chao)T.chao(t,dt);
+  desenhaAmbiente(t);
+  if(T.chao&&T.id==='cosmos')T.chao(t,dt);
   for(let i=ondas.length-1;i>=0;i--){const w=ondas[i];w.t+=dt/1.8;if(w.t>=1){ondas.splice(i,1);continue;}if(w.t<0)continue;
     caminhoAnel(w.t*1.15,0,90);ctx.lineWidth=1+3*(1-w.t);ctx.strokeStyle=hexA(w.cor||P.onda,(1-w.t)*.6);ctx.stroke();}
   if(T.id==='cosmos')CONFIG.orbitas.forEach(o=>{const pts=[];for(let i=0;i<=64;i++)pts.push(posOrbita(o,i/64*TAU));
