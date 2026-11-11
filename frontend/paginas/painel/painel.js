@@ -13,7 +13,7 @@ const CONFIG={
     {id:'game',   nome:'Game',   temas:['pixel','dados','naves','cartas','voxel']},
     {id:'estilos',nome:'Estilos',temas:['criaturas','cosmos','cyber','bio','arcano']},
     {id:'natureza',nome:'Natureza',temas:['oceano','floresta','clima','deserto','artico']},
-    {id:'pop',    nome:'Pop',    temas:['comida','musica','esportes','origami','brinquedos']}
+    {id:'pop',    nome:'Pop',    temas:['comida','musica','esportes','origami','brinquedos','jardim','aquario','oficina']}
   ],
   mostrarAbas:true,
   lembrarTema:true,          // lembra a última aba escolhida neste navegador
@@ -275,6 +275,14 @@ function orbW(o,ang){
   return{x:px*Math.cos(no)-pz*Math.sin(no),y:py,z:px*Math.sin(no)+pz*Math.cos(no)};
 }
 function posOrbita(o,ang){const w=orbW(o,ang),p=proj3(w.x,w.y,w.z);p.prof=-p.z;return p;}
+function posCenario(a,t){
+  const i=a.i,cols=W<570?3:5,row=Math.floor(i/cols),col=i%cols;
+  const x=W*(col+.5)/cols,y=H*(.24+(row+.5)*.13);
+  const estilo=TEMA.id;
+  const dx=['oceano','aquario','floresta','jardim'].includes(estilo)?Math.sin(t*.45+i)*S*.014:0;
+  const dy=estilo==='musica'?Math.sin(t*1.6+i)*S*.03:Math.sin(t*.65+i)*S*.01;
+  return{x:clamp(x+dx,S*.07,W-S*.07),y:clamp(y+dy,H*.2,H*.83),z:0,prof:0,f:1};
+}
 /* anel no plano horizontal (raio em unidades do mundo) */
 function caminhoAnel(rr,y,n){
   n=n||72;ctx.beginPath();
@@ -2686,6 +2694,35 @@ TEMAS.brinquedos={
   frente(t){particulasFrente(t,'#ffe08a',true);}
 };
 
+
+const CENARIOS_NOVOS=[
+  {id:'jardim',nome:'Jardim Encantado',base:'floresta',cor:'#b6ef91',niveis:['Semente','Broto','Flor','Bosque','Jardim Vivo']},
+  {id:'aquario',nome:'Aquário Abissal',base:'oceano',cor:'#7ce8ef',niveis:['Bolha','Coral','Recife','Abismo','Oceano Vivo']},
+  {id:'oficina',nome:'Oficina dos Inventos',base:'cyber',cor:'#ffbd72',niveis:['Faísca','Engrenagem','Autômato','Laboratório','Inventor Mestre']}
+];
+for(const c of CENARIOS_NOVOS){
+  const base=TEMAS[c.base];
+  TEMAS[c.id]={...base,id:c.id,nome:c.nome,cor:c.cor,niveis:c.niveis,
+    css:{...base.css,ac:c.cor},pal:{...base.pal,destaque:c.cor,onda:c.cor},
+    agente(a,t,u,inf){
+      base.agente(a,t,u,inf);
+      ctx.save();ctx.lineWidth=Math.max(.025,u*1.7);ctx.strokeStyle=c.cor;ctx.fillStyle=c.cor;
+      if(c.id==='jardim'){
+        ctx.translate(.6,-.6);ctx.rotate(Math.sin(t+a.i)*.15);
+        for(let j=0;j<5;j++){ctx.rotate(TAU/5);ctx.beginPath();ctx.ellipse(0,-.2,.1,.2,0,0,TAU);ctx.fill();}
+        ctx.beginPath();ctx.arc(0,0,.1,0,TAU);ctx.fillStyle='#ffe7a1';ctx.fill();
+      }else if(c.id==='aquario'){
+        for(let j=0;j<3;j++){ctx.beginPath();ctx.arc(.68+Math.sin(t+j+a.i)*.08,.6-j*.26-(t*.15%1),.06,0,TAU);ctx.stroke();}
+      }else{
+        ctx.translate(.65,-.65);ctx.rotate(t*.5+a.i);
+        for(let j=0;j<8;j++){ctx.rotate(TAU/8);ctx.fillRect(-.065,-.3,.13,.15);}
+        ctx.beginPath();ctx.arc(0,0,.2,0,TAU);ctx.stroke();
+      }
+      ctx.restore();
+    }
+  };
+}
+
 /* ================= MOTOR (lógica comum a todos os temas) ================= */
 const nomeNivel=n=>{
   if(n<=5)return (NIV[n-1]&&NIV[n-1].nome)||(TEMA&&TEMA.niveis[n-1])||('Nível '+n);
@@ -2886,10 +2923,11 @@ function desenhaAgente(a,p,t){
   const cx=p.x+a.recuoX,cy=p.y+a.recuoY,dx=CX-cx,dy=CY-cy,d=Math.hypot(dx,dy)||1,luzD={x:dx/d,y:dy/d};
   let look=luzD;if(a.olhar)look=a.olhar;
   if(a.carga>0&&a.pend){const A=alvoDe(a.pend.para);if(A){const ex=A.x-cx,ey=A.y-cy,ed=Math.hypot(ex,ey)||1;look={x:ex/ed,y:ey/ed};}}
-  const q=posOrbita(o,a.ang+sg*.03),qd=Math.hypot(q.x-p.x,q.y-p.y)||1,dir={x:(q.x-p.x)/qd,y:(q.y-p.y)/qd};
-  const pts=[];for(let i=1;i<=12;i++)pts.push(posOrbita(o,a.ang-sg*i*.075));
-  if(T.rastro)T.rastro(a,pts,r,al);
-  else{const lw=T.rastroLargura==null?.32:T.rastroLargura;if(lw>0){let ant=p;pts.forEach((q2,i)=>{ctx.beginPath();ctx.moveTo(ant.x,ant.y);ctx.lineTo(q2.x,q2.y);ctx.lineWidth=Math.max(.5,r*lw*(1-(i+1)/27));ctx.lineCap='round';ctx.strokeStyle=hexA(a.corT,al*(1-(i+1)/27)*.5);ctx.stroke();ant=q2;});}}
+  const orbital=T.id==='cosmos',q=orbital?posOrbita(o,a.ang+sg*.03):{x:p.x+1,y:p.y};
+  const qd=Math.hypot(q.x-p.x,q.y-p.y)||1,dir={x:(q.x-p.x)/qd,y:(q.y-p.y)/qd};
+  const pts=[];if(orbital)for(let i=1;i<=12;i++)pts.push(posOrbita(o,a.ang-sg*i*.075));
+  if(orbital&&T.rastro)T.rastro(a,pts,r,al);
+  else if(orbital){const lw=T.rastroLargura==null?.32:T.rastroLargura;if(lw>0){let ant=p;pts.forEach((q2,i)=>{ctx.beginPath();ctx.moveTo(ant.x,ant.y);ctx.lineTo(q2.x,q2.y);ctx.lineWidth=Math.max(.5,r*lw*(1-(i+1)/27));ctx.lineCap='round';ctx.strokeStyle=hexA(a.corT,al*(1-(i+1)/27)*.5);ctx.stroke();ant=q2;});}}
   if(T.halo){const g=ctx.createRadialGradient(cx,cy,r*.2,cx,cy,r*2.4);g.addColorStop(0,hexA(a.corT,.27));g.addColorStop(1,hexA(a.corT,0));ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,r*2.4,0,TAU);ctx.fill();}
   if(T.sombra){ctx.beginPath();ctx.ellipse(p.x,p.y+r*1.35,r*.8,r*.16,0,0,TAU);ctx.fillStyle='rgba(0,0,0,.3)';ctx.fill();}
   if(a.glow>0){ctx.beginPath();ctx.arc(cx,cy,r*(1.4+(1-a.glow)*1.4),0,TAU);ctx.lineWidth=2.5;ctx.strokeStyle=hexA(a.corT,a.glow*.85);ctx.stroke();}
@@ -3008,7 +3046,7 @@ function quadro(t,dt,dtR){
   if(T.chao)T.chao(t,dt);
   for(let i=ondas.length-1;i>=0;i--){const w=ondas[i];w.t+=dt/1.8;if(w.t>=1){ondas.splice(i,1);continue;}if(w.t<0)continue;
     caminhoAnel(w.t*1.15,0,90);ctx.lineWidth=1+3*(1-w.t);ctx.strokeStyle=hexA(w.cor||P.onda,(1-w.t)*.6);ctx.stroke();}
-  CONFIG.orbitas.forEach(o=>{const pts=[];for(let i=0;i<=64;i++)pts.push(posOrbita(o,i/64*TAU));
+  if(T.id==='cosmos')CONFIG.orbitas.forEach(o=>{const pts=[];for(let i=0;i<=64;i++)pts.push(posOrbita(o,i/64*TAU));
     if(T.orbita)T.orbita(pts,o,t);else{ctx.setLineDash([2,8]);for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],fr=clamp((a.prof+1)/2,0,1);ctx.strokeStyle=hexA(P.texto,.05+fr*.14);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}ctx.setLineDash([]);}});
   /* simulação */
   if(!reduz)darXP(CONFIG.xp.passivo*dt);
@@ -3031,9 +3069,9 @@ function quadro(t,dt,dtR){
     a.olharT-=dt;if(a.olhar){a.olhar.t-=dt;if(a.olhar.t<=0)a.olhar=null;}
     if(a.olharT<=0){const ang=Math.random()*TAU;a.olhar={x:Math.cos(ang),y:Math.sin(ang),t:.9};a.olharT=3+Math.random()*4;}
     if(a.carga>0){a.carga-=dt;if(a.carga<=0)liberar(a);}
-    const p=posOrbita(CONFIG.orbitas[a.orbita],a.ang);if(OV)OV.move(a,p,t,dt);return{a,p};
+    const p=TEMA.id==='cosmos'?posOrbita(CONFIG.orbitas[a.orbita],a.ang):posCenario(a,t);if(OV&&TEMA.id==='cosmos')OV.move(a,p,t,dt);return{a,p};
   });
-  if(OV)OV.separate(lista,t,dt);
+  if(OV&&TEMA.id==='cosmos')OV.separate(lista,t,dt);
   // A órbita é o alvo; a posição desenhada mantém continuidade mesmo ao
   // trocar de modo ou quando a resolução de colisões muda repentinamente.
   for(const {a,p} of lista){
@@ -3049,7 +3087,7 @@ function quadro(t,dt,dtR){
   }
   lista.sort((x,y)=>x.p.prof-y.p.prof);
   ondas.forEach(w=>{if(w.t<0)return;lista.forEach(({a})=>{if(Math.abs(CONFIG.orbitas[a.orbita].r-w.t*1.15)<.04)a.glow=Math.max(a.glow,.9);});});
-  if(T.ligacoes!==false)lista.forEach(({a,p})=>{const g=ctx.createLinearGradient(p.x,p.y,CX,CY);g.addColorStop(0,hexA(a.corT,.25));g.addColorStop(1,hexA(a.corT,.02));
+  if(T.id==='cosmos'&&T.ligacoes!==false)lista.forEach(({a,p})=>{const g=ctx.createLinearGradient(p.x,p.y,CX,CY);g.addColorStop(0,hexA(a.corT,.25));g.addColorStop(1,hexA(a.corT,.02));
     ctx.strokeStyle=g;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(CX,CY);ctx.stroke();});
   lista.filter(i=>i.p.z>0).forEach(i=>desenhaAgente(i.a,i.p,t));
   desenhaNucleo(t,dt);desenhaEscudo(t,dt);
@@ -3097,7 +3135,7 @@ const tabsEl=document.getElementById('ao-tabs'),chipsEl=document.getElementById(
 function setTema(id,inst){
   const T=TEMAS[id];if(!T||T===TEMA)return;
   if(TEMA&&!inst&&W>2){const c=document.createElement('canvas');c.width=cv.width;c.height=cv.height;c.getContext('2d').drawImage(cv,0,0);transicao={img:c,t:0};cam.voo=1;}
-  TEMA=T;if(OV)OV.theme(T);AG.forEach(a=>{a.corT=(T.cores&&T.cores[a.i%T.cores.length])||a.cor;});
+  TEMA=T;if(OV)OV.theme(T);AG.forEach(a=>{a.posVisual=null;a.corT=(T.cores&&T.cores[a.i%T.cores.length])||a.cor;});
   const s=root.style,c=T.css;s.setProperty('--t-bg',c.bg);s.setProperty('--t-fg',c.fg);s.setProperty('--t-suave',c.suave);s.setProperty('--t-ac',c.ac);
   s.setProperty('--t-font',c.fonte);s.setProperty('--t-raio',c.raio);s.setProperty('--t-chip',c.chip);
   document.body.style.background=c.bg;
