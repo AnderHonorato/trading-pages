@@ -67,3 +67,5 @@
 - Caravana de cinco exploradores, dunas, ruinas, oases descobertos por toque e tempestade acionavel.
 - Modulo de animacao independente e painel mobile de exploracao.
 
+
+- 2026-11-11: Atelie de missoes, quadro touch com criacao e progresso manual de tarefas, personagens 2D por estado e persistencia local; demonstrativo sem IA executora.

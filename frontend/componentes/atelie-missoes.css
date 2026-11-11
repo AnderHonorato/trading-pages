@@ -1,0 +1,42 @@
+/* Atelie de missoes: painel independente com etapas visuais acionadas pelo usuario. */
+#flow-quadro{position:fixed;right:0;top:0;bottom:0;width:min(480px,100vw);z-index:130;background:#fbf7ff;color:#342748;box-shadow:-18px 0 65px #160c2c88;padding:20px;overflow:auto;transform:translateX(110%);visibility:hidden;transition:transform .32s ease,visibility .32s;font:14px/1.5 system-ui;box-sizing:border-box}
+#flow-quadro.flow-quadro-aberto{transform:translateX(0);visibility:visible}
+#flow-quadro *{box-sizing:border-box}
+.flow-quadro-topo{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.flow-quadro-topo small{font-size:10px;font-weight:800;letter-spacing:.15em;color:#9069ba}
+.flow-quadro-topo h3{font-size:23px;line-height:1.2;margin:5px 0}
+.flow-quadro-topo p{font-size:12px;color:#796e85;margin:0 0 20px}
+#flow-quadro button{min-height:44px;border-radius:12px;border:1px solid #d6c8e8;background:#fff;color:#49315c;padding:9px 13px;font:700 12px system-ui;cursor:pointer}
+#flow-quadro button:focus-visible{outline:3px solid #9b77e7;outline-offset:2px}
+#flow-quadro-fechar{min-width:44px;font-size:21px!important}
+#flow-tarefa-criar{display:grid;grid-template-columns:1fr;gap:10px;background:#f0e9fa;padding:14px;border-radius:17px}
+#flow-tarefa-criar label{display:flex;flex-direction:column;gap:5px;font-weight:700;font-size:12px}
+#flow-tarefa-criar :is(input,select){border:1px solid #d2c2e2;border-radius:11px;min-height:44px;padding:10px;background:white;color:#332342;font:14px system-ui;width:100%}
+#flow-tarefa-criar button,.flow-tarefa-acoes button:first-child{background:#7855dc!important;color:#fff!important;border-color:#7855dc!important}
+#flow-tarefa-resumo{margin:17px 0 12px;font-size:12px;color:#765e8d;font-weight:700}
+.flow-quadro-vazio{background:#f3edfa;border:1px dashed #c6a9e6;border-radius:15px;padding:25px;text-align:center;color:#79638e}
+#flow-tarefa-lista{display:grid;gap:12px;padding-bottom:50px}
+.flow-tarefa{border:1px solid #e6daee;border-radius:17px;background:white;padding:13px;box-shadow:0 3px 13px #3522490c}
+.flow-tarefa-cab{display:flex;align-items:center;gap:12px}
+.flow-tarefa-info{min-width:0;display:flex;flex-direction:column;gap:3px}
+.flow-tarefa-info strong{overflow-wrap:anywhere}
+.flow-tarefa-info small{color:#816d8c}
+.flow-tarefa-personagem{position:relative;width:47px;height:47px;border-radius:43% 52% 49% 45%;background:#9b76e9;flex:none;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:inset -8px -6px #0002,0 3px 10px #0002;animation:flow-missao-respirar 2.7s ease-in-out infinite}
+.flow-tarefa--andamento .flow-tarefa-personagem{background:#f5b85c;animation:flow-missao-trabalhar .85s ease-in-out infinite}
+.flow-tarefa--revisao .flow-tarefa-personagem{background:#65bad9;animation:flow-missao-olhar 1.5s ease-in-out infinite}
+.flow-tarefa--concluida .flow-tarefa-personagem{background:#72d5ad;animation:flow-missao-festejar 1.3s ease-in-out 2}
+.flow-tarefa-olho{width:5px;height:8px;background:#35253f;border-radius:100%;margin-top:-2px;animation:flow-missao-piscar 5s infinite}
+.flow-tarefa-sorriso{position:absolute;bottom:10px;width:11px;height:5px;border-bottom:2px solid #35253f;border-radius:50%}
+.flow-tarefa-trilha{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:13px 0}
+.flow-etapa{height:6px;border-radius:20px;background:#e9e0ef;transition:background .25s}
+.flow-etapa-feita{background:#9063e3}
+.flow-tarefa--concluida .flow-etapa-feita{background:#4fc39a}
+.flow-tarefa-acoes{display:flex;gap:7px;justify-content:flex-end}
+.flow-tarefa-excluir{color:#a34463!important}
+@keyframes flow-missao-respirar{50%{transform:translateY(-4px) rotate(3deg)}}
+@keyframes flow-missao-trabalhar{50%{transform:translateY(-5px) rotate(-6deg)}}
+@keyframes flow-missao-olhar{50%{transform:rotate(7deg)}}
+@keyframes flow-missao-festejar{50%{transform:translateY(-9px) rotate(12deg)}}
+@keyframes flow-missao-piscar{0%,45%,49%,100%{transform:scaleY(1)}47%{transform:scaleY(.1)}}
+@media(max-width:700px){#flow-quadro{padding:14px 12px 65px}#flow-atalhos{flex-wrap:wrap}#flow-atalhos button{min-width:95px!important;flex:1}}
+@media(prefers-reduced-motion:reduce){#flow-quadro{transition:none}.flow-tarefa-personagem,.flow-tarefa-olho{animation:none!important}}

@@ -31,6 +31,8 @@ function gerar(){
   copiar('frontend/componentes/central-missoes.js');
   copiar('frontend/componentes/equipe-viva.js');
   copiar('frontend/componentes/equipe-viva.css');
+  copiar('frontend/componentes/atelie-missoes.js');
+  copiar('frontend/componentes/atelie-missoes.css');
   copiar('frontend/animacoes/aquario-vivo.js');
   copiar('frontend/animacoes/oficina-viva.js');
   copiar('frontend/animacoes/jardim-vivo.js');

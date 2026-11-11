@@ -65,6 +65,15 @@ async function principal(){
     await pagina.locator('#flow-formulario button[type="submit"]').click();
     if(await pagina.evaluate(()=>window.FlowEquipe.orquestrador().nome)!=='Chefinho Plus')erros.push('equipe: edicao do orquestrador falhou');
     await pagina.locator('#flow-equipe-fechar').click();
+    // Atelie: criacao e progresso acionados pelo usuario, sem simular trabalho de IA.
+    await pagina.locator('#flow-abrir-quadro').click();
+    await pagina.locator('#flow-tarefa-titulo').fill('Revisar jardim vivo');
+    await pagina.locator('#flow-tarefa-responsavel').selectOption('analise');
+    await pagina.locator('#flow-tarefa-criar button[type="submit"]').click();
+    if((await pagina.evaluate(()=>window.FlowTarefas.listar().length))!==1)erros.push('atelie: criacao falhou');
+    for(let i=0;i<3;i++)await pagina.locator('.flow-tarefa-acoes button').first().click();
+    if((await pagina.evaluate(()=>window.FlowTarefas.listar()[0]?.estado))!=='concluida')erros.push('atelie: etapas nao avancaram');
+    await pagina.locator('#flow-quadro-fechar').click();
     await pagina.reload({waitUntil:'networkidle'});
     await pagina.waitForFunction(()=>window.FlowEquipe&&window.AgentesOrbitais,{timeout:10000});
     if(await pagina.locator('#flow-inicio').isVisible())erros.push('equipe: onboarding reapareceu depois de salvar');
