@@ -37,3 +37,4 @@ A API retorna códigos como `credenciais_invalidas`, `csrf_invalido`, `2fa_neces
 - `GET /api/saude` → health mínimo público: estado, versão, uptime, banco e horário.
 - `GET /api/diagnostico` → exige autenticação e retorna métricas agregadas de requisições, processo e banco.
 - Todas as respostas passam pelo middleware de `X-Request-Id`.
+`nAquarioVivo.desenhar(ctx, largura, altura, tempo, delta): renderiza apenas cena visual; alimentar(x,y): adiciona alimento; estado(): retorna contagens, sem backend.

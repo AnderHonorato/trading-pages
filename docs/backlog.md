@@ -78,3 +78,4 @@ Atualizado na v12. A prioridade muda a cada ciclo com base em risco, valor e evi
 - [P1] Dividir `frontend/paginas/painel/painel.js`.
 - [P1] Renomear arquivos `evolucao-v11.*` para versão neutra após estabilização.
 - [P2] Remover compatibilidades antigas não utilizadas após cobertura de regressão.
+- [ ] Avaliar FPS e contraste visual do Aquario Vivo em aparelhos Android reais

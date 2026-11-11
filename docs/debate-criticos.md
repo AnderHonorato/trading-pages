@@ -15,3 +15,4 @@
 - [MÉDIA → corrigido] nomes e placa central cobriam a arena. Placas dos agentes são ocultadas no Cosmo e a placa central não é desenhada.
 - [MÉDIA → corrigido] navegação mobile estava apertada. Temas usam duas faixas roláveis e agentes usam uma faixa horizontal compacta.
 - [MÉDIA → pendente] inglês completo do painel legado ainda não foi migrado nesta onda.
+`n2026-11-11: aquario sem novas dependencias, limites de 11 peixes e 12 alimentos; riscos: sobreposicao de elementos em telas pequenas e FPS a medir em dispositivo real.

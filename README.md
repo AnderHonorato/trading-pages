@@ -294,4 +294,4 @@ A URL foi validada em HTTP 200, desktop 1440 px e mobile 390 px, sem overflow e 
 ## Central de missoes (2026-11-11)
 Painel demonstrativo interativo: selecao de agentes, ativacao/reserva, pulsos, convocacao, transferencia de sinais, desafios e historico local. Sem operacoes financeiras reais.
 
-\n
+\n`n## 2026-11-11 - Aquario Vivo`nNovo modulo frontend/animacoes/aquario-vivo.js com cardume independente, plantas, raios e bolhas deterministas. Toque na arena cria alimento; peixes proximos reagem. Integrado ao Canvas apenas no tema aquario; Cosmos preserva orbitas. Demo publica copia o modulo. Teste E2E valida cardume e toque.`n

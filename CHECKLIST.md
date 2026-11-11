@@ -87,4 +87,4 @@ Legenda: [x] feito e testado · [~] em andamento · [ ] falta · [!] decisão/li
 
 - [x] Central de missoes visual e funcional integrada aos agentes; fluxo browser E2E.
 
-\n
+\n- [x] Aquario Vivo com cardume, bolhas, plantas e alimentacao por toque

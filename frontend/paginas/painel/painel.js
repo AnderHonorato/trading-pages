@@ -3107,6 +3107,7 @@ function quadro(t,dt,dtR){
   if(T.fundo)T.fundo(t,dt);
   if(OV)OV.drawBackground(t,dt);
   desenhaAmbiente(t);
+  if(T.id==='aquario'&&window.AquarioVivo)window.AquarioVivo.desenhar(ctx,W,H,t,dt);
   if(T.chao&&T.id==='cosmos')T.chao(t,dt);
   for(let i=ondas.length-1;i>=0;i--){const w=ondas[i];w.t+=dt/1.8;if(w.t>=1){ondas.splice(i,1);continue;}if(w.t<0)continue;
     caminhoAnel(w.t*1.15,0,90);ctx.lineWidth=1+3*(1-w.t);ctx.strokeStyle=hexA(w.cor||P.onda,(1-w.t)*.6);ctx.stroke();}
@@ -3285,7 +3286,7 @@ function montaChips(){
 
 /* ---------------- interação e início ---------------- */
 function achar(ev){const b=cv.getBoundingClientRect(),x=ev.clientX-b.left,y=ev.clientY-b.top;return ativos().find(a=>a.p&&Math.hypot(a.p.x-x,a.p.y-y)<a.p.r*1.4);}
-cv.addEventListener('pointerdown',ev=>{const a=achar(ev);if(a){a.bounce=1;a.happy=1;dispararDe(a,'sinal','nucleo');}});
+cv.addEventListener('pointerdown',ev=>{if(TEMA.id==='aquario'&&window.AquarioVivo){const b=cv.getBoundingClientRect();window.AquarioVivo.alimentar((ev.clientX-b.left)*W/b.width,(ev.clientY-b.top)*H/b.height);}const a=achar(ev);if(a){a.bounce=1;a.happy=1;dispararDe(a,'sinal','nucleo');}});
 cv.addEventListener('pointermove',ev=>{cv.style.cursor=achar(ev)?'pointer':'default';const b=cv.getBoundingClientRect();par.tx=(ev.clientX-b.left)/b.width-.5;par.ty=(ev.clientY-b.top)/b.height-.5;});
 cv.addEventListener('pointerleave',()=>{par.tx=0;par.ty=0;});
 addEventListener('resize',resize);

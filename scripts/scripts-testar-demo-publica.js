@@ -83,6 +83,13 @@ async function principal(){
       if(atual!==tema)erros.push('tema: '+tema+' retornou '+atual);
     }
     await pagina.evaluate(()=>window.AgentesOrbitais.tema('cosmos'));
+    await pagina.evaluate(()=>window.AgentesOrbitais.tema('aquario'));
+    const ecossistema=await pagina.evaluate(()=>window.AquarioVivo?.estado());
+    if(!ecossistema||ecossistema.peixes!==11)erros.push('aquario: cardume nao inicializado');
+    await pagina.locator('#ao-canvas').click({position:{x:120,y:180}});
+    const comida=await pagina.evaluate(()=>window.AquarioVivo?.estado().alimentos);
+    if(!comida)erros.push('aquario: toque nao alimentou cardume');
+    await pagina.evaluate(()=>window.AgentesOrbitais.tema('cosmos'));
     await pagina.waitForTimeout(500);
     await pagina.screenshot({path:path.join(execucao,'demo-publica-desktop.png'),fullPage:true});
     await pagina.setViewportSize({width:390,height:844});
