@@ -44,7 +44,22 @@ async function principal(){
     pagina.on('console',m=>{if(m.type()==='error')erros.push('console: '+m.text());});
     pagina.on('pageerror',e=>erros.push('page: '+(e.stack||e.message)));
     await pagina.goto(origem+'/',{waitUntil:'networkidle'});
-    await pagina.waitForFunction(()=>window.AgentesOrbitais&&window.AgentesOrbitais.tema,{timeout:10000});
+    await pagina.waitForFunction(()=>window.AgentesOrbitais&&window.FlowEquipe,{timeout:10000});
+    // Primeiro acesso sem ajudantes e com o Chefinho configuravel.
+    if(!(await pagina.locator('#flow-inicio').isVisible()))erros.push('equipe: onboarding nao abriu');
+    if(await pagina.evaluate(()=>window.AgentesOrbitais.agentes().some(a=>a.ativo)))erros.push('equipe: iniciou com agentes ativos');
+    await pagina.locator('#flow-form-inicio button[type="submit"]').click();
+    if(await pagina.evaluate(()=>window.FlowEquipe.orquestrador().nome)!=='Chefinho')erros.push('equipe: nome padrao incorreto');
+    await pagina.locator('#flow-aba-equipe button.flow-principal').first().click();
+    await pagina.locator('#flow-formulario input').fill('Lupita');
+    await pagina.locator('#flow-formulario textarea').fill('Curiosa, delicada e detalhista');
+    await pagina.locator('#flow-formulario button[type="submit"]').click();
+    if(await pagina.evaluate(()=>window.FlowEquipe.listar().length)!==1)erros.push('equipe: criacao nao registrada');
+    await pagina.locator('#flow-modal [data-aba="conversas"]').click();
+    await pagina.locator('#flow-texto').fill('Confira as novidades da arena');
+    await pagina.locator('.flow-enviar button[type="submit"]').click();
+    if((await pagina.evaluate(()=>window.FlowEquipe.estado().mensagens))<4)erros.push('equipe: recado nao passou pelo orquestrador');
+    await pagina.locator('#flow-equipe-fechar').click();
     await pagina.evaluate(()=>window.AgentesOrbitais.tema('cosmos'));
     await pagina.waitForTimeout(2500);
     const desktop=await pagina.evaluate(()=>({
