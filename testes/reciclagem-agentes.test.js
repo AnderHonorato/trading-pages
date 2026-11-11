@@ -33,3 +33,26 @@ test('afinidade de papel prioriza reserva compatível',()=>{
 test('afinidade ignora acentos e caixa',()=>{
   assert.ok(reciclagem.afinidadePapel({papel:'Execução Rápida'},'execucao')>0);
 });
+
+test('sorteio de substituto avalia cada reserva uma única vez',()=>{
+  const reservas=[
+    {nome:'A',papel:'Risco'},
+    {nome:'B',papel:'Risco'},
+    {nome:'C',papel:'Risco'}
+  ];
+  const valores=[0.1,0.9,0.4];
+  let chamadas=0;
+  const escolhido=reciclagem.escolherSubstituto(reservas,'Risco',()=>{
+    assert.ok(chamadas<valores.length,'não deve sortear durante comparações');
+    return valores[chamadas++];
+  });
+  assert.equal(chamadas,reservas.length);
+  assert.equal(escolhido.nome,'B');
+  assert.deepEqual(reservas.map(a=>a.nome),['A','B','C']);
+});
+
+test('substituição preserva prioridade de afinidade mesmo com sorteio adverso',()=>{
+  const reservas=[{nome:'Compatível',papel:'Risco'},{nome:'Outro',papel:'Liquidez'}];
+  const escolhido=reciclagem.escolherSubstituto(reservas,'Risco',(()=>{let n=0;return ()=>n++===0?0:1;})());
+  assert.equal(escolhido.nome,'Compatível');
+});
