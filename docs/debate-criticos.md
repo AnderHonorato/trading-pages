@@ -36,3 +36,28 @@
 - Gate visual final: Pixel 1,89× e Cosmo 1,03× a soma dos raios do par mais próximo.
 - Desktop 1440 px e mobile 390 px sem overflow.
 - Zero erros de console no teste visual.
+
+
+## Revisão crítica — v14
+
+### Crítico de produto
+- [ALTA → corrigido] A V13 tinha 20 skins visuais, mas todos os agentes ainda eram posicionados pela mesma lógica orbital. Isso contrariava o requisito de identidade própria dos temas.
+- [ALTA → corrigido] Mesmo após trocar o posicionamento, o HUD ainda mostrava “Elipse 3D” em Oceano/Música/Pixel, transmitindo uma capacidade que não existia mais.
+- [ALTA → corrigido] O fundo ainda desenhava elipses ambientais genéricas em todos os temas, preservando visualmente a sensação de órbita.
+- [MÉDIA → corrigido] Cartas, Criaturas, Cyber e Clima apresentaram sobreposição real na primeira rodada Playwright; a geometria desses layouts foi refeita e o gate elevado para 1,0×.
+- [MÉDIA → evidência] Pixel, Naves, Oceano, Música e Cosmo foram capturados separadamente para inspeção visual; as composições são claramente distintas.
+
+### Crítico técnico
+- [ALTA → corrigido] O primeiro teste de continuidade comparava t=0 com t=4 e classificava deslocamento longo como teletransporte. O teste foi corrigido para medir deslocamento entre quadros de 100 ms.
+- [ALTA → corrigido] Cyber/Oceano/Clima usavam wrap de fase em versões intermediárias, o que poderia causar salto da borda direita para a esquerda. Foram substituídos por trajetórias contínuas de ida e volta ou oscilações locais.
+- [MÉDIA → monitorar] O motor temático hoje é determinístico e leve, mas o custo do Canvas com 20+ agentes deve ganhar budget formal de frame time/FPS em próxima onda.
+- [MÉDIA → monitorar] `evolucao-v11.js` ainda contém responsabilidades visuais e de simulação demais; a V14 extraiu movimento, mas a modularização deve continuar.
+
+### Evidências da rodada de desenvolvimento
+- 9/9 testes específicos V14 aprovados.
+- Playwright percorreu 20/20 temas no Chrome.
+- 19 assinaturas geométricas não-Cosmo diferentes.
+- Todos os temas apresentaram movimento mensurável.
+- Todos passaram separação >= 1,0× na rodada final.
+- Zero overflow horizontal.
+- Zero erros de console/page.

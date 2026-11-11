@@ -10,5 +10,5 @@ test('servidor usa guarda local e aceita PORT de plataforma sem varredura',()=>{
   assert.match(js,/verificarInstancia/);
   assert.match(js,/removerPidProprio/);
   assert.match(js,/portaPlataforma>0 \? portaPlataforma : await encontrarPortaLivre/);
-  assert.match(js,/Trading Pages v13/);
+  assert.match(js,/Trading Pages v14/);
 });

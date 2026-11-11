@@ -1,7 +1,7 @@
 const crypto=require('node:crypto');
 const os=require('node:os');
 
-function criarObservabilidade({versao='13.0',inicio=Date.now()}={}){
+function criarObservabilidade({versao='14.0',inicio=Date.now()}={}){
   const estado={
     total:0,status2xx:0,status3xx:0,status4xx:0,status5xx:0,
     ativas:0,tempoTotalMs:0,tempoMaxMs:0

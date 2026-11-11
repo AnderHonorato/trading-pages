@@ -1,4 +1,4 @@
-# CHECKLIST — Trading Pages v13
+# CHECKLIST — Trading Pages v14
 
 Legenda: [x] feito e testado · [~] em andamento · [ ] falta · [!] decisão/limitação
 
@@ -10,7 +10,20 @@ Legenda: [x] feito e testado · [~] em andamento · [ ] falta · [!] decisão/li
 - [x] Trava contra segunda instância local + limpeza de PID obsoleto
 - [x] Compatibilidade com PORT de plataforma
 - [x] .env e banco fora do Git
-- [x] Versionamento 13.0.0
+- [x] Versionamento 14.0.0
+
+## Movimentos temáticos v14
+- [x] Somente Cosmo usa órbita contínua
+- [x] 19 temas não-Cosmo com formação e deslocamento próprios
+- [x] Guias visuais por categoria sem anéis orbitais genéricos
+- [x] Rastros seguem deslocamento temático real
+- [x] HUD mostra movimento correto do tema
+- [x] Botão de trajetória orbital fica disponível somente no Cosmo
+- [x] QA Chrome percorre todos os 20 temas
+- [x] 19 assinaturas geométricas distintas fora do Cosmo
+- [x] Separação mínima >= 1,0x a soma dos raios
+- [x] Continuidade de movimento sem teletransporte
+- [x] Desktop/mobile sem overflow nos temas representativos
 
 ## Cosmo e animação
 - [x] Buraco negro central fixo no Cosmo
@@ -84,7 +97,7 @@ Legenda: [x] feito e testado · [~] em andamento · [ ] falta · [!] decisão/li
 - [x] CI GitHub com testes, segurança, smoke, visual e release condicionado ao sucesso
 
 ## Verificação
-- [x] 57 testes unitários/integrados
+- [x] 68 testes unitários/integrados
 - [x] Smoke HTTP com health, login, sessão e diagnóstico
 - [x] Smoke 2FA
 - [x] Auditoria de segurança em 6 frentes

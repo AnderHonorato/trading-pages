@@ -7,6 +7,7 @@
   const FISICA = global.OrbitalFisica || null;
   const RECICLAGEM = global.ReciclagemAgentes || null;
   const COREOGRAFIA = global.OrbitalCoreografia || null;
+  const MOVIMENTOS = global.MovimentosTematicos || null;
   const ORBITAS = [
     { id: 'elipse', nome: 'Elipse 3D' },
     { id: 'oito', nome: 'Infinito ∞' },
@@ -569,7 +570,9 @@
       const ativosAgora=vivos();
       const pior=ativosAgora.length?(RECICLAGEM?RECICLAGEM.escolherMenorRelevancia(ativosAgora):ativosAgora.slice().sort((a,b)=>(a.relevancia||100)-(b.relevancia||100))[0]):null;
       const rel=pior?pior.nome+' '+Math.round(pior.relevancia||0)+'%':'—';
-      indicador.innerHTML='<strong>✦ '+pp[0].toUpperCase()+'</strong><span>✧ NÍVEL '+L.nuc.nivel+'/50 · G'+geracao+' · '+L.ativos().length+' seres · ♻ '+reciclagens+'</span><small>◎ '+ORBITAS[modo].nome+' · reciclagem em '+Math.max(0,Math.ceil(proximaReciclagem))+'s · menor relevância '+rel+' · '+backend+'</small>';
+      const movimento=tema()?.id==='cosmos'?ORBITAS[modo].nome:(MOVIMENTOS?.nomeMovimento(tema()?.id)||'Movimento temático');
+      const iconeMovimento=tema()?.id==='cosmos'?'◎':'↝';
+      indicador.innerHTML='<strong>✦ '+pp[0].toUpperCase()+'</strong><span>✧ NÍVEL '+L.nuc.nivel+'/50 · G'+geracao+' · '+L.ativos().length+' seres · ♻ '+reciclagens+'</span><small>'+iconeMovimento+' '+movimento+' · reciclagem em '+Math.max(0,Math.ceil(proximaReciclagem))+'s · menor relevância '+rel+' · '+backend+'</small>';
     }
   }
   function drawAura(a, p, t) {
@@ -697,18 +700,35 @@
       };
     });
   }
+  function atualizarControleMovimento(){
+    if(!botaoModo)return;
+    const id=tema()?.id,cosmo=id==='cosmos';
+    const nome=cosmo?ORBITAS[modo].nome:(MOVIMENTOS?.nomeMovimento(id)||'Movimento temático');
+    botaoModo.disabled=!cosmo;
+    botaoModo.textContent=(cosmo?'◎ ':'↝ ')+nome;
+    botaoModo.setAttribute('aria-label',cosmo?'Alternar trajetória orbital do Cosmo':'Movimento do tema: '+nome);
+    botaoModo.title=cosmo?'Cosmo permite alternar trajetórias orbitais':'Cada tema possui movimento próprio; somente o Cosmo usa órbita';
+  }
   function setMode(id){
+    if(tema()?.id!=='cosmos'){
+      atualizarControleMovimento();
+      return 'tematico:'+(tema()?.id||'desconhecido');
+    }
     const n=typeof id==='number'?id:ORBITAS.findIndex(x=>x.id===id);
     modo=(n>=0?n:modo)%ORBITAS.length;
-    if (botaoModo) botaoModo.textContent='◎ '+ORBITAS[modo].nome;
-    evento('ÓRBITA: '+ORBITAS[modo].nome.toUpperCase());
+    atualizarControleMovimento();
+    evento('TRAJETÓRIA CÓSMICA: '+ORBITAS[modo].nome.toUpperCase());
     return ORBITAS[modo].id;
   }
   function challenge() {proximoAtaque=7;return iniciarAtaque();}
   function recycleNow() {proximaReciclagem=0;const iniciou=iniciarReciclagem();if(iniciou)proximaReciclagem=62+Math.random()*34;return iniciou;}
-  function theme(T) {if (indicador) evento('PODER DESBLOQUEADO · '+(PODERES[T.id]?.[0]||T.nome));}
+  function theme(T) {
+    atualizarControleMovimento();
+    if (indicador) evento('PODER DESBLOQUEADO · '+(PODERES[T.id]?.[0]||T.nome));
+  }
   function state(){return {
-    modo:tema()?.id==='cosmos'?'orbita-cosmica':ORBITAS[modo].id,
+    modo:tema()?.id==='cosmos'?'orbita-cosmica':'tematico:'+(tema()?.id||'desconhecido'),
+    movimento:MOVIMENTOS?.nomeMovimento(tema()?.id)||(tema()?.id==='cosmos'?ORBITAS[modo].nome:'Movimento temático'),
     eliminacoes:mortes,reciclagens,evolucoes,geracao,nivelNucleo:L?.nuc.nivel||1,
     poder:power()[0],backend,zoomAutomatico:true,
     proximaReciclagemSeg:Math.max(0,Math.ceil(proximaReciclagem)),
@@ -742,12 +762,12 @@
     L=obj;
     for(const a of L.AG)if(a.ativo)initAgente(a);
     const grupo=document.createElement('div');grupo.id='ao-controls';grupo.setAttribute('role','group');grupo.setAttribute('aria-label','Controles de batalha e trajetória');
-    grupo.innerHTML='<span class="ao-control-label">MOVIMENTO</span><button type="button" id="ao-modo" aria-label="Alternar modo de órbita">◎ Elipse 3D</button><button type="button" id="ao-desafio" class="ao-kill" aria-label="Iniciar duelo com o núcleo">⚔ Duelo</button><button type="button" id="ao-habilidade" aria-label="Usar poder do tema">✦ Poder</button><button type="button" id="ao-progredir" aria-label="Evoluir o núcleo mais um nível">↑ Nível</button><button type="button" id="ao-convocar" aria-label="Adicionar um mascote em órbita">+ Mascote</button>';
+    grupo.innerHTML='<span class="ao-control-label">MOVIMENTO</span><button type="button" id="ao-modo" aria-label="Movimento do tema">↝ Movimento temático</button><button type="button" id="ao-desafio" class="ao-kill" aria-label="Iniciar duelo com o núcleo">⚔ Duelo</button><button type="button" id="ao-habilidade" aria-label="Usar poder do tema">✦ Poder</button><button type="button" id="ao-progredir" aria-label="Evoluir o núcleo mais um nível">↑ Nível</button><button type="button" id="ao-convocar" aria-label="Adicionar um mascote à formação">+ Mascote</button>';
     L.root.appendChild(grupo);
-    botaoModo=grupo.querySelector('#ao-modo');botaoDesafio=grupo.querySelector('#ao-desafio');
+    botaoModo=grupo.querySelector('#ao-modo');botaoDesafio=grupo.querySelector('#ao-desafio');atualizarControleMovimento();
     indicador=document.createElement('div');indicador.id='ao-combat-info';indicador.setAttribute('role','status');L.root.appendChild(indicador);
     avisoEl=document.createElement('div');avisoEl.id='ao-v9-notice';avisoEl.setAttribute('aria-live','polite');L.root.appendChild(avisoEl);
-    botaoModo.addEventListener('click',()=>setMode((modo+1)%ORBITAS.length));
+    botaoModo.addEventListener('click',()=>{if(tema()?.id==='cosmos')setMode((modo+1)%ORBITAS.length);});
     botaoDesafio.addEventListener('click',()=>challenge());
     grupo.querySelector('#ao-progredir').addEventListener('click',()=>{
       if(L.nuc.nivel < L.CONFIG.xp.niveis.length) {
@@ -772,7 +792,7 @@
     safe(verificarBackend);safe(sinalBackend);
     global.setInterval(()=>{if(document.visibilityState==='visible')safe(verificarBackend);},30000);
     global.setInterval(()=>{if(document.visibilityState==='visible')safe(sinalBackend);},12000);
-    evento('SISTEMA V13 · FLUIDEZ + COREOGRAFIA + CONVERSA CONTEXTUAL');
+    evento('SISTEMA V14 · MOVIMENTOS TEMÁTICOS + IDENTIDADE PRÓPRIA');
   }
 
   /* Arena anti-colisão: distância mínima em tela, e centro protegido dos rótulos. */
@@ -790,11 +810,11 @@
       const cosmo=tema()?.id==='cosmos';
       const offsets=COREOGRAFIA.resolverSeparacao(itens,{
         dt,
-        margem:cosmo?(n>13?11:20):(n>13?5:10),
-        maxDeslocamento:Math.min(cosmo?48:34,S*(cosmo?.155:.12)),
-        rigidez:cosmo?13:8,
-        amortecimento:cosmo?.92:.88,
-        iteracoes:cosmo?4:2
+        margem:cosmo?(n>13?11:20):(n>13?9:15),
+        maxDeslocamento:Math.min(cosmo?48:44,S*(cosmo?.155:.145)),
+        rigidez:cosmo?13:10,
+        amortecimento:cosmo?.92:.90,
+        iteracoes:cosmo?4:3
       });
       const k=1-Math.exp(-Math.max(dt,.001)*7);
       for(const e of lista){
@@ -895,12 +915,14 @@
         ctx.beginPath();ctx.arc(x,y,sz*1.2,0,TAU);ctx.fill();
       }
     }
-    // Ondas atmosféricas quase transparentes no entorno do núcleo.
-    ctx.globalAlpha=.075;
-    for(let k=0;k<2;k++){
-      const progress=((t*.065+k*.5)%1),rad=S*(.10+progress*.57);
-      ctx.strokeStyle=col;ctx.lineWidth=1.5*(1-progress);
-      ctx.beginPath();ctx.ellipse(CX,CY,rad,rad*.68,Math.sin(t*.11+k)*.18,0,TAU);ctx.stroke();
+    // Anéis ambientais pertencem apenas ao Cosmo; outros temas usam suas próprias guias.
+    if(id==='cosmos'){
+      ctx.globalAlpha=.075;
+      for(let k=0;k<2;k++){
+        const progress=((t*.065+k*.5)%1),rad=S*(.10+progress*.57);
+        ctx.strokeStyle=col;ctx.lineWidth=1.5*(1-progress);
+        ctx.beginPath();ctx.ellipse(CX,CY,rad,rad*.68,Math.sin(t*.11+k)*.18,0,TAU);ctx.stroke();
+      }
     }
     ctx.restore();
   }

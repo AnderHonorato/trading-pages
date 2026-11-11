@@ -1,6 +1,6 @@
 # Backlog técnico vivo — Trading Pages
 
-Atualizado na v13. A prioridade muda a cada ciclo com base em risco, valor e evidência.
+Atualizado na v14. A prioridade muda a cada ciclo com base em risco, valor e evidência.
 
 ## Produto
 - [P1] Teste real de conectividade dos provedores de IA sem expor chave.
@@ -9,6 +9,8 @@ Atualizado na v13. A prioridade muda a cada ciclo com base em risco, valor e evi
 - [P2] Preferências persistentes de painel por usuário.
 
 ## Frontend
+- [FEITO v14] Movimento próprio para os 19 temas não-Cosmo; Cosmo é o único orbital.
+- [FEITO v14] QA visual de identidade de movimento dos 20 temas.
 - [FEITO v13] Coreografia orbital e conversa contextual extraídas para módulos reutilizáveis.
 - [P1] Quebrar o restante do motor Canvas legado em módulos menores.
 - [P1] Completar i18n PT-BR/EN.

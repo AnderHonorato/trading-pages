@@ -1,6 +1,6 @@
 {
   "name": "trading-pages",
-  "version": "13.0.0",
+  "version": "14.0.0",
   "private": true,
   "description": "Trading Pages — painel orbital seguro e demonstrativo",
   "scripts": {
@@ -11,6 +11,7 @@
     "testar:http": "node scripts/scripts-testar-http.js",
     "testar:2fa": "node scripts/scripts-testar-2fa.js",
     "testar:visual": "node scripts/scripts-testar-visual.js",
+    "testar:movimentos": "node scripts/scripts-testar-movimentos-v14.js",
     "gerar:demo-publica": "node scripts/scripts-gerar-demo-publica.js",
     "testar:demo-publica": "node scripts/scripts-testar-demo-publica.js",
     "verificar": "node scripts/scripts-verificar.js",

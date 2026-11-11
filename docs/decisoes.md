@@ -37,3 +37,20 @@
 16. **Progresso integrado ao núcleo:** a antiga placa central grande foi removida. Nível/progresso passam a ocupar um anel discreto ao redor do núcleo para liberar o centro da composição.
 
 17. **Gate anti-colisão:** a API visual expõe apenas nome, posição, raio e órbita dos agentes para QA. O teste visual mede a razão distância/(raioA+raioB) e falha abaixo do limite definido, sem expor sessão, tokens ou segredos.
+
+
+## Decisões v14 — Identidade de movimento por tema
+
+18. **Cosmo é o único sistema orbital:** `posOrbita`, anéis de trajetória e alternância de órbita só participam do layout quando `tema.id === 'cosmos'`.
+
+19. **Movimento temático é domínio próprio:** os outros 19 temas usam `movimentos-tematicos.js`, módulo puro e testável que recebe índice, população, tempo e tamanho da arena e devolve posição contínua.
+
+20. **Formação não é skin:** cada categoria tem uma assinatura geométrica própria; o QA exige pelo menos 15 assinaturas distintas e a implementação atual produz 19.
+
+21. **Sem teletransporte:** continuidade é medida entre amostras temporais curtas. Comparar posições separadas por vários segundos não é um teste válido de teletransporte porque movimentos contínuos podem percorrer grande distância.
+
+22. **Sem atropelo visual:** o gate do navegador exige distância centro-a-centro maior ou igual à soma dos raios dos agentes. O limite não é relaxado para fazer o teste passar.
+
+23. **Guias ambientais seguem o tema:** anéis ambientais genéricos foram removidos dos temas não-Cosmo; cada formação possui guia visual correspondente.
+
+24. **Controle de movimento comunica capacidade real:** temas comuns mostram sua formação como informação; somente o Cosmo habilita o botão de troca de trajetória orbital.
