@@ -48,9 +48,9 @@
         break;
       }
       case 'cartas':{
-        const ang=(-1.08+u*2.16),raio=Math.min(W,H)*.43;
-        x=CX+Math.sin(ang)*raio+Math.sin(t*.42+i)*W*.005;
-        y=CY+H*.20-Math.cos(ang)*raio*.66+Math.cos(t*.38+i)*H*.005;
+        const ang=(-1.22+u*2.44),raio=Math.min(W,H)*.47;
+        x=CX+Math.sin(ang)*raio+Math.sin(t*.36+i)*W*.0035;
+        y=CY+H*.22-Math.cos(ang)*raio*.72+Math.cos(t*.34+i)*H*.0035;
         break;
       }
       case 'voxel':{
@@ -75,10 +75,10 @@
         break;
       }
       case 'bio':{
-        const colunas=4,row=Math.floor(i/colunas),col=i%colunas;
-        const pulso=1+.05*Math.sin(t*.8+i);
-        x=CX+(col-1.5)*W*.16*pulso+Math.sin(t*.3+i)*W*.012;
-        y=CY+(row-(Math.ceil(n/colunas)-1)/2)*H*.19*pulso+Math.cos(t*.36+i)*H*.012;
+        const colunas=3,row=Math.floor(i/colunas),col=i%colunas;
+        const linhas=Math.ceil(n/colunas),pulso=1+.028*Math.sin(t*.62+i);
+        x=CX+(col-1)*W*.23*pulso+Math.sin(t*.27+i)*W*.007;
+        y=CY+(row-(linhas-1)/2)*H*.22*pulso+Math.cos(t*.31+i)*H*.007;
         break;
       }
       case 'arcano':{

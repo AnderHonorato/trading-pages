@@ -61,3 +61,10 @@
 - Todos passaram separação >= 1,0× na rodada final.
 - Zero overflow horizontal.
 - Zero erros de console/page.
+
+
+### Validação cruzada Linux/Chrome — PR #8
+- [ALTA → corrigido] O primeiro CI da V14 bloqueou o merge porque Cartas chegou a 0,93× e Bio a 0,62× no timing do runner Linux, apesar de ambos passarem localmente.
+- A geometria de Cartas foi ampliada e a Colônia Bio passou de 4 para 3 colunas com maior espaçamento e pulsação menor.
+- Duas rodadas Playwright locais consecutivas após a correção ficaram verdes: Cartas 1,26×/1,28× e Bio 2,46×/2,55×.
+- O limite de 1,0× foi mantido; nenhum gate foi relaxado para obter aprovação.
