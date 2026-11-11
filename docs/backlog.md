@@ -79,3 +79,8 @@ Atualizado na v12. A prioridade muda a cada ciclo com base em risco, valor e evi
 - [P1] Renomear arquivos `evolucao-v11.*` para versão neutra após estabilização.
 - [P2] Remover compatibilidades antigas não utilizadas após cobertura de regressão.
 - [ ] Avaliar FPS e contraste visual do Aquario Vivo em aparelhos Android reais
+
+## Evolucao 2026-11-11 - Oficina
+- [x] Produto/Frontend: Oficina interativa com esteira e pecas acionadas por toque.
+- [ ] UX: avaliar sobreposicao de agentes e esteira em celulares reais.
+- [ ] DevOps: publicar demo canonica apos revisao e verificacao dos gates.

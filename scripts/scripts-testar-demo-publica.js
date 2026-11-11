@@ -72,6 +72,12 @@ async function principal(){
     await pagina.locator('#ao-proximo').click();
     const seguinte=await pagina.evaluate(()=>window.AgentesOrbitais.estado().tema);
     if(anterior===seguinte)erros.push('controle: proximo cenario nao mudou');
+    // A oficina deve fabricar uma peca ao toque, sem depender de orbitas.
+    await pagina.evaluate(()=>window.AgentesOrbitais.tema('oficina'));
+    const oficinaAntes=await pagina.evaluate(()=>window.OficinaViva.estado().pecas);
+    await pagina.evaluate(()=>window.OficinaViva.acionar(300,400,800,600));
+    const oficinaDepois=await pagina.evaluate(()=>window.OficinaViva.estado().pecas);
+    if(oficinaDepois!==oficinaAntes+1)erros.push('oficina: fabricacao interativa falhou');
     // Validação de todas as categorias e das trocas repetidas no navegador real.
     const temas=['pixel','dados','naves','cartas','voxel','criaturas','cosmos','cyber','bio','arcano','oceano','floresta','clima','deserto','artico','comida','musica','esportes','origami','brinquedos','jardim','aquario','oficina'];
     const categorias=[];

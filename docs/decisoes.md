@@ -27,3 +27,5 @@
 Modulo separado frontend/componentes/central-missoes.js e .css; utiliza apenas API publica de simulacao, sem novos endpoints e sem ordens financeiras. Historico efemero para nao armazenar dados sensiveis.
 
 \n`n## 2026-11-11 - Aquario Vivo`nNovo modulo frontend/animacoes/aquario-vivo.js com cardume independente, plantas, raios e bolhas deterministas. Toque na arena cria alimento; peixes proximos reagem. Integrado ao Canvas apenas no tema aquario; Cosmos preserva orbitas. Demo publica copia o modulo. Teste E2E valida cardume e toque.`n
+
+10. **Oficina:** animacao em modulo proprio `frontend/animacoes/oficina-viva.js`, mantendo simulacao financeira separada e sem acionar APIs externas.

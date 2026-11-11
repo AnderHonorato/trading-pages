@@ -50,3 +50,7 @@
 - Workflow `pages-demo.yml` publica somente `.site-publico` no GitHub Pages.
 - URL canônica `https://anderhonorato.github.io/trading-pages/` validada após deploy com HTTP 200, Cosmo funcional e zero erros de console.
 `n## 2026-11-11 - Aquario Vivo`nNovo modulo frontend/animacoes/aquario-vivo.js com cardume independente, plantas, raios e bolhas deterministas. Toque na arena cria alimento; peixes proximos reagem. Integrado ao Canvas apenas no tema aquario; Cosmos preserva orbitas. Demo publica copia o modulo. Teste E2E valida cardume e toque.`n
+
+## 2026-11-11 - Oficina dos Inventos interativa
+- Nova linha de montagem 2D com cinco maquinas, engrenagens, esteira, iluminacao, faiscas e pecas fabricadas por toque.
+- Modulo independente em frontend/animacoes/oficina-viva.js, sem movimentacao orbital no cenario.
