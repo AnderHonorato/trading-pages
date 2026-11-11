@@ -84,3 +84,7 @@ Legenda: [x] feito e testado · [~] em andamento · [ ] falta · [!] decisão/li
 - [x] Zero overflow nos viewports testados
 - [x] Zero erros de console no teste visual
 - [~] PT-BR ↔ EN completo — legado ainda pendente
+
+- [x] Central de missoes visual e funcional integrada aos agentes; fluxo browser E2E.
+
+\n

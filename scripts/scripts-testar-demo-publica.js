@@ -53,6 +53,14 @@ async function principal(){
       conta:Boolean(document.querySelector('#painel-conta')),
       tema:window.AgentesOrbitais.estado().tema
     }));
+    // Fluxo de ponta a ponta da central de missoes.
+    await pagina.locator('#flow-abrir').click();
+    if(await pagina.locator('#flow-corpo').isHidden())erros.push('missoes: painel nao abriu');
+    await pagina.locator('[data-acao="pulso"]').click();
+    if((await pagina.locator('#flow-historico li').count())<1)erros.push('missoes: historico vazio');
+    if((await pagina.evaluate(()=>window.FlowMissoes.estado().comandos))<1)erros.push('missoes: comando nao registrado');
+    await pagina.locator('#flow-fechar').click();
+    if(!(await pagina.locator('#flow-corpo').isHidden()))erros.push('missoes: painel nao fechou');
     // A central precisa responder a cliques reais e refletir o estado do motor.
     await pagina.locator('#ao-pausa').click();
     if(await pagina.locator('#ao-pausa').getAttribute('aria-pressed')!=='true')erros.push('controle: pausa nao ativou');

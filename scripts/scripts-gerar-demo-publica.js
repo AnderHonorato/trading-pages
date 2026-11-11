@@ -27,6 +27,8 @@ function gerar(){
 
   copiar('frontend/paginas/painel/painel.css');
   copiar('frontend/paginas/painel/controle-vivo.css');
+  copiar('frontend/componentes/central-missoes.css');
+  copiar('frontend/componentes/central-missoes.js');
   copiar('frontend/paginas/painel/painel.js');
   copiar('frontend/paginas/painel/demo-publica.css');
   copiar('frontend/compartilhado/orbital-fisica.js');

@@ -22,3 +22,8 @@
 17. **Porta de plataforma:** `PORT` tem prioridade em hospedagem; `PORTA` continua sendo a preferência local e usa descoberta segura quando ocupada.
 
 18. **Bootstrap de produção:** `ADMIN_INICIAL_USUARIO` e `ADMIN_INICIAL_SENHA` só são aceitos quando a tabela de usuários está vazia. Depois do primeiro boot, os valores devem ser zerados/removidos no provedor.
+
+## 2026-11-11 - Central de missoes
+Modulo separado frontend/componentes/central-missoes.js e .css; utiliza apenas API publica de simulacao, sem novos endpoints e sem ordens financeiras. Historico efemero para nao armazenar dados sensiveis.
+
+\n

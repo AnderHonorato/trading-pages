@@ -3306,6 +3306,7 @@ window.AgentesOrbitais={
   ataque(n){if(ameaca.fase===0)iniciaAmeaca(n);},
   darXP(v){darXP(v);},setNivel,ativar,desativar,
   estado(){return{tema:TEMA.id,nivel:nuc.nivel,xp:Math.floor(nuc.xp),sinais:nuc.sinais,defesas:nuc.defesas};},
+  agentes(){return AG.map(a=>({nome:a.nome,papel:a.papel,status:a.status,ativo:!!a.ativo,cor:a.corT,orbita:a.orbita}));},
   config:CONFIG,TEMAS,
   combate:()=>OV?OV.state():null,
   modoOrbita:(m)=>OV?OV.setMode(m):null,

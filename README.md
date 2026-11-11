@@ -290,3 +290,8 @@ URL canônica ativa e testada do Pages:
 `https://anderhonorato.github.io/trading-pages/`
 
 A URL foi validada em HTTP 200, desktop 1440 px e mobile 390 px, sem overflow e sem erros de console. A demo é gerada por `npm run gerar:demo-publica` e validada por `npm run testar:demo-publica`. Ela **não contém login, banco de dados, sessões, chaves de API ou trading real**; os poucos sinais remotos são JSONs locais simulados apenas para manter a animação viva.
+
+## Central de missoes (2026-11-11)
+Painel demonstrativo interativo: selecao de agentes, ativacao/reserva, pulsos, convocacao, transferencia de sinais, desafios e historico local. Sem operacoes financeiras reais.
+
+\n
