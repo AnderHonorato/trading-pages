@@ -53,6 +53,17 @@ async function principal(){
       conta:Boolean(document.querySelector('#painel-conta')),
       tema:window.AgentesOrbitais.estado().tema
     }));
+    // A central precisa responder a cliques reais e refletir o estado do motor.
+    await pagina.locator('#ao-pausa').click();
+    if(await pagina.locator('#ao-pausa').getAttribute('aria-pressed')!=='true')erros.push('controle: pausa nao ativou');
+    await pagina.locator('#ao-pausa').click();
+    if(await pagina.locator('#ao-pausa').getAttribute('aria-pressed')!=='false')erros.push('controle: retomada falhou');
+    await pagina.locator('#ao-velocidade').click();
+    if((await pagina.locator('#ao-velocidade').textContent()).trim()!=='1.5×')erros.push('controle: velocidade nao mudou');
+    const anterior=await pagina.evaluate(()=>window.AgentesOrbitais.estado().tema);
+    await pagina.locator('#ao-proximo').click();
+    const seguinte=await pagina.evaluate(()=>window.AgentesOrbitais.estado().tema);
+    if(anterior===seguinte)erros.push('controle: proximo cenario nao mudou');
     // Validação de todas as categorias e das trocas repetidas no navegador real.
     const temas=['pixel','dados','naves','cartas','voxel','criaturas','cosmos','cyber','bio','arcano','oceano','floresta','clima','deserto','artico','comida','musica','esportes','origami','brinquedos','jardim','aquario','oficina'];
     const categorias=[];

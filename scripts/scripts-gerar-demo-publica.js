@@ -26,6 +26,7 @@ function gerar(){
   fs.writeFileSync(path.join(destino,'index.html'),html);
 
   copiar('frontend/paginas/painel/painel.css');
+  copiar('frontend/paginas/painel/controle-vivo.css');
   copiar('frontend/paginas/painel/painel.js');
   copiar('frontend/paginas/painel/demo-publica.css');
   copiar('frontend/compartilhado/orbital-fisica.js');

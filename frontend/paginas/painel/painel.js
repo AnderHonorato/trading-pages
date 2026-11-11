@@ -3185,13 +3185,13 @@ function quadro(t,dt,dtR){
     ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1-k;const s=1+k*.12,w=cv.width,h=cv.height;ctx.drawImage(transicao.img,w/2-w*s/2,h/2-h*s/2,w*s,h*s);ctx.restore();
     if(transicao.t>=1)transicao=null;}
 }
-let ultimo=performance.now(),proxEv=.8;
+let ultimo=performance.now(),proxEv=.8,pausadoPeloUsuario=false,velocidadeUsuario=1;
 function loop(now){
   const dtR=Math.min((now-ultimo)/1000,.05);ultimo=now;
   tempoEscala+=(1-tempoEscala)*Math.min(1,dtR*2.5);
-  const dt=reduz?0:dtR*tempoEscala;tSim+=dt;
-  if(!reduz){proxEv-=dt;if(proxEv<=0){evento();if(Math.random()<.3)agenda.push({t:.25,fn:evento});proxEv=CONFIG.intervaloPulso/1000*(.5+Math.random()*.7);}}
-  quadro(reduz?1.2:tSim,dt,reduz?0:dtR);
+  const dt=reduz||pausadoPeloUsuario?0:dtR*tempoEscala*velocidadeUsuario;tSim+=dt;
+  if(!reduz&&!pausadoPeloUsuario){proxEv-=dt;if(proxEv<=0){evento();if(Math.random()<.3)agenda.push({t:.25,fn:evento});proxEv=CONFIG.intervaloPulso/1000*(.5+Math.random()*.7);}}
+  quadro(reduz?1.2:tSim,dt,reduz||pausadoPeloUsuario?0:dtR);
   requestAnimationFrame(loop);
 }
 
@@ -3207,6 +3207,7 @@ function setTema(id,inst){
   if(W>2)fundoImg=criaFundo();
   if(listaEl){const g=grupoDe(id);if(g!==grupoAtual)selecionaGrupo(g.id,false);listaEl.querySelectorAll('.ao-tab').forEach(b=>{const on=b.dataset.t===id;b.setAttribute('aria-selected',String(on));b.tabIndex=on?0:-1;});}
   chipsEl.querySelectorAll('.ao-chip').forEach(b=>{const a=AG.find(x=>x.nome===b.dataset.n);b.style.setProperty('--c',a.corT);});
+  if(typeof central!=='undefined')atualizarCentral();
   if(CONFIG.lembrarTema){try{localStorage.setItem('ao-tema-v7',id);}catch(e){}}
 }
 const GRUPOS=(CONFIG.grupos||[{id:'todos',nome:'Temas',temas:CONFIG.temas||Object.keys(TEMAS)}]).map(g=>({...g,temas:g.temas.filter(id=>TEMAS[id])})).filter(g=>g.temas.length);
@@ -3234,6 +3235,35 @@ function montaAbas(){
     setTema(n);const b=listaEl.querySelector('[data-t="'+n+'"]');if(b)b.focus();e.preventDefault();});
 }
 
+/* ---------------- central de controle interativa ---------------- */
+const central=document.createElement('section');
+central.id='ao-central';central.setAttribute('aria-label','Central de controle da simulação');
+central.innerHTML='<div class="ao-central-titulo"><span class="ao-central-luz"></span><strong>CONTROLE VIVO</strong><output id="ao-central-estado" aria-live="polite">Em execução</output></div><div class="ao-central-acoes"><button type="button" id="ao-anterior" aria-label="Cenário anterior" title="Cenário anterior">‹</button><button type="button" id="ao-pausa" aria-pressed="false">Ⅱ Pausar</button><button type="button" id="ao-proximo" aria-label="Próximo cenário" title="Próximo cenário">›</button><button type="button" id="ao-velocidade" aria-label="Alterar velocidade da simulação">1×</button></div><div class="ao-central-progresso"><span id="ao-central-tema">Cenário</span><span id="ao-central-contador">1 / 1</span></div>';
+root.appendChild(central);
+function atualizarCentral(){
+  const i=TODOS.indexOf(TEMA.id);
+  central.querySelector('#ao-central-tema').textContent=TEMA.nome;
+  central.querySelector('#ao-central-contador').textContent=(i+1)+' / '+TODOS.length;
+  central.querySelector('#ao-central-estado').textContent=pausadoPeloUsuario?'Pausado':velocidadeUsuario+'× ativo';
+  central.querySelector('.ao-central-luz').classList.toggle('ao-parado',pausadoPeloUsuario);
+  const botao=central.querySelector('#ao-pausa');botao.textContent=pausadoPeloUsuario?'▶ Retomar':'Ⅱ Pausar';
+  botao.setAttribute('aria-pressed',String(pausadoPeloUsuario));
+  central.querySelector('#ao-velocidade').textContent=velocidadeUsuario+'×';
+}
+function navegarCenario(delta){
+  const i=TODOS.indexOf(TEMA.id),proximo=TODOS[(i+delta+TODOS.length)%TODOS.length];
+  setTema(proximo);atualizarCentral();
+}
+central.querySelector('#ao-anterior').addEventListener('click',()=>navegarCenario(-1));
+central.querySelector('#ao-proximo').addEventListener('click',()=>navegarCenario(1));
+central.querySelector('#ao-pausa').addEventListener('click',()=>{pausadoPeloUsuario=!pausadoPeloUsuario;atualizarCentral();});
+central.querySelector('#ao-velocidade').addEventListener('click',()=>{velocidadeUsuario=velocidadeUsuario===1?1.5:velocidadeUsuario===1.5?2:.5;atualizarCentral();});
+document.addEventListener('keydown',e=>{
+  if(e.altKey||e.ctrlKey||e.metaKey||['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName))return;
+  if(e.code==='Space'){e.preventDefault();central.querySelector('#ao-pausa').click();}
+  if(e.key==='PageDown'){e.preventDefault();navegarCenario(1);}
+  if(e.key==='PageUp'){e.preventDefault();navegarCenario(-1);}
+});
 /* ---------------- agentes da reserva ---------------- */
 function ativar(nome){
   const a=AG.find(x=>x.nome===nome);if(!a||a.ativo)return;
@@ -3264,7 +3294,7 @@ montaAbas();montaChips();
 let inicial=CONFIG.tema;
 try{const h=(location.hash||'').slice(1);if(TEMAS[h])inicial=h;else if(CONFIG.lembrarTema){const sv=localStorage.getItem('ao-tema-v7');if(sv&&TODOS.includes(sv))inicial=sv;}}catch(e){}
 if(!TEMAS[inicial])inicial=TODOS[0]||Object.keys(TEMAS)[0];
-setTema(inicial,true);resize();requestAnimationFrame(loop);
+setTema(inicial,true);atualizarCentral();resize();requestAnimationFrame(loop);
 
 window.AgentesOrbitais={
   tema:id=>setTema(id),temas:()=>Object.keys(TEMAS),grupo:id=>selecionaGrupo(id,true),
