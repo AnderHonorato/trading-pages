@@ -1,5 +1,29 @@
 # CHANGELOG
 
+## 14.0.0 — 2026-11-11
+### Adicionado
+- Módulo `movimentos-tematicos.js` com 19 formações/deslocamentos não orbitais.
+- Guias de arena por tema: grade, mesa, V, leque, circuito, sigilo, ondas, galhos, caravana, equalizador e outras.
+- QA Playwright `scripts-testar-movimentos-v14.js` que percorre os 20 temas no Chrome.
+- Gate de continuidade de movimento e separação visual mínima de 1,0×.
+- Documento `docs/conformidade-conversa.md` consolidando requisitos antigos como critérios de aceite.
+- Referência visual no Figma “Trading Pages V14 — Movimentos por Tema”.
+
+### Alterado
+- Somente o Cosmo calcula posições com `posOrbita` e exibe anéis orbitais.
+- Temas não-Cosmo passam a calcular posição via motor temático e deixam rastros do caminho real.
+- Botão “Movimento” vira indicador da formação fora do Cosmo e só alterna trajetória orbital no Cosmo.
+- HUD deixa de exibir “Elipse 3D” fora do Cosmo.
+- Anéis ambientais genéricos no entorno do núcleo ficam restritos ao Cosmo.
+- Separação anti-colisão foi reforçada para formações temáticas.
+- Backend, demo pública, CI e pacote atualizados para 14.0.0.
+
+### Verificação durante desenvolvimento
+- 19 assinaturas não-Cosmo distintas detectadas no navegador.
+- 20/20 temas em movimento.
+- Todos os temas passaram o gate de separação >= 1,0× na rodada visual de desenvolvimento.
+- Zero overflow e zero erros de console na rodada dos 20 temas.
+
 ## 13.0.0 — 2026-11-10
 ### Adicionado
 - Módulo `orbital-coreografia.js` com distribuição regular de fases, interpolação angular e separação suave.

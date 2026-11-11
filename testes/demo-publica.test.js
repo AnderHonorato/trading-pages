@@ -27,3 +27,12 @@ test('demo tem JSONs locais e marcador explícito de simulação',()=>{
   assert.equal(status.conectadoCorretora,false);
   assert.match(html,/Demo pública · dados simulados/);
 });
+
+test('demo pública inclui motor temático v14 e versão correta',()=>{
+  const pasta=gerar();
+  const status=JSON.parse(fs.readFileSync(path.join(pasta,'api/status.json'),'utf8'));
+  const html=fs.readFileSync(path.join(pasta,'index.html'),'utf8');
+  assert.equal(status.versao,'14.0-demo');
+  assert.match(html,/movimentos-tematicos\.js/);
+  assert.equal(fs.existsSync(path.join(pasta,'frontend/compartilhado/movimentos-tematicos.js')),true);
+});

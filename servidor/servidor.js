@@ -24,7 +24,7 @@ if(adminInicial.criado)console.log('Administrador inicial criado:',adminInicial.
 
 const raiz=path.resolve(__dirname,'..');
 const app=express();
-const observabilidade=criarObservabilidade({versao:'13.0'});
+const observabilidade=criarObservabilidade({versao:'14.0'});
 app.disable('x-powered-by');
 if(String(process.env.TRUST_PROXY).toLowerCase()==='true')app.set('trust proxy',1);
 app.use(segurancaCabecalhos());
@@ -45,7 +45,7 @@ app.get('/api/saude',(_req,res)=>{
     obterBanco().prepare('SELECT 1 AS ok').get();
     res.json({...observabilidade.health(),banco:'ok'});
   }catch{
-    res.status(503).json({ok:false,versao:'13.0',estado:'degradado',banco:'erro',hora:new Date().toISOString()});
+    res.status(503).json({ok:false,versao:'14.0',estado:'degradado',banco:'erro',hora:new Date().toISOString()});
   }
 });
 
@@ -59,20 +59,20 @@ app.get('/api/diagnostico',(req,res)=>{
   const sessoesAtivas=banco.prepare("SELECT COUNT(*) AS n FROM sessoes WHERE revogada_em IS NULL AND expira_em>?").get(new Date().toISOString()).n;
   const auditoria24h=banco.prepare("SELECT COUNT(*) AS n FROM auditoria WHERE criado_em>?").get(new Date(Date.now()-86400000).toISOString()).n;
   res.set('Cache-Control','no-store');
-  res.json({ok:true,versao:'13.0',...observabilidade.snapshot(),banco:{sessoesAtivas:Number(sessoesAtivas),eventosAuditoria24h:Number(auditoria24h)}});
+  res.json({ok:true,versao:'14.0',...observabilidade.snapshot(),banco:{sessoesAtivas:Number(sessoesAtivas),eventosAuditoria24h:Number(auditoria24h)}});
 });
 
 app.get('/api/status',(req,res)=>{
   if(!req.sessao)return res.status(401).json({ok:false,erro:'autenticacao_necessaria'});
   res.set('Cache-Control','no-store');
-  res.json({ok:true,versao:'13.0',modo:'demonstracao',conectadoCorretora:false,orquestracao:'visual',hora:new Date().toISOString()});
+  res.json({ok:true,versao:'14.0',modo:'demonstracao',conectadoCorretora:false,orquestracao:'visual',hora:new Date().toISOString()});
 });
 app.get('/api/sinais',(req,res)=>{
   if(!req.sessao)return res.status(401).json({ok:false,erro:'autenticacao_necessaria'});
   const agentes=['KELLY','SPOTTER','TAKER','CLOSER','PRIOR','EDGE','LUNA','RUBI','AXO'];
   const ciclo=Math.floor(Date.now()/30000);
   res.set('Cache-Control','no-store');
-  res.json({ok:true,demonstracao:true,versao:'13.0',eventos:[{id:'demo-'+ciclo,tipo:'observacao',agente:agentes[ciclo%agentes.length],horario:new Date(ciclo*30000).toISOString(),descricao:'Pulso visual demonstrativo — sem ordem real.'}]});
+  res.json({ok:true,demonstracao:true,versao:'14.0',eventos:[{id:'demo-'+ciclo,tipo:'observacao',agente:agentes[ciclo%agentes.length],horario:new Date(ciclo*30000).toISOString(),descricao:'Pulso visual demonstrativo — sem ordem real.'}]});
 });
 
 function paginaProtegida(arquivo,{permitirTroca=false}={}){
@@ -125,7 +125,7 @@ async function iniciar(){
     fs.writeFileSync(arquivoPid,String(process.pid));
     fs.writeFileSync(arquivoPorta,String(porta));
   }
-  console.log(`Trading Pages v13 em http://127.0.0.1:${porta} · bind ${host}:${porta}`);
+  console.log(`Trading Pages v14 em http://127.0.0.1:${porta} · bind ${host}:${porta}`);
 }
 
 function encerrar(){

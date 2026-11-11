@@ -11,7 +11,7 @@ test('CI roda no main e em pull requests',()=>{
 });
 
 test('CI cobre gates críticos e testes visuais',()=>{
-  for(const comando of ['npm ci','npm run verificar','npm run testar','npm run auditar:seguranca','npm audit --omit=dev','npm run testar:http','npm run testar:2fa','npm run testar:visual']){
+  for(const comando of ['npm ci','npm run verificar','npm run testar','npm run auditar:seguranca','npm audit --omit=dev','npm run testar:http','npm run testar:2fa','npm run testar:visual','npm run testar:movimentos']){
     assert.ok(workflow.includes(comando),comando+' ausente');
   }
 });
@@ -25,5 +25,10 @@ test('release só é publicado após sucesso e fonte usa git archive',()=>{
 
 test('falhas geram artefato de diagnóstico separado',()=>{
   assert.match(workflow,/Publicar diagnóstico de falha\s*\n\s*if: failure\(\)/);
-  assert.match(workflow,/trading-pages-v13-falha-/);
+  assert.match(workflow,/trading-pages-v14-falha-/);
+});
+
+test('CI v14 publica artefato versionado',()=>{
+  assert.match(workflow,/trading-pages-v14-/);
+  assert.match(workflow,/trading-pages-v14-source\.zip/);
 });

@@ -1,8 +1,18 @@
-# Trading Pages v13 — Ander Quant OS
+# Trading Pages v14 — Ander Quant OS
 
-Painel orbital visual para orquestração demonstrativa de agentes, com múltiplos estilos, progressão, eventos animados e área administrativa segura.
-A base v11 adicionou o **Cosmo vivo**, autenticação real, 2FA, configuração criptografada de provedores de IA e acesso pela rede local. A v12 acrescentou gestão de sessões/dispositivos, health check, métricas de diagnóstico e request IDs. A v13 refina o sistema visual com coreografia orbital, anti-colisão previsível, movimentos mais suaves e comunicação contextual com menos poluição visual.
+Painel visual vivo para orquestração demonstrativa de agentes, com 20 universos temáticos, progressão, eventos animados e área administrativa segura.
+A base v11 adicionou o **Cosmo vivo**, autenticação real, 2FA, configuração criptografada de provedores de IA e acesso pela rede local. A v12 acrescentou gestão de sessões/dispositivos, health check, métricas de diagnóstico e request IDs. A v13 refinou fluidez, anti-colisão e conversa contextual. A v14 elimina a órbita genérica dos demais temas: **somente o Cosmo é orbital; os outros 19 possuem formação e deslocamento próprios**.
 O projeto permanece em **modo demonstrativo**: não envia ordens financeiras reais e não está conectado a corretora.
+
+## Evoluções v14
+- **19 movimentos não-Cosmo próprios:** grade arcade, mesa tática, esquadrão em V, leque, degraus, matilha, circuito, colônia, sigilo, cardume, galhos, camadas atmosféricas, caravana, placas de gelo, esteira, equalizador, campo, dobras e pista.
+- **Cosmo é o único modo orbital:** anéis, cálculo orbital e alternância de trajetória ficam restritos a esse tema.
+- **Guias temáticas:** o fundo da arena comunica a formação do tema sem reutilizar anéis orbitais genéricos.
+- **Rastros reais:** fora do Cosmo, o rastro segue o histórico do deslocamento temático do agente.
+- **HUD coerente:** mostra o nome do movimento do tema; “Elipse 3D” não aparece mais em temas que não orbitam.
+- **Anti-colisão reforçada para todos os temas:** gate visual exige distância mínima de pelo menos 1,0× a soma dos raios.
+- **QA de todos os 20 temas no Chrome:** valida modo, movimento, separação, continuidade, overflow e erros de console.
+- **Matriz visual no Figma:** a regra de movimento por tema está documentada como referência de produto: https://www.figma.com/design/fpAFJJ45mTmbH8mKWZ1HiZ
 
 ## Evoluções v13
 - **Slots orbitais dinâmicos:** agentes da mesma órbita mantêm ordem e espaçamento regular antes de chegar à zona de colisão.

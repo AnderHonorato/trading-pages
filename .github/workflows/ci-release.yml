@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   validar:
-    name: Validar v13
+    name: Validar v14
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -78,6 +78,7 @@ jobs:
           npm run testar:http
           npm run testar:2fa
           npm run testar:visual
+          npm run testar:movimentos
 
       - name: Preparar pacote de release
         if: success()
@@ -86,16 +87,30 @@ jobs:
           set -euo pipefail
           mkdir -p release/evidencias
 
-          git archive --format=zip --output=release/trading-pages-v13-source.zip HEAD
+          git archive --format=zip --output=release/trading-pages-v14-source.zip HEAD
 
-          for arquivo in             .execucao/cosmo-desktop.png             .execucao/cosmo-mobile.png             .execucao/configuracoes-desktop.png             .execucao/configuracoes-mobile.png             .execucao/ci-servidor.log             docs/auditoria-seguranca.json             CHANGELOG.md             CHECKLIST.md; do
+          for arquivo in \
+            .execucao/cosmo-desktop.png \
+            .execucao/cosmo-mobile.png \
+            .execucao/v14-pixel-desktop.png \
+            .execucao/v14-naves-desktop.png \
+            .execucao/v14-oceano-desktop.png \
+            .execucao/v14-musica-desktop.png \
+            .execucao/v14-cosmos-desktop.png \
+            .execucao/configuracoes-desktop.png \
+            .execucao/configuracoes-mobile.png \
+            .execucao/ci-servidor.log \
+            docs/auditoria-seguranca.json \
+            docs/conformidade-conversa.md \
+            CHANGELOG.md \
+            CHECKLIST.md; do
             if [ -f "$arquivo" ]; then
               cp "$arquivo" release/evidencias/
             fi
           done
 
           {
-            echo "# Trading Pages v13 — Relatório de Release"
+            echo "# Trading Pages v14 — Relatório de Release"
             echo
             echo "- Commit: \`${GITHUB_SHA}\`"
             echo "- Ref: \`${GITHUB_REF}\`"
@@ -111,6 +126,7 @@ jobs:
             echo "- Smoke HTTP"
             echo "- Smoke 2FA"
             echo "- Teste visual desktop/mobile"
+            echo "- QA dos 20 movimentos temáticos e separação visual"
             echo
             echo "O pacote de código foi criado com \`git archive\`, portanto não inclui \`.git\`, \`.env\`, banco local nem arquivos ignorados."
           } > release/RELATORIO.md
@@ -119,7 +135,7 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: trading-pages-v13-${{ github.sha }}
+          name: trading-pages-v14-${{ github.sha }}
           path: release/
           if-no-files-found: error
           retention-days: 30
@@ -128,7 +144,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: trading-pages-v13-falha-${{ github.sha }}
+          name: trading-pages-v14-falha-${{ github.sha }}
           path: |
             .execucao/
             docs/auditoria-seguranca.json
