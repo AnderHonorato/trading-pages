@@ -31,6 +31,9 @@ function gerar(){
   copiar('frontend/componentes/central-missoes.js');
   copiar('frontend/animacoes/aquario-vivo.js');
   copiar('frontend/animacoes/oficina-viva.js');
+  copiar('frontend/animacoes/jardim-vivo.js');
+  copiar('frontend/componentes/jardim-controles.js');
+  copiar('frontend/componentes/jardim-controles.css');
   copiar('frontend/paginas/painel/painel.js');
   copiar('frontend/paginas/painel/demo-publica.css');
   copiar('frontend/compartilhado/orbital-fisica.js');

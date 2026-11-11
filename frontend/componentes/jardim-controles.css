@@ -1,0 +1,10 @@
+#flow-jardim{position:absolute;left:12px;top:82px;z-index:4;width:min(230px,calc(100% - 24px));padding:13px;border-radius:18px;background:#102b2ae8;color:#f1f9e7;border:1px solid #a2d2a966;box-shadow:0 10px 30px #071c2180;font:500 12px system-ui,sans-serif;backdrop-filter:blur(12px)}
+#flow-jardim[hidden]{display:none}
+#flow-jardim strong{font-size:13px;letter-spacing:.12em}
+#flow-jardim-contagem{display:block;color:#b3e9bc;margin-top:4px}
+#flow-jardim p{line-height:1.4;margin:8px 0}
+#flow-jardim div{display:flex;gap:7px}
+#flow-jardim button{flex:1;min-height:44px;background:#325a48;border:1px solid #b0dbab88;color:white;border-radius:12px;font:600 12px system-ui;cursor:pointer;touch-action:manipulation}
+#flow-jardim button:active{background:#558a63}
+#flow-jardim button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+@media(max-width:700px){#flow-jardim{top:90px;left:8px;width:min(195px,calc(100% - 16px));padding:9px}#flow-jardim p{font-size:11px}}

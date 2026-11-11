@@ -3109,6 +3109,7 @@ function quadro(t,dt,dtR){
   desenhaAmbiente(t);
   if(T.id==='aquario'&&window.AquarioVivo)window.AquarioVivo.desenhar(ctx,W,H,t,dt);
   if(T.id==='oficina'&&window.OficinaViva)window.OficinaViva.desenhar(ctx,W,H,t,dt);
+  if(T.id==='jardim'&&window.JardimVivo)window.JardimVivo.desenhar(ctx,W,H,t,dt);
   if(T.chao&&T.id==='cosmos')T.chao(t,dt);
   for(let i=ondas.length-1;i>=0;i--){const w=ondas[i];w.t+=dt/1.8;if(w.t>=1){ondas.splice(i,1);continue;}if(w.t<0)continue;
     caminhoAnel(w.t*1.15,0,90);ctx.lineWidth=1+3*(1-w.t);ctx.strokeStyle=hexA(w.cor||P.onda,(1-w.t)*.6);ctx.stroke();}
@@ -3210,6 +3211,7 @@ function setTema(id,inst){
   if(listaEl){const g=grupoDe(id);if(g!==grupoAtual)selecionaGrupo(g.id,false);listaEl.querySelectorAll('.ao-tab').forEach(b=>{const on=b.dataset.t===id;b.setAttribute('aria-selected',String(on));b.tabIndex=on?0:-1;});}
   chipsEl.querySelectorAll('.ao-chip').forEach(b=>{const a=AG.find(x=>x.nome===b.dataset.n);b.style.setProperty('--c',a.corT);});
   if(typeof central!=='undefined')atualizarCentral();
+  document.dispatchEvent(new CustomEvent('flow:tema',{detail:{id}}));
   if(CONFIG.lembrarTema){try{localStorage.setItem('ao-tema-v7',id);}catch(e){}}
 }
 const GRUPOS=(CONFIG.grupos||[{id:'todos',nome:'Temas',temas:CONFIG.temas||Object.keys(TEMAS)}]).map(g=>({...g,temas:g.temas.filter(id=>TEMAS[id])})).filter(g=>g.temas.length);
@@ -3287,7 +3289,7 @@ function montaChips(){
 
 /* ---------------- interação e início ---------------- */
 function achar(ev){const b=cv.getBoundingClientRect(),x=ev.clientX-b.left,y=ev.clientY-b.top;return ativos().find(a=>a.p&&Math.hypot(a.p.x-x,a.p.y-y)<a.p.r*1.4);}
-cv.addEventListener('pointerdown',ev=>{if(TEMA.id==='oficina'&&window.OficinaViva){const b=cv.getBoundingClientRect();window.OficinaViva.acionar((ev.clientX-b.left)*W/b.width,(ev.clientY-b.top)*H/b.height);}if(TEMA.id==='aquario'&&window.AquarioVivo){const b=cv.getBoundingClientRect();window.AquarioVivo.alimentar((ev.clientX-b.left)*W/b.width,(ev.clientY-b.top)*H/b.height);}const a=achar(ev);if(a){a.bounce=1;a.happy=1;dispararDe(a,'sinal','nucleo');}});
+cv.addEventListener('pointerdown',ev=>{if(TEMA.id==='jardim'&&window.JardimVivo){const b=cv.getBoundingClientRect();window.JardimVivo.plantar((ev.clientX-b.left)*W/b.width,(ev.clientY-b.top)*H/b.height,W,H);document.dispatchEvent(new Event('flow:jardim'));return;}if(TEMA.id==='oficina'&&window.OficinaViva){const b=cv.getBoundingClientRect();window.OficinaViva.acionar((ev.clientX-b.left)*W/b.width,(ev.clientY-b.top)*H/b.height);}if(TEMA.id==='aquario'&&window.AquarioVivo){const b=cv.getBoundingClientRect();window.AquarioVivo.alimentar((ev.clientX-b.left)*W/b.width,(ev.clientY-b.top)*H/b.height);}const a=achar(ev);if(a){a.bounce=1;a.happy=1;dispararDe(a,'sinal','nucleo');}});
 cv.addEventListener('pointermove',ev=>{cv.style.cursor=achar(ev)?'pointer':'default';const b=cv.getBoundingClientRect();par.tx=(ev.clientX-b.left)/b.width-.5;par.ty=(ev.clientY-b.top)/b.height-.5;});
 cv.addEventListener('pointerleave',()=>{par.tx=0;par.ty=0;});
 addEventListener('resize',resize);

@@ -79,6 +79,16 @@ async function principal(){
     const oficinaDepois=await pagina.evaluate(()=>window.OficinaViva.estado().pecas);
     if(oficinaDepois!==oficinaAntes+1)erros.push('oficina: fabricacao interativa falhou');
     // Validação de todas as categorias e das trocas repetidas no navegador real.
+    await pagina.evaluate(()=>window.AgentesOrbitais.tema('jardim'));
+    await pagina.waitForTimeout(200);
+    if(!(await pagina.locator('#flow-jardim').isVisible()))erros.push('jardim: painel nao apareceu');
+    const floresAntes=await pagina.evaluate(()=>window.JardimVivo.estado().flores);
+    await pagina.locator('#ao-canvas').click({position:{x:120,y:300},force:true});
+    const floresDepois=await pagina.evaluate(()=>window.JardimVivo.estado().flores);
+    if(floresDepois!==floresAntes+1)erros.push('jardim: toque nao plantou');
+    await pagina.locator('#flow-regar').click();
+    if(!(await pagina.evaluate(()=>window.JardimVivo.estado().chuva)))erros.push('jardim: regar nao iniciou chuva');
+    await pagina.locator('#flow-sol').click();
     const temas=['pixel','dados','naves','cartas','voxel','criaturas','cosmos','cyber','bio','arcano','oceano','floresta','clima','deserto','artico','comida','musica','esportes','origami','brinquedos','jardim','aquario','oficina'];
     const categorias=[];
     for(const tema of temas){
