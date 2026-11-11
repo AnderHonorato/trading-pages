@@ -68,3 +68,5 @@
 - A geometria de Cartas foi ampliada e a Colônia Bio passou de 4 para 3 colunas com maior espaçamento e pulsação menor.
 - Duas rodadas Playwright locais consecutivas após a correção ficaram verdes: Cartas 1,26×/1,28× e Bio 2,46×/2,55×.
 - O limite de 1,0× foi mantido; nenhum gate foi relaxado para obter aprovação.
+
+- [ALTA → corrigido] O segundo CI encontrou Oceano em 0,993× e deslocamento de 308 px no intervalo de QA. O cardume foi redesenhado em faixas estáveis com onda local, eliminando travessia ampla sensível ao timing. Duas rodadas locais seguintes ficaram em 1,24× e 1,33×, com deslocamento de cerca de 11 px.

@@ -91,9 +91,11 @@
         break;
       }
       case 'oceano':{
-        const camada=i%3,seq=Math.floor(i/3),fase=.5+.5*Math.sin(t*.34+seq*1.5+r*TAU);
-        x=CX-sx/2+fase*sx;
-        y=CY+(camada-1)*H*.17+Math.sin(fase*TAU*1.25+i)*H*.055;
+        const camada=i%3,seq=Math.floor(i/3),colunas=Math.ceil(n/3);
+        const baseX=CX+(seq-(colunas-1)/2)*W*.255;
+        const fase=t*.42+seq*.78+camada*1.35;
+        x=baseX+Math.sin(fase)*W*.035;
+        y=CY+(camada-1)*H*.19+Math.sin(fase*.82+i*.45)*H*.035;
         break;
       }
       case 'floresta':{
