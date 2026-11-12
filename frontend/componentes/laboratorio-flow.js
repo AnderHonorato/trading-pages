@@ -1,0 +1,32 @@
+/* Laboratorio Flow: inspecao manual e rastreavel de missoes. Ander Flow. */
+(()=>{'use strict';
+const M='ander-flow-missoes-v1',L='ander-flow-laboratorio-v1',E='ander-flow-equipe-v1';
+const ler=(k,p)=>{try{return JSON.parse(localStorage.getItem(k))??p}catch{return p}};
+const gravar=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return true}catch{return false}};
+const escapar=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
+const criterios=['Funcionalidade conferida','Experiência móvel revisada','Acessibilidade verificada','Segurança e dados revisados'];
+let selecionada='',anterior=null;
+const root=document.createElement('section');root.id='laboratorio-flow';
+root.innerHTML=`<button id="lf-abrir" type="button">Laboratório Flow</button><div id="lf-fundo" hidden><div id="lf-painel" role="dialog" aria-modal="true" aria-labelledby="lf-titulo"><header><div><small>ANDER FLOW · INSPEÇÃO MANUAL</small><h2 id="lf-titulo">Laboratório Flow</h2><p>Uma bancada 2D para conferir entregas reais. Nenhum teste ou IA é executado automaticamente.</p></div><button id="lf-fechar" type="button" aria-label="Fechar laboratório">×</button></header><div class="lf-corpo"><aside><label for="lf-busca">Buscar missão</label><input id="lf-busca" type="search" placeholder="Buscar pelo título"><div id="lf-lista"></div></aside><main id="lf-detalhe"><p>Escolha uma missão para iniciar a inspeção.</p></main></div><p id="lf-aviso" role="status" aria-live="polite"></p></div></div>`;
+document.body.append(root);const $=s=>root.querySelector(s);
+const missoes=()=>{const a=ler(M,[]);return Array.isArray(a)?a.filter(x=>x&&typeof x.titulo==='string'&&typeof x.id==='string'):[]};
+const registros=()=>{const a=ler(L,{});return a&&typeof a==='object'&&!Array.isArray(a)?a:{}};
+function render(){
+const a=missoes(),r=registros(),q=$('#lf-busca').value.toLowerCase();
+$('#lf-lista').innerHTML=a.filter(m=>m.titulo.toLowerCase().includes(q)).map(m=>{const n=(r[m.id]?.checks||[]).filter(Boolean).length;return `<button class="lf-missao ${selecionada===m.id?'lf-ativa':''}" data-id="${escapar(m.id)}" type="button"><strong>${escapar(m.titulo)}</strong><small>${n}/4 verificações · etapa ${Number(m.fase)+1}/4</small></button>`}).join('')||'<p class="lf-vazio">Nenhuma missão encontrada. Crie uma no Mural de Missões.</p>';
+const m=a.find(x=>x.id===selecionada);if(!m){$('#lf-detalhe').innerHTML='<div class="lf-vazio">Selecione uma missão à esquerda para examinar na bancada.</div>';return}
+const d=r[m.id]||{},checks=Array.isArray(d.checks)?d.checks:[],total=checks.filter(Boolean).length;
+$('#lf-detalhe').innerHTML=`<div class="lf-cenario" aria-hidden="true"><div class="lf-luminaria"></div><div class="lf-robo ${total===4?'lf-feliz':''}"><div class="lf-antena"></div><div class="lf-olhos"><i></i><i></i></div><div class="lf-boca"></div></div><div class="lf-mesa"><span class="lf-tubo"></span><span class="lf-tubo"></span><span class="lf-tubo"></span><div class="lf-medidor" style="--progresso:${total*25}%"></div></div></div><h3>${escapar(m.titulo)}</h3><p class="lf-progresso" role="status">${total} de 4 critérios conferidos manualmente · ${total===4?'Pronta para aprovação':'Inspeção em andamento'}</p><form id="lf-form"><fieldset><legend>Lista de verificação</legend>${criterios.map((c,i)=>`<label class="lf-check"><input type="checkbox" name="check${i}" ${checks[i]?'checked':''}><span>${c}</span></label>`).join('')}</fieldset><label for="lf-notas">Evidências e observações</label><textarea id="lf-notas" maxlength="2500" rows="4" placeholder="Descreva o que foi verificado e onde...">${escapar(d.notas||'')}</textarea><div class="lf-acoes"><button type="submit">Salvar inspeção</button><button type="button" id="lf-aprovar" ${total!==4||Number(m.fase)===3?'disabled':''}>Aprovar e concluir missão</button></div></form><small class="lf-data">${d.atualizado?'Último registro: '+escapar(new Date(d.atualizado).toLocaleString('pt-BR')):'Sem inspeção registrada'}</small>`;
+}
+function salvarInspecao(form){const m=missoes().find(x=>x.id===selecionada);if(!m)return false;const r=registros();r[m.id]={checks:criterios.map((_,i)=>!!form.elements['check'+i].checked),notas:$('#lf-notas').value.trim().slice(0,2500),atualizado:new Date().toISOString(),origem:'inspecao-manual'};if(!gravar(L,r)){ $('#lf-aviso').textContent='Não foi possível salvar no navegador.';return false}$('#lf-aviso').textContent='Inspeção salva localmente.';render();return true}
+$('#lf-abrir').onclick=()=>{anterior=document.activeElement;$('#lf-fundo').hidden=false;render();$('#lf-fechar').focus()};
+const fechar=()=>{$('#lf-fundo').hidden=true;anterior?.focus?.()};
+$('#lf-fechar').onclick=fechar;$('#lf-fundo').onclick=e=>{if(e.target===$('#lf-fundo'))fechar()};
+$('#lf-busca').oninput=render;
+$('#lf-lista').onclick=e=>{const b=e.target.closest('[data-id]');if(b){selecionada=b.dataset.id;render();$('#lf-detalhe h3')?.setAttribute('tabindex','-1');$('#lf-detalhe h3')?.focus()}};
+$('#lf-detalhe').onsubmit=e=>{if(e.target.id==='lf-form'){e.preventDefault();salvarInspecao(e.target)}};
+$('#lf-detalhe').onclick=e=>{if(e.target.id!=='lf-aprovar')return;const r=registros(),d=r[selecionada];if(!d||!Array.isArray(d.checks)||d.checks.filter(Boolean).length!==4)return;const a=missoes(),m=a.find(x=>x.id===selecionada);if(!m||Number(m.fase)===3)return;m.fase=3;m.atualizadoEm=new Date().toISOString();if(gravar(M,a)){window.dispatchEvent(new Event('ander-flow-missoes-alteradas'));$('#lf-aviso').textContent='Missão concluída e sincronizada com o Mural e a Estação.';render()}else $('#lf-aviso').textContent='Falha ao atualizar a missão.'};
+document.addEventListener('keydown',e=>{if($('#lf-fundo').hidden)return;if(e.key==='Escape')fechar();if(e.key==='Tab'){const f=[...$('#lf-painel').querySelectorAll('button:not(:disabled),input,textarea')].filter(x=>x.getClientRects().length);if(!f.length)return;const a=f[0],z=f.at(-1);if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus()}}});
+window.addEventListener('storage',e=>{if([M,L,E].includes(e.key)&&!$('#lf-fundo').hidden)render()});
+window.addEventListener('ander-flow-missoes-alteradas',()=>{if(!$('#lf-fundo').hidden)render()});
+})();
