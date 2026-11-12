@@ -135,3 +135,9 @@ Legenda: [x] feito e testado · [~] em andamento · [ ] falta · [!] decisão/li
 - [~] Integrado ao HTML e ao gerador da demo; código enviado ao GitHub.
 - [ ] CI e QA visual mobile/desktop pendentes; não publicado.
 - [!] Revisões e dados são locais; sem execução real de IA ou trading.
+
+## Onda 2026-11-12 — Jardim Flow
+- [~] Cenário 2D não orbital com sementes, brotos e flores refletindo estados reais dos despachos; criação, início, conclusão com resultado e reabertura.
+- [~] Integração de CSS/JS ao painel e gerador de demo.
+- [ ] Validar build, testes de navegador mobile/desktop, persistência e eventos cruzados.
+- [ ] Publicação canônica e release no Drive somente após gates verdes.
