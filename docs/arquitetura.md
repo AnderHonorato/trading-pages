@@ -41,3 +41,10 @@ A linha do tempo não é um log imutável/auditável: alterações antigas podem
 - Leitura de `ander-flow-despachos-v1` e `ander-flow-equipe-v1`; gravação em `ander-flow-revisoes-v1`. Uma devolução reabre o despacho em `ander-flow-despachos-v1`.
 - A aprovação exige resultado descrito, três confirmações humanas e evidência textual. Não afirma teste automático nem execução de IA.
 - Gates pendentes: testes E2E de aprovação, devolução, persistência, mobile e deploy público.
+
+## Fluxo Vivo — mapa operacional
+- `frontend/componentes/fluxo-vivo.js`: leitura local dos despachos, equipe e revisões, classificação por estado, filtros e detalhes; sem alterar registros.
+- `frontend/componentes/fluxo-vivo.css`: palco 2D, Chefinho expressivo, mapa responsivo e `prefers-reduced-motion`.
+- Importações em `agentes-orbitais.html` e cópias em `scripts/scripts-gerar-demo-publica.js`.
+- Fluxo: pendente → andamento → revisão → aprovado; revisão rejeitada reabre a tarefa e aparece em ajustes.
+- Para validar: gerar demo, executar Chrome em 360px/1440px, conferir filtros, reabertura, persistência, console e CI antes de merge/publicação.
