@@ -46,6 +46,8 @@ function gerar(){
   copiar('frontend/componentes/estudio-foco.js');
   copiar('frontend/componentes/jornada-flow.css');
   copiar('frontend/componentes/jornada-flow.js');
+  copiar('frontend/componentes/quadro-despachos.css');
+  copiar('frontend/componentes/quadro-despachos.js');
 
   let evolucao=fs.readFileSync(path.join(raiz,'evolucao-v11.js'),'utf8');
   evolucao=evolucao
