@@ -114,3 +114,11 @@ Legenda: [x] feito e testado · [~] em andamento · [ ] falta · [!] decisão/li
 - [ ] Publicar em URL canônica e arquivar release no Drive após validação.
 - [!] Agenda é planejamento manual; não aciona IA nem ordens financeiras.
 \n## Integração Foco + Diário (branch, pendente de QA)\n- [~] Sessão manual de foco vinculada a missão e agenda\n- [~] Registrar resultado de sessão no Diário, com origem e identificador rastreável\n- [ ] Testar fluxo completo desktop/mobile, persistência e recarga\n- [ ] Publicar demo canônica após gates verdes\n- [ ] Enviar release versionada ao Google Drive correto\n
+## Onda 2026-11-12 — Linha do Tempo Flow (branch)
+- [x] Implementação de painel visual, filtros de tipo/período/busca, agrupamento diário e exportação JSON.
+- [x] Integração HTML/CSS/JS com gerador de demo estática.
+- [x] Conversas novas registram data ISO real, sem fabricar datas para histórico legado.
+- [ ] Gate CI/Chrome desktop e mobile da nova onda — ainda não comprovado.
+- [ ] Publicação canônica — Vercel bloqueada por limite diário HTTP 402.
+- [ ] Release Drive versionada — aguardando validação dos gates.
+- [!] Histórico derivado de estado local; não é auditoria imutável.
