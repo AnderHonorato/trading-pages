@@ -22,3 +22,16 @@
 @media(prefers-reduced-motion:reduce){#estudio-cenas *,#abrir-estudio{animation:none!important;transition:none!important}}
 
 .estudio-novos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0}.estudio-importar{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 13px;border:1px solid #aab5c5;border-radius:12px;background:#343e50;color:#fff;cursor:pointer;font-weight:650}.estudio-importar input{position:absolute;width:1px;height:1px;opacity:0}.estudio-importar:focus-within{outline:3px solid #f4c69c}.estudio-lista button{min-width:36px}.estudio-lista button:disabled{opacity:.35}.estudio-duracao{color:#f4c69c}@media(max-width:560px){.estudio-novos{grid-template-columns:1fr}}
+
+/* Storyboard visual: composições planas; somente o Canvas Cosmos possui órbitas. */
+.estudio-subtitulo{font-size:15px;margin:14px 0 8px}
+.estudio-linha{display:flex;gap:10px;overflow-x:auto;padding:6px 3px 14px;scroll-snap-type:x mandatory}
+.estudio-cartao{flex:0 0 136px;min-height:154px;display:flex;flex-direction:column;gap:6px;align-items:stretch;text-align:left;padding:8px;border:2px solid #718092;border-radius:15px;background:#252c39;color:#fff;scroll-snap-align:start;cursor:pointer;font:inherit}
+.estudio-cartao.ativo{border-color:#f4c69c;box-shadow:0 0 0 2px #f4c69c55}
+.estudio-cartao:focus-visible{outline:3px solid #f4c69c;outline-offset:3px}
+.estudio-cartao strong{font-size:13px}
+.estudio-cartao small{font-size:11px;color:#cbd5e2}
+.estudio-arte{height:85px;border-radius:10px;display:grid;place-items:center;background:radial-gradient(ellipse at 75% 25%,var(--cena-brilho),transparent 42%),var(--cena-fundo);overflow:hidden}
+.estudio-figura{font-size:40px;color:var(--cena-brilho);text-shadow:0 2px 9px #0008;transform:rotate(-8deg)}
+#estudio-cenas progress{display:block;width:100%;height:12px;accent-color:#f4c69c}
+@media(prefers-reduced-motion:no-preference){.estudio-cartao{transition:transform .2s,border-color .2s}.estudio-cartao:hover{transform:translateY(-3px)}.estudio-cartao.ativo .estudio-figura{animation:estudio-respirar 1.8s ease-in-out infinite alternate}@keyframes estudio-respirar{to{transform:translateY(-5px) rotate(6deg)}}}
