@@ -1,6 +1,6 @@
 /* Palco Flow: personagens e atividades locais. Sem execucao de IA externa. */
 (()=>{'use strict';
-const raiz=document.querySelector('#palco-flow');if(!raiz)return;
+const raiz=document.querySelector('#palco-flow');if(!raiz)return;const abrirPalco=document.querySelector('#abrir-palco');
 const chave='ander-flow-palco-v1',tarefas=['planejar','produzir','revisar','descansar'],rotulos={planejar:'Planejando',produzir:'Produzindo',revisar:'Revisando',descansar:'Descansando'};
 const papeis=[['Criativo','Pincelinho'],['Programacao','Codiguinho'],['Pesquisa','Lupinha'],['Qualidade','Testinho'],['Organizacao','Listinha']];
 let estado={chefinho:'Chefinho',personalidade:'Organizado e gentil',agentes:[],eventos:[]};
@@ -21,8 +21,8 @@ function pintar(){
  item.querySelector('[data-excluir]').addEventListener('click',()=>{if(!confirm('Excluir '+a.nome+' da equipe?'))return;estado.agentes.splice(i,1);registrar('Personagem excluído: '+a.nome);pintar();});palco.append(item);});
  $('[data-contagem]').textContent=estado.agentes.length+' auxiliares';const eventos=$('[data-eventos]');eventos.replaceChildren();estado.eventos.slice(0,8).forEach(e=>{const li=document.createElement('li');li.textContent=e.em+' · '+e.texto;eventos.append(li);});
 }
-$('[data-abrir-palco]').addEventListener('click',()=>{raiz.hidden=false;pintar();$('[data-fechar-palco]').focus();});
-$('[data-fechar-palco]').addEventListener('click',()=>{raiz.hidden=true;$('[data-abrir-palco]').focus();});
+abrirPalco.addEventListener('click',()=>{raiz.hidden=false;pintar();$('[data-fechar-palco]').focus();});
+$('[data-fechar-palco]').addEventListener('click',()=>{raiz.hidden=true;abrirPalco.focus();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!raiz.hidden)raiz.querySelector('[data-fechar-palco]').click();});
 $('[data-configurar]').addEventListener('click',()=>{const nome=prompt('Nome do orquestrador',estado.chefinho);if(nome===null)return;const personalidade=prompt('Personalidade do orquestrador',estado.personalidade);if(personalidade===null)return;estado.chefinho=nome.trim().slice(0,32)||'Chefinho';estado.personalidade=personalidade.trim().slice(0,120)||'Organizado e gentil';registrar('Orquestrador personalizado');pintar();});
 const catalogo=$('[data-catalogo]');papeis.forEach(([papel,nome])=>{const opt=document.createElement('option');opt.value=papel;opt.textContent=papel+' · '+nome;catalogo.append(opt);});
