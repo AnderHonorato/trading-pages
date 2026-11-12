@@ -129,3 +129,9 @@ Legenda: [x] feito e testado · [~] em andamento · [ ] falta · [!] decisão/li
 - [ ] Validar fluxo E2E, mobile e CI da branch.
 - [ ] Publicar URL canônica e enviar release versionada ao Drive.
 - [!] A revisão é manual e não comprova execução de IA ou testes automatizados.
+
+## Onda 2026-11-12 — Fluxo Vivo (branch)
+- [~] Mapa 2D com Chefinho animado, cinco etapas, contadores, filtros e detalhes reais dos despachos e revisões.
+- [~] Integrado ao HTML e ao gerador da demo; código enviado ao GitHub.
+- [ ] CI e QA visual mobile/desktop pendentes; não publicado.
+- [!] Revisões e dados são locais; sem execução real de IA ou trading.
