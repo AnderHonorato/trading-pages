@@ -61,3 +61,5 @@ body{background:var(--t-bg);color:var(--t-fg);font-family:var(--ao-fonte-corpo);
   #ao-chips::-webkit-scrollbar{display:none}
   .ao-chip{flex:none;font-size:9px;padding:3px 7px}
 }
+
+.acesso-missoes{position:fixed;right:14px;bottom:14px;z-index:30;background:#85ded2;color:#10232a;border-radius:999px;padding:14px 19px;font:700 14px system-ui;text-decoration:none;box-shadow:0 6px 28px #0007;min-height:48px;display:grid;place-items:center}.acesso-missoes:focus-visible{outline:3px solid white}
