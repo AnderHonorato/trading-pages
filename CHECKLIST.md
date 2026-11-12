@@ -106,3 +106,10 @@ Legenda: [x] feito e testado · [~] em andamento · [ ] falta · [!] decisão/li
 - [x] Zero overflow nos viewports testados
 - [x] Zero erros de console no teste visual
 - [~] PT-BR ↔ EN completo — legado ainda pendente
+
+## Onda 2026-11-11 — Agenda semanal (branch de evolução)
+- [~] Agenda semanal de missões com seleção de dia, navegação entre semanas, horários, filtros, conclusão manual e exclusão.
+- [~] Persistência local e integração no painel e gerador da demonstração; commits enviados, mas sem validação visual/CI nesta onda.
+- [ ] Executar CI, teste visual 360px/desktop, smoke e auditoria antes de merge.
+- [ ] Publicar em URL canônica e arquivar release no Drive após validação.
+- [!] Agenda é planejamento manual; não aciona IA nem ordens financeiras.
