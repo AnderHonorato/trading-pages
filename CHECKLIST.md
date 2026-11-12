@@ -141,3 +141,8 @@ Legenda: [x] feito e testado · [~] em andamento · [ ] falta · [!] decisão/li
 - [~] Integração de CSS/JS ao painel e gerador de demo.
 - [ ] Validar build, testes de navegador mobile/desktop, persistência e eventos cruzados.
 - [ ] Publicação canônica e release no Drive somente após gates verdes.
+
+## Onda 12/11 — Oficina Flow
+- [~] Bancada visual de projetos e etapas dependentes implementada na branch, integrada ao HTML e gerador da demo.
+- [~] Criação/exclusão de projetos, adição/remoção de etapas, bloqueio sequencial, conclusão e reabertura com persistência local.
+- [ ] Executar CI, validar interações no navegador e mobile, revisar regressões e publicar após gates verdes.
