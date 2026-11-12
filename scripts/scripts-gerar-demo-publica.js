@@ -60,6 +60,8 @@ function gerar(){
   copiar('frontend/componentes/fluxo-vivo.js');
   copiar('frontend/componentes/jardim-flow.css');
   copiar('frontend/componentes/jardim-flow.js');
+  copiar('frontend/componentes/oficina-flow.css');
+  copiar('frontend/componentes/oficina-flow.js');
   copiar('frontend/componentes/quadro-despachos.css');
   copiar('frontend/componentes/quadro-despachos.js');
 
