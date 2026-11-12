@@ -56,3 +56,9 @@ A linha do tempo não é um log imutável/auditável: alterações antigas podem
 - Ao plantar, um despacho pendente é criado. Regar inicia; florescer exige resultado escrito; replantar reabre. Alterações emitem `ander-flow-despachos-alterados` e `ander-flow:radar-atualizado`.
 - O cenário não é orbital; respeita `prefers-reduced-motion` e não executa IA ou ordens financeiras.
 - Validação pendente: CI, Playwright em 360px/1440px, persistência e integração com Sala/Quadro/Fluxo.
+
+## Oficina Flow — bancada de projetos (12/11/2026)
+- `frontend/componentes/oficina-flow.js`: projetos locais com etapas sequenciais, vínculos opcionais a despachos, conclusão e reabertura manuais, persistidos em `ander-flow-oficina-v1`.
+- `frontend/componentes/oficina-flow.css`: bancada 2D, personagem-máquina expressivo, esteira de etapas, layout mobile e movimento reduzido.
+- Importar CSS/JS em `agentes-orbitais.html` e copiar ambos no gerador da demo. Nenhuma integração de IA ou corretora; vincular despacho não altera status.
+- Validação pendente: CI, testes de dependências, persistência, viewport 360px e publicação.
