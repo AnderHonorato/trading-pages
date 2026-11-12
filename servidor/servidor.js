@@ -88,6 +88,7 @@ app.get('/',(req,res)=>res.redirect(302,req.sessao?(req.sessao.forcar_troca_senh
 app.get('/entrar',(req,res)=>res.sendFile(path.join(raiz,'frontend/paginas/entrar/entrar.html')));
 app.get('/trocar-senha',paginaProtegida('frontend/paginas/trocar-senha/trocar-senha.html',{permitirTroca:true}));
 app.get('/configuracoes/apis',paginaProtegida('frontend/paginas/configuracoes/configuracoes.html'));
+app.get('/central-missoes',paginaProtegida('frontend/paginas/missoes/missoes.html'));
 app.get('/painel',paginaProtegida('agentes-orbitais.html'));
 app.get('/agentes-orbitais.html',paginaProtegida('agentes-orbitais.html'));
 
