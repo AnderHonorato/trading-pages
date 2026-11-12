@@ -50,6 +50,8 @@ function gerar(){
   copiar('frontend/componentes/cofre-flow.js');
   copiar('frontend/componentes/radar-flow.css');
   copiar('frontend/componentes/radar-flow.js');
+  copiar('frontend/componentes/linha-tempo-flow.css');
+  copiar('frontend/componentes/linha-tempo-flow.js');
   copiar('frontend/componentes/quadro-despachos.css');
   copiar('frontend/componentes/quadro-despachos.js');
 
