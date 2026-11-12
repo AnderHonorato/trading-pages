@@ -66,8 +66,11 @@ PARA OUTRAS IAs (como reutilizar / implantar em qualquer site):
 <link rel="stylesheet" href="./frontend/paginas/painel/painel.css">
 <link rel="stylesheet" href="./evolucao-v11.css">
 <link rel="stylesheet" href="./frontend/paginas/painel/painel-conta.css">
-<link rel="stylesheet" href="./frontend/paginas/painel/estudio-cenas.css">\n</head>
-<body><button id="abrir-estudio" type="button" aria-controls="estudio-cenas" aria-expanded="false">Estúdio de cenas</button>\n<section id="estudio-cenas" hidden role="dialog" aria-modal="true" aria-label="Estúdio de cenas"><div class="estudio-painel"><header class="estudio-topo"><div><h2>Estúdio de cenas Flow</h2><p>Direção interativa dos 20 universos · ações locais demonstrativas</p></div><button type="button" data-fechar>Fechar</button></header><div class="estudio-grade"><label class="estudio-campo">Universo<select data-temas></select></label><label class="estudio-campo">Ação<select data-acao><option value="tema">Mudar cenário</option><option value="pulso">Pulso visual</option><option value="xp">Adicionar 25 XP de demonstração</option><option value="nivel">Evoluir núcleo</option></select></label><label class="estudio-campo">Personagem demonstrativo<select data-agentes></select></label></div><div class="estudio-acoes"><button data-aplicar>Experimentar agora</button><button data-adicionar>Adicionar ao roteiro</button><button data-executar>Reproduzir roteiro</button><button data-parar disabled>Parar</button><button data-limpar>Limpar</button></div><p data-progresso role="status">Pronto para criar cenas</p><div class="estudio-duas"><div><h3>Roteiro salvo neste navegador</h3><ol class="estudio-lista" data-roteiro></ol></div><div><h3>Histórico de ações locais</h3><ol class="estudio-lista" data-historico aria-live="polite"></ol></div></div></div></section>\n<a class="acesso-missoes" href="/central-missoes">Equipe e Missões</a>
+<link rel="stylesheet" href="./frontend/paginas/painel/estudio-cenas.css">
+</head>
+<body><button id="abrir-estudio" type="button" aria-controls="estudio-cenas" aria-expanded="false">Estúdio de cenas</button>
+<section id="estudio-cenas" hidden role="dialog" aria-modal="true" aria-label="Estúdio de cenas"><div class="estudio-painel"><header class="estudio-topo"><div><h2>Estúdio de cenas Flow</h2><p>Direção interativa dos 20 universos · ações locais demonstrativas</p></div><button type="button" data-fechar>Fechar</button></header><div class="estudio-grade"><label class="estudio-campo">Universo<select data-temas></select></label><label class="estudio-campo">Ação<select data-acao><option value="tema">Mudar cenário</option><option value="pulso">Pulso visual</option><option value="xp">Adicionar 25 XP de demonstração</option><option value="nivel">Evoluir núcleo</option></select></label><label class="estudio-campo">Personagem demonstrativo<select data-agentes></select></label></div><div class="estudio-acoes"><button data-aplicar>Experimentar agora</button><button data-adicionar>Adicionar ao roteiro</button><button data-executar>Reproduzir roteiro</button><button data-parar disabled>Parar</button><button data-limpar>Limpar</button></div><p data-progresso role="status">Pronto para criar cenas</p><div class="estudio-duas"><div><h3>Roteiro salvo neste navegador</h3><ol class="estudio-lista" data-roteiro></ol></div><div><h3>Histórico de ações locais</h3><ol class="estudio-lista" data-historico aria-live="polite"></ol></div></div></div></section>
+<a class="acesso-missoes" href="/central-missoes">Equipe e Missões</a>
 <div id="ao-root" role="img" aria-label="Agentes de trading orbitando um núcleo que evolui, com vinte temas visuais em abas, agrupados em Game, Estilos, Natureza e Pop">
   <canvas id="ao-canvas"></canvas>
   <nav id="ao-tabs" aria-label="Tema visual"></nav>
@@ -81,5 +84,6 @@ PARA OUTRAS IAs (como reutilizar / implantar em qualquer site):
 <script src="./evolucao-v11.js"></script>
 <script src="./frontend/paginas/painel/painel.js"></script>
 <script src="./frontend/paginas/painel/painel-sessao.js"></script>
-<script src="./frontend/paginas/painel/estudio-cenas.js"></script>\n</body>
+<script src="./frontend/paginas/painel/estudio-cenas.js"></script>
+</body>
 </html>
