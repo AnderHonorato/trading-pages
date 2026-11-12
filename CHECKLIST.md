@@ -122,3 +122,10 @@ Legenda: [x] feito e testado · [~] em andamento · [ ] falta · [!] decisão/li
 - [ ] Publicação canônica — Vercel bloqueada por limite diário HTTP 402.
 - [ ] Release Drive versionada — aguardando validação dos gates.
 - [!] Histórico derivado de estado local; não é auditoria imutável.
+
+## Onda 2026-11-12 — Estação de Revisão Flow
+- [~] Painel visual 2D de revisão humana de despachos, integrado à Equipe e Sala Flow na branch.
+- [~] Aprovação com três critérios e evidência textual; devolução reabre despacho; persistência local.
+- [ ] Validar fluxo E2E, mobile e CI da branch.
+- [ ] Publicar URL canônica e enviar release versionada ao Drive.
+- [!] A revisão é manual e não comprova execução de IA ou testes automatizados.
