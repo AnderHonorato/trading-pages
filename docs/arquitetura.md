@@ -25,3 +25,11 @@ Os filtros (tipo, período, texto) são locais. Exportação gera JSON com apena
 
 ## Limitações
 A linha do tempo não é um log imutável/auditável: alterações antigas podem ser substituídas pelos estados atuais. Não há execução real de agentes de IA ou negociação financeira. Persistência sincronizada entre dispositivos requer backend, autenticação e migração separados.
+
+## Sala Flow — quadro operacional interativo (12/11/2026)
+- `frontend/componentes/sala-flow.js`: painel, criação de despachos, personagens representativos, filtros, passagem manual entre estados e persistência.
+- `frontend/componentes/sala-flow.css`: palco 2D, quadro Kanban, responsividade, redução de movimento e alvos de toque.
+- Ambos são importados por `agentes-orbitais.html` e copiados pela rotina `scripts/scripts-gerar-demo-publica.js`.
+- Os dados são os mesmos do Quadro de Despachos (`ander-flow-despachos-v1`) e da Equipe (`ander-flow-equipe-v1`). Alterações disparam `ander-flow-despachos-alterados` para atualização na mesma aba.
+- A conclusão exige descrição manual do resultado, sem alegar execução real por agentes. Não há conexão com corretoras.
+- Critérios de validação pendentes: executar build/CI da branch, testar criação, movimentação, resultado obrigatório, persistência e viewport de 360px em navegador real antes de publicar.
