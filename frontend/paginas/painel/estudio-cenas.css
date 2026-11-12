@@ -20,3 +20,5 @@
 #estudio-cenas :focus-visible,#abrir-estudio:focus-visible{outline:3px solid #f4c69c;outline-offset:3px}
 @media(max-width:560px){.estudio-grade,.estudio-duas{grid-template-columns:1fr}.estudio-painel{max-height:94dvh}.estudio-lista{max-height:125px}#abrir-estudio{bottom:72px}}
 @media(prefers-reduced-motion:reduce){#estudio-cenas *,#abrir-estudio{animation:none!important;transition:none!important}}
+
+.estudio-novos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0}.estudio-importar{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 13px;border:1px solid #aab5c5;border-radius:12px;background:#343e50;color:#fff;cursor:pointer;font-weight:650}.estudio-importar input{position:absolute;width:1px;height:1px;opacity:0}.estudio-importar:focus-within{outline:3px solid #f4c69c}.estudio-lista button{min-width:36px}.estudio-lista button:disabled{opacity:.35}.estudio-duracao{color:#f4c69c}@media(max-width:560px){.estudio-novos{grid-template-columns:1fr}}
