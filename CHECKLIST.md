@@ -113,3 +113,4 @@ Legenda: [x] feito e testado · [~] em andamento · [ ] falta · [!] decisão/li
 - [ ] Executar CI, teste visual 360px/desktop, smoke e auditoria antes de merge.
 - [ ] Publicar em URL canônica e arquivar release no Drive após validação.
 - [!] Agenda é planejamento manual; não aciona IA nem ordens financeiras.
+\n## Integração Foco + Diário (branch, pendente de QA)\n- [~] Sessão manual de foco vinculada a missão e agenda\n- [~] Registrar resultado de sessão no Diário, com origem e identificador rastreável\n- [ ] Testar fluxo completo desktop/mobile, persistência e recarga\n- [ ] Publicar demo canônica após gates verdes\n- [ ] Enviar release versionada ao Google Drive correto\n
