@@ -25,7 +25,7 @@ function gerar(){
     .replace('<body>','<body>\n<div id="demo-publica" aria-label="Demonstração pública com dados simulados">Demo pública · dados simulados</div>');
   fs.writeFileSync(path.join(destino,'index.html'),html);
 
-  copiar('frontend/paginas/painel/painel.css');
+  copiar('frontend/paginas/painel/painel.css');\n  copiar('frontend/paginas/equipe/equipe.html');\n  copiar('frontend/paginas/equipe/equipe.css');\n  copiar('frontend/paginas/equipe/equipe.js');
   copiar('frontend/paginas/painel/painel.js');
   copiar('frontend/paginas/painel/demo-publica.css');
   copiar('frontend/compartilhado/orbital-fisica.js');
