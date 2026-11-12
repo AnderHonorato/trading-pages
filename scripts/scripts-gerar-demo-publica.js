@@ -40,6 +40,8 @@ function gerar(){
   copiar('frontend/componentes/mural-missoes.js');
   copiar('frontend/componentes/diario-trabalho.css');
   copiar('frontend/componentes/diario-trabalho.js');
+  copiar('frontend/componentes/agenda-semanal.css');
+  copiar('frontend/componentes/agenda-semanal.js');
 
   let evolucao=fs.readFileSync(path.join(raiz,'evolucao-v11.js'),'utf8');
   evolucao=evolucao
