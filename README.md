@@ -4,7 +4,7 @@ Painel visual vivo para orquestração demonstrativa de agentes, com 20 universo
 A base v11 adicionou o **Cosmo vivo**, autenticação real, 2FA, configuração criptografada de provedores de IA e acesso pela rede local. A v12 acrescentou gestão de sessões/dispositivos, health check, métricas de diagnóstico e request IDs. A v13 refinou fluidez, anti-colisão e conversa contextual. A v14 elimina a órbita genérica dos demais temas: **somente o Cosmo é orbital; os outros 19 possuem formação e deslocamento próprios**.
 O projeto permanece em **modo demonstrativo**: não envia ordens financeiras reais e não está conectado a corretora.
 
-## Evoluções v14
+## Evolução em branch — Estúdio de Foco e Diário integrados\n- O Estúdio de Foco permite sessões manuais de concentração associadas a missões e agenda.\n- Depois da sessão, o usuário descreve o resultado efetivo e envia um registro rastreável ao Diário de Trabalho.\n- Registro inclui duração, objetivo, identificador da sessão e origem manual; evita registrar execução de IA inexistente.\n- Dados locais do navegador; ainda não sincronizados com servidor. Validação CI/visual e publicação pendentes.\n\n## Evoluções v14
 - **19 movimentos não-Cosmo próprios:** grade arcade, mesa tática, esquadrão em V, leque, degraus, matilha, circuito, colônia, sigilo, cardume, galhos, camadas atmosféricas, caravana, placas de gelo, esteira, equalizador, campo, dobras e pista.
 - **Cosmo é o único modo orbital:** anéis, cálculo orbital e alternância de trajetória ficam restritos a esse tema.
 - **Guias temáticas:** o fundo da arena comunica a formação do tema sem reutilizar anéis orbitais genéricos.
