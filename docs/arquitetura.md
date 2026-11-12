@@ -62,3 +62,10 @@ A linha do tempo não é um log imutável/auditável: alterações antigas podem
 - `frontend/componentes/oficina-flow.css`: bancada 2D, personagem-máquina expressivo, esteira de etapas, layout mobile e movimento reduzido.
 - Importar CSS/JS em `agentes-orbitais.html` e copiar ambos no gerador da demo. Nenhuma integração de IA ou corretora; vincular despacho não altera status.
 - Validação pendente: CI, testes de dependências, persistência, viewport 360px e publicação.
+
+## Estação Flow — gestão ferroviária visual de missões (12/11/2026)
+- `frontend/componentes/estacao-flow.js`: cria missões, lê a equipe local, mostra quatro plataformas e permite avançar/retroceder estados manualmente, preservando o contrato `ander-flow-missoes-v1`.
+- `frontend/componentes/estacao-flow.css`: personagens-trens 2D com expressões, trilhos, cenários, layout responsivo e `prefers-reduced-motion`.
+- Importações no `agentes-orbitais.html` e cópia explícita em `scripts/scripts-gerar-demo-publica.js`. Sem órbitas fora do Cosmos e sem simulação de execução por IA.
+- Testes de aceite: criar missão sem auxiliares, adicionar auxiliar e atribuir, avançar e voltar, persistir após recarregar, verificar sincronização com Mural de Missões, 360px, teclado, foco e redução de movimento.
+- Limitação: sincronização entre componentes na mesma aba depende de eventos; persistência permanece apenas local, sem backend nem operações financeiras.
