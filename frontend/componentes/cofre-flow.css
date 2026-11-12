@@ -1,0 +1,30 @@
+/* Cofre Flow: painel de backup responsivo */
+#flow-cofre{position:fixed;bottom:20px;right:12px;z-index:9996;font:500 14px system-ui,sans-serif}
+#fc-abrir{border-radius:999px;padding:12px 16px;min-height:48px;border:1px solid #5eead4;background:#123b40;color:#ccfbf1;cursor:pointer;box-shadow:0 8px 30px #0006}
+#fc-fundo[hidden],#fc-previa[hidden]{display:none!important}
+#fc-fundo{position:fixed;inset:0;background:#020617df;display:grid;place-items:center;padding:12px;z-index:10020}
+#fc-painel{box-sizing:border-box;width:min(710px,100%);max-height:95dvh;overflow:auto;background:#112034;color:#f8fafc;border:1px solid #5b718a;border-radius:22px;padding:clamp(16px,4vw,28px);box-shadow:0 20px 70px #000b}
+#fc-painel header{display:flex;justify-content:space-between;gap:12px;align-items:start}
+#fc-painel h2{font-size:clamp(24px,5vw,32px);margin:4px 0}
+#fc-painel p{color:#cbd5e1;line-height:1.5}
+#fc-painel small{color:#a5f3fc}
+#fc-painel button,#fc-painel .fc-importar{background:#185b65;border:1px solid #5eead4;color:white;border-radius:12px;padding:10px 14px;min-height:46px;cursor:pointer;font:inherit}
+#fc-painel button:disabled{opacity:.5;cursor:not-allowed}
+#fc-painel :focus-visible{outline:3px solid #67e8f9;outline-offset:3px}
+.fc-resumo{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
+.fc-resumo article{background:#1b344a;border-radius:14px;padding:15px;display:grid;gap:5px}
+.fc-resumo strong{font-size:27px;color:#5eead4}
+.fc-resumo span{font-size:12px;color:#dbeafe}
+.fc-acoes{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+.fc-importar{display:inline-flex;align-items:center}
+.fc-importar input{position:absolute;width:1px;height:1px;opacity:0}
+.fc-importar:focus-within{outline:3px solid #67e8f9}
+#fc-previa{border-top:1px solid #64748b;padding-top:12px}
+#fc-comparacao{display:grid;gap:8px}
+#fc-comparacao label{display:flex;align-items:center;gap:12px;padding:10px;background:#1b344a;border-radius:10px;flex-wrap:wrap}
+#fc-comparacao label small{margin-left:auto}
+.fc-confirmacao{display:flex;align-items:center;gap:10px;margin:16px 0;line-height:1.4}
+#fc-painel input[type=checkbox]{width:20px;height:20px;accent-color:#2dd4bf}
+#fc-aviso{min-height:20px}
+@media(max-width:480px){.fc-resumo{grid-template-columns:repeat(2,1fr)}.fc-acoes>*{width:100%;box-sizing:border-box;justify-content:center}#flow-cofre{bottom:12px;right:8px}}
+@media(prefers-reduced-motion:reduce){#fc-painel *{animation:none!important;transition:none!important}}
