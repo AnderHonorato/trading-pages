@@ -66,6 +66,8 @@ function gerar(){
   copiar('frontend/componentes/central-pulso-flow.js');
   copiar('frontend/componentes/estacao-flow.css');
   copiar('frontend/componentes/estacao-flow.js');
+  copiar('frontend/componentes/laboratorio-flow.css');
+  copiar('frontend/componentes/laboratorio-flow.js');
   copiar('frontend/componentes/quadro-despachos.css');
   copiar('frontend/componentes/quadro-despachos.js');
 
