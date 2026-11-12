@@ -33,3 +33,11 @@ A linha do tempo não é um log imutável/auditável: alterações antigas podem
 - Os dados são os mesmos do Quadro de Despachos (`ander-flow-despachos-v1`) e da Equipe (`ander-flow-equipe-v1`). Alterações disparam `ander-flow-despachos-alterados` para atualização na mesma aba.
 - A conclusão exige descrição manual do resultado, sem alegar execução real por agentes. Não há conexão com corretoras.
 - Critérios de validação pendentes: executar build/CI da branch, testar criação, movimentação, resultado obrigatório, persistência e viewport de 360px em navegador real antes de publicar.
+
+## Estação de Revisão Flow (12/11/2026)
+- `frontend/componentes/revisao-flow.js`: revisão manual de despachos concluídos, com três critérios obrigatórios para aprovação, observações, histórico de decisão e devolução que reabre o despacho.
+- `frontend/componentes/revisao-flow.css`: painel editorial 2D com Chefinho expressivo, cartões de avaliação, estados vazios, viewport móvel e movimento reduzido.
+- Os arquivos são importados em `agentes-orbitais.html` e copiados pelo gerador da demonstração.
+- Leitura de `ander-flow-despachos-v1` e `ander-flow-equipe-v1`; gravação em `ander-flow-revisoes-v1`. Uma devolução reabre o despacho em `ander-flow-despachos-v1`.
+- A aprovação exige resultado descrito, três confirmações humanas e evidência textual. Não afirma teste automático nem execução de IA.
+- Gates pendentes: testes E2E de aprovação, devolução, persistência, mobile e deploy público.
