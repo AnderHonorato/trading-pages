@@ -37,3 +37,11 @@ A API retorna códigos como `credenciais_invalidas`, `csrf_invalido`, `2fa_neces
 - `GET /api/saude` → health mínimo público: estado, versão, uptime, banco e horário.
 - `GET /api/diagnostico` → exige autenticação e retorna métricas agregadas de requisições, processo e banco.
 - Todas as respostas passam pelo middleware de `X-Request-Id`.
+
+## Quadro de despachos Flow (branch de evolução)
+- Dados locais em `localStorage` na chave `ander-flow-despachos-v1`, sem API externa e sem execução automática de IA.
+- Cada despacho tem `id`, `titulo`, `descricao`, `agente`, `missao`, `prioridade`, `status`, `criado`, `resultado` e `concluido` (quando aplicável).
+- Estados: `pendente` → `andamento` → `concluido`, exigindo descrição manual do resultado para concluir.
+- Despachos para agentes auxiliares geram duas mensagens locais no histórico `ander-flow-equipe-v1`: usuário → Chefinho → auxiliar. Nunca há conversa direta auxiliar-auxiliar.
+- Evento `ander-flow-despachos-alterados` é emitido após gravação local. Sem sincronização multiusuário ou backend.
+- Demo pública: não representa execução real de tarefas nem de corretora.

@@ -1,0 +1,41 @@
+/* Jornada Flow: painel 2D responsivo, sem movimento orbital. */
+#flow-jornada{position:fixed;right:12px;bottom:188px;z-index:9993;font:500 14px system-ui,sans-serif}
+#fj-abrir{border:1px solid #f9a8d4;border-radius:999px;background:#421c43;color:#fff;padding:12px 17px;min-height:46px;box-shadow:0 8px 25px #0007;cursor:pointer}
+#fj-sombra[hidden]{display:none!important}
+#fj-sombra{position:fixed;inset:0;z-index:10020;display:grid;place-items:center;background:#020617e8;padding:12px}
+#fj-painel{box-sizing:border-box;width:min(940px,100%);max-height:95dvh;overflow:auto;border:1px solid #a78bfa;border-radius:24px;background:linear-gradient(145deg,#1c1735,#111c32);color:#f8fafc;padding:clamp(14px,3vw,28px);box-shadow:0 24px 75px #000c}
+#fj-painel header{display:flex;justify-content:space-between;align-items:start;gap:12px}
+#fj-painel h2{font-size:clamp(24px,5vw,34px);margin:4px 0}
+#fj-painel h3{font-size:17px;margin:0 0 15px}
+#fj-painel h4{margin:14px 0 6px}
+#fj-painel p{color:#cbd5e1;line-height:1.5}
+#fj-painel small,#fj-painel time{color:#c4b5fd;font-size:12px}
+#fj-painel button{min-height:44px;border-radius:11px;border:1px solid #8875b8;background:#30244c;color:white;padding:9px 13px;cursor:pointer;font:inherit}
+#fj-painel button:focus-visible{outline:3px solid #f9a8d4;outline-offset:2px}
+.fj-indicadores{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0 24px}
+.fj-indicador{display:grid;gap:4px;padding:16px 12px;border:1px solid #574c7a;border-radius:15px;background:#28203e}
+.fj-indicador strong{font-size:clamp(23px,4vw,35px);color:#f9a8d4;font-variant-numeric:tabular-nums}
+.fj-indicador span{color:#d6d3e6;font-size:12px}
+.fj-conteudo{display:grid;grid-template-columns:1.15fr 1fr;gap:22px}
+.fj-conteudo>section{min-width:0}
+.fj-topo{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.fj-dias{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;align-items:end}
+#fj-painel .fj-dia{display:grid;justify-items:center;gap:5px;padding:8px 2px;background:#211a35;border-color:transparent}
+#fj-painel .fj-ativo{border-color:#f9a8d4;background:#402b58}
+.fj-coluna{height:120px;width:70%;display:flex;align-items:end;justify-content:center;background:#342c4b;border-radius:8px;overflow:hidden}
+.fj-coluna i{display:block;width:100%;background:linear-gradient(#f9a8d4,#a78bfa);border-radius:8px 8px 0 0;transition:height .3s ease}
+.fj-dia strong{font-size:12px}
+#fj-detalhe{margin-top:18px;border-top:1px solid #55476e}
+#fj-detalhe ul{padding-left:20px;max-height:190px;overflow:auto}
+#fj-detalhe li{margin:8px 0;overflow-wrap:anywhere}
+#fj-detalhe li small{display:block}
+.fj-etapa{margin-bottom:12px}
+.fj-etapa>span{display:flex;justify-content:space-between;margin-bottom:6px}
+.fj-trilha{height:9px;background:#352e4c;border-radius:10px;overflow:hidden}
+.fj-trilha i{display:block;height:100%;background:#c084fc;border-radius:10px}
+#fj-proximas{padding-left:20px;display:grid;gap:12px}
+#fj-proximas li{overflow-wrap:anywhere}
+#fj-proximas time{display:block}
+.fj-acoes{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+@media(max-width:640px){#flow-jornada{bottom:175px;right:8px}#fj-painel{max-height:97dvh}.fj-indicadores{grid-template-columns:repeat(2,1fr)}.fj-conteudo{grid-template-columns:1fr}.fj-coluna{height:85px}.fj-dia small{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.fj-coluna i{transition:none}}

@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "buildCommand": "npm run gerar:demo-publica",
+  "outputDirectory": ".site-publico",
+  "redirects": [
+    {
+      "source": "/entrar",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/painel",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/agentes-orbitais.html",
+      "destination": "/",
+      "permanent": false
+    }
+  ]
+}

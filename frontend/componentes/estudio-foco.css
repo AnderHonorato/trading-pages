@@ -1,0 +1,41 @@
+/* Estudio de foco — Ander Flow */
+#flow-foco{position:fixed;right:12px;bottom:78px;z-index:9995;font:500 14px system-ui,sans-serif}
+#ff-abrir{border:1px solid #7dd3fc;border-radius:999px;background:#10253b;color:#e0f2fe;padding:13px 18px;min-height:48px;box-shadow:0 8px 30px #0007;cursor:pointer}
+#ff-fundo[hidden]{display:none!important}
+#ff-fundo{position:fixed;inset:0;background:#020617d9;display:grid;place-items:center;padding:12px;z-index:10010}
+#ff-painel{box-sizing:border-box;width:min(740px,100%);max-height:94dvh;overflow:auto;border:1px solid #475569;border-radius:22px;background:#101b30;color:#f8fafc;padding:clamp(16px,4vw,28px);box-shadow:0 20px 70px #000b}
+#ff-painel header{display:flex;align-items:start;justify-content:space-between;gap:12px}
+#ff-painel h2{font-size:clamp(23px,5vw,32px);margin:4px 0}
+#ff-painel h3{font-size:17px;margin:14px 0}
+#ff-painel small{color:#93c5fd}
+#ff-painel p{color:#cbd5e1;line-height:1.5;margin:7px 0 16px}
+#ff-painel button,#ff-painel input,#ff-painel select{font:inherit;border-radius:11px;min-height:44px}
+#ff-painel button{background:#1e3a5f;color:white;border:1px solid #64748b;padding:9px 13px;cursor:pointer}
+#ff-painel button:disabled{opacity:.45;cursor:not-allowed}
+#ff-painel button:focus-visible,#ff-painel input:focus-visible,#ff-painel select:focus-visible{outline:3px solid #7dd3fc;outline-offset:2px}
+#ff-fechar{flex-shrink:0}
+.ff-grade{display:grid;grid-template-columns:1.1fr 1fr;gap:22px;align-items:center}
+.ff-relogio{display:grid;justify-items:center;gap:16px}
+.ff-anel{--ff-progresso:0%;width:min(250px,64vw);aspect-ratio:1;border-radius:50%;background:conic-gradient(#38bdf8 var(--ff-progresso),#263c58 0);display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;isolation:isolate}
+.ff-anel:before{content:'';position:absolute;inset:12px;border-radius:50%;background:#101b30;z-index:-1}
+#ff-tempo{font-size:clamp(36px,8vw,56px);font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-2px}
+#ff-estado{font-size:12px}
+.ff-controles{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+#ff-iniciar{background:#0369a1!important}
+.ff-lateral{display:grid;gap:12px}
+.ff-lateral label{display:grid;gap:5px;color:#dbeafe}
+.ff-lateral select,.ff-lateral input{background:#0b1425;color:#fff;border:1px solid #64748b;padding:8px;box-sizing:border-box;width:100%}
+.ff-resumo{display:flex;align-items:center;gap:10px;padding:12px;border-radius:12px;background:#1e293b}
+.ff-resumo strong{font-size:24px;color:#7dd3fc}
+.ff-historico{border-top:1px solid #475569;margin-top:18px;padding-top:8px}
+#ff-lista{padding:0;list-style:none;display:grid;gap:8px;max-height:160px;overflow:auto}
+#ff-lista li{display:grid;gap:3px;background:#1e293b;padding:10px;border-radius:9px}
+#ff-lista span{font-size:12px;color:#cbd5e1}
+#ff-aviso{min-height:1em}
+@media(max-width:580px){#flow-foco{bottom:65px;right:8px}#ff-painel{max-height:96dvh}.ff-grade{grid-template-columns:1fr}.ff-anel{width:min(190px,48vw)}.ff-lateral{grid-template-columns:1fr 1fr}.ff-lateral label:last-of-type,.ff-lateral .ff-resumo,.ff-lateral p{grid-column:1/-1}}
+@media(prefers-reduced-motion:reduce){#ff-painel *,#ff-painel *:before{animation:none!important;transition:none!important}}
+
+.ff-integracao{margin-top:16px;padding:16px;border:1px solid #2563eb;border-radius:14px;background:#0c2640}
+.ff-integracao label{display:grid;gap:8px;color:#dbeafe}
+.ff-integracao textarea{box-sizing:border-box;width:100%;min-height:84px;resize:vertical;border:1px solid #64748b;border-radius:10px;padding:10px;background:#0b1425;color:#fff;font:inherit}
+#ff-registrar{margin-top:12px;background:#0369a1!important;width:100%}

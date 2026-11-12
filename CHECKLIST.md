@@ -106,3 +106,43 @@ Legenda: [x] feito e testado · [~] em andamento · [ ] falta · [!] decisão/li
 - [x] Zero overflow nos viewports testados
 - [x] Zero erros de console no teste visual
 - [~] PT-BR ↔ EN completo — legado ainda pendente
+
+## Onda 2026-11-11 — Agenda semanal (branch de evolução)
+- [~] Agenda semanal de missões com seleção de dia, navegação entre semanas, horários, filtros, conclusão manual e exclusão.
+- [~] Persistência local e integração no painel e gerador da demonstração; commits enviados, mas sem validação visual/CI nesta onda.
+- [ ] Executar CI, teste visual 360px/desktop, smoke e auditoria antes de merge.
+- [ ] Publicar em URL canônica e arquivar release no Drive após validação.
+- [!] Agenda é planejamento manual; não aciona IA nem ordens financeiras.
+\n## Integração Foco + Diário (branch, pendente de QA)\n- [~] Sessão manual de foco vinculada a missão e agenda\n- [~] Registrar resultado de sessão no Diário, com origem e identificador rastreável\n- [ ] Testar fluxo completo desktop/mobile, persistência e recarga\n- [ ] Publicar demo canônica após gates verdes\n- [ ] Enviar release versionada ao Google Drive correto\n
+## Onda 2026-11-12 — Linha do Tempo Flow (branch)
+- [x] Implementação de painel visual, filtros de tipo/período/busca, agrupamento diário e exportação JSON.
+- [x] Integração HTML/CSS/JS com gerador de demo estática.
+- [x] Conversas novas registram data ISO real, sem fabricar datas para histórico legado.
+- [ ] Gate CI/Chrome desktop e mobile da nova onda — ainda não comprovado.
+- [ ] Publicação canônica — Vercel bloqueada por limite diário HTTP 402.
+- [ ] Release Drive versionada — aguardando validação dos gates.
+- [!] Histórico derivado de estado local; não é auditoria imutável.
+
+## Onda 2026-11-12 — Estação de Revisão Flow
+- [~] Painel visual 2D de revisão humana de despachos, integrado à Equipe e Sala Flow na branch.
+- [~] Aprovação com três critérios e evidência textual; devolução reabre despacho; persistência local.
+- [ ] Validar fluxo E2E, mobile e CI da branch.
+- [ ] Publicar URL canônica e enviar release versionada ao Drive.
+- [!] A revisão é manual e não comprova execução de IA ou testes automatizados.
+
+## Onda 2026-11-12 — Fluxo Vivo (branch)
+- [~] Mapa 2D com Chefinho animado, cinco etapas, contadores, filtros e detalhes reais dos despachos e revisões.
+- [~] Integrado ao HTML e ao gerador da demo; código enviado ao GitHub.
+- [ ] CI e QA visual mobile/desktop pendentes; não publicado.
+- [!] Revisões e dados são locais; sem execução real de IA ou trading.
+
+## Onda 2026-11-12 — Jardim Flow
+- [~] Cenário 2D não orbital com sementes, brotos e flores refletindo estados reais dos despachos; criação, início, conclusão com resultado e reabertura.
+- [~] Integração de CSS/JS ao painel e gerador de demo.
+- [ ] Validar build, testes de navegador mobile/desktop, persistência e eventos cruzados.
+- [ ] Publicação canônica e release no Drive somente após gates verdes.
+
+## Onda 12/11 — Oficina Flow
+- [~] Bancada visual de projetos e etapas dependentes implementada na branch, integrada ao HTML e gerador da demo.
+- [~] Criação/exclusão de projetos, adição/remoção de etapas, bloqueio sequencial, conclusão e reabertura com persistência local.
+- [ ] Executar CI, validar interações no navegador e mobile, revisar regressões e publicar após gates verdes.

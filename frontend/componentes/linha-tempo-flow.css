@@ -1,0 +1,39 @@
+/* Linha do Tempo Flow — visual editorial 2D, responsivo. */
+#flow-linha-tempo{position:fixed;right:12px;bottom:138px;z-index:9994;font:500 14px system-ui,sans-serif}
+#flt-abrir{min-height:48px;padding:10px 16px;border-radius:999px;background:#21473d;color:#e0fff2;border:1px solid #86efac;box-shadow:0 9px 24px #0008;cursor:pointer}
+#flt-fundo[hidden]{display:none!important}
+#flt-fundo{position:fixed;inset:0;z-index:10030;background:#06101be8;display:grid;place-items:center;padding:12px}
+#flt-painel{box-sizing:border-box;width:min(900px,100%);max-height:95dvh;overflow:auto;background:#101d29;border:1px solid #528979;border-radius:24px;color:#f0fdf4;padding:clamp(16px,3vw,30px);box-shadow:0 30px 90px #000b}
+#flt-painel header{display:flex;justify-content:space-between;align-items:start;gap:15px}
+#flt-painel h2{font-size:clamp(24px,5vw,34px);margin:5px 0}
+#flt-painel p{color:#d1e5dc;line-height:1.5}
+#flt-painel small{color:#86efac}
+#flt-painel button{min-height:44px;border:1px solid #6ee7b7;background:#214d45;color:#f0fdf4;border-radius:12px;padding:10px 14px;cursor:pointer;font:inherit}
+#flt-painel :focus-visible{outline:3px solid #fbbf24;outline-offset:3px}
+.flt-metricas{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:18px 0}
+.flt-metricas article{display:grid;gap:4px;background:#1a3440;border-radius:15px;padding:14px}
+.flt-metricas strong{font-size:clamp(23px,4vw,30px);color:#86efac}
+.flt-metricas span{font-size:12px;color:#d1fae5}
+.flt-controles{display:grid;grid-template-columns:1fr 1fr 1.5fr;gap:10px}
+.flt-controles label{display:grid;gap:6px;color:#c7f9dc}
+.flt-controles input,.flt-controles select{min-height:46px;box-sizing:border-box;width:100%;border:1px solid #568078;background:#0a202a;color:#fff;border-radius:11px;padding:10px}
+.flt-atalhos{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+.flt-dia{font-size:14px;color:#86efac;text-transform:capitalize;margin:24px 0 14px}
+.flt-evento{display:grid;grid-template-columns:28px minmax(0,1fr);min-height:92px}
+.flt-trilho{position:relative;display:flex;justify-content:center}
+.flt-trilho:before{content:"";position:absolute;top:0;bottom:0;width:2px;background:#406b66}
+.flt-ponto{position:relative;margin-top:21px;width:13px;height:13px;border-radius:50%;background:#86efac;border:3px solid #193b37;z-index:1}
+.flt-conteudo{margin:0 0 12px 8px;padding:14px 16px;background:#1b303d;border:1px solid #355a5a;border-radius:15px;min-width:0;animation:flt-entrada .35s both;animation-delay:calc(var(--indice)*35ms)}
+.flt-meta{display:flex;align-items:center;flex-wrap:wrap;gap:8px;color:#b8d6ce;font-size:12px}
+.flt-etiqueta{border-radius:7px;padding:3px 8px;background:#245d4d;color:#b6ffcf;font-weight:750}
+.flt-evento[data-tipo=despacho] .flt-etiqueta{background:#514370;color:#eee2ff}
+.flt-evento[data-tipo=mensagem] .flt-etiqueta{background:#314d7b;color:#d9ebff}
+.flt-evento[data-tipo=diario] .flt-etiqueta{background:#70552b;color:#fff0c4}
+.flt-estado{margin-left:auto}
+.flt-conteudo h4{font-size:16px;margin:10px 0 4px;overflow-wrap:anywhere}
+.flt-conteudo p{font-size:13px;margin:0;overflow-wrap:anywhere}
+.flt-vazio{padding:30px;text-align:center;background:#1b303d;border-radius:14px}
+.flt-rodape{font-size:12px}
+@keyframes flt-entrada{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){#flow-linha-tempo{right:8px;bottom:130px}.flt-metricas{grid-template-columns:repeat(2,1fr)}.flt-controles{grid-template-columns:1fr}.flt-atalhos button{flex:1}}
+@media(prefers-reduced-motion:reduce){.flt-conteudo{animation:none!important}#flow-linha-tempo *{transition:none!important}}
