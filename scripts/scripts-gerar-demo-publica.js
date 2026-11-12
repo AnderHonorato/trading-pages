@@ -29,6 +29,8 @@ function gerar(){
   copiar('frontend/paginas/painel/painel.js');
   copiar('frontend/paginas/painel/estudio-cenas.js');
   copiar('frontend/paginas/painel/estudio-cenas.css');
+  copiar('frontend/paginas/painel/palco-flow.js');
+  copiar('frontend/paginas/painel/palco-flow.css');
   copiar('frontend/paginas/painel/demo-publica.css');
   copiar('frontend/compartilhado/orbital-fisica.js');
   copiar('frontend/compartilhado/reciclagem-agentes.js');
