@@ -34,3 +34,8 @@
 #ff-aviso{min-height:1em}
 @media(max-width:580px){#flow-foco{bottom:65px;right:8px}#ff-painel{max-height:96dvh}.ff-grade{grid-template-columns:1fr}.ff-anel{width:min(190px,48vw)}.ff-lateral{grid-template-columns:1fr 1fr}.ff-lateral label:last-of-type,.ff-lateral .ff-resumo,.ff-lateral p{grid-column:1/-1}}
 @media(prefers-reduced-motion:reduce){#ff-painel *,#ff-painel *:before{animation:none!important;transition:none!important}}
+
+.ff-integracao{margin-top:16px;padding:16px;border:1px solid #2563eb;border-radius:14px;background:#0c2640}
+.ff-integracao label{display:grid;gap:8px;color:#dbeafe}
+.ff-integracao textarea{box-sizing:border-box;width:100%;min-height:84px;resize:vertical;border:1px solid #64748b;border-radius:10px;padding:10px;background:#0b1425;color:#fff;font:inherit}
+#ff-registrar{margin-top:12px;background:#0369a1!important;width:100%}
