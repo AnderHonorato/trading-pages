@@ -80,9 +80,9 @@
     if(e.target.id==='ef-inicio'){e.preventDefault();const d=new FormData(e.target);estado.chefe.nome=String(d.get('nome')).trim()||'Chefinho';estado.chefe.personalidade=String(d.get('personalidade')).trim()||'Gentil, organizado e objetivo.';estado.iniciado=true;salvar();desenhar();}
     if(e.target.id==='ef-enviar'){e.preventDefault();const d=new FormData(e.target), destino=String(d.get('destino')),texto=String(d.get('texto')).trim();if(!texto)return;
       const nome=estado.agentes.find(a=>a.id===destino)?.nome||estado.chefe.nome;
-      const hora=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-      estado.mensagens.push({origem:'Você',destino:estado.chefe.nome,texto,hora});
-      if(destino!=='chefe')estado.mensagens.push({origem:estado.chefe.nome,destino:nome,texto:'Recado encaminhado: '+texto,hora});
+      const agora=new Date(),hora=agora.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),quando=agora.toISOString();
+      estado.mensagens.push({origem:'Você',destino:estado.chefe.nome,texto,hora,quando,via:'chefe'});
+      if(destino!=='chefe')estado.mensagens.push({origem:estado.chefe.nome,destino:nome,texto:'Recado encaminhado: '+texto,hora,quando,via:'chefe'});
       estado.mensagens=estado.mensagens.slice(-150);salvar();desenhar();
     }
   });
