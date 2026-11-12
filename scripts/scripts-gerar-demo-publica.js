@@ -48,6 +48,8 @@ function gerar(){
   copiar('frontend/componentes/jornada-flow.js');
   copiar('frontend/componentes/cofre-flow.css');
   copiar('frontend/componentes/cofre-flow.js');
+  copiar('frontend/componentes/radar-flow.css');
+  copiar('frontend/componentes/radar-flow.js');
   copiar('frontend/componentes/quadro-despachos.css');
   copiar('frontend/componentes/quadro-despachos.js');
 
