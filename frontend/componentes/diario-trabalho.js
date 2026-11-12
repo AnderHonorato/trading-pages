@@ -17,7 +17,7 @@ function atualizar(){
  $('#fd-filtro').innerHTML='<option value="">Todas as missões</option>'+ms.map(m=>'<option value="'+esc(m.id)+'">'+esc(m.titulo)+'</option>').join('');$('#fd-filtro').value=filtro;
  const visiveis=eventos.filter(e=>!filtro||e.missao===filtro);
  $('#fd-resumo').textContent=eventos.length+' atividades registradas · '+eventos.filter(e=>e.tipo==='Resultado').length+' resultados · '+eventos.filter(e=>e.tipo==='Bloqueio').length+' bloqueios';
- $('#fd-lista').innerHTML=visiveis.slice().reverse().map(e=>'<li><strong>'+esc(e.tipo)+'</strong><time>'+esc(new Date(e.quando).toLocaleString('pt-BR'))+'</time><p>'+esc(e.texto)+'</p><small>'+esc(ms.find(m=>m.id===e.missao)?.titulo||'Atividade geral')+' · registro manual</small></li>').join('')||'<li class="fd-vazio">Nenhuma atividade ainda. Registre o primeiro resultado para acompanhar sua evolução.</li>';
+ $('#fd-lista').innerHTML=visiveis.slice().reverse().map(e=>'<li><strong>'+esc(e.tipo)+'</strong><time>'+esc(new Date(e.quando).toLocaleString('pt-BR'))+'</time><p>'+esc(e.texto)+'</p><small>'+esc(ms.find(m=>m.id===e.missao)?.titulo||'Atividade geral')+' · '+(e.origem==='foco-manual'?'foco manual ('+esc(e.sessaoId||'')+')':'registro manual')+'</small></li>').join('')||'<li class="fd-vazio">Nenhuma atividade ainda. Registre o primeiro resultado para acompanhar sua evolução.</li>';
 }
 function fechar(){sombra.hidden=true;$('#fd-abrir').focus()}
 $('#fd-abrir').onclick=()=>{atualizar();sombra.hidden=false;$('#fd-fechar').focus()};
@@ -25,5 +25,7 @@ $('#fd-fechar').onclick=fechar;sombra.onclick=e=>{if(e.target===sombra)fechar()}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!sombra.hidden)fechar()});
 $('#fd-form').onsubmit=e=>{e.preventDefault();const d=new FormData(e.currentTarget),texto=String(d.get('texto')||'').trim();if(!texto)return;const novo={id:crypto.randomUUID?.()||String(Date.now()),missao:String(d.get('missao')||''),tipo:String(d.get('tipo')||'Progresso'),texto,quando:new Date().toISOString(),origem:'manual'};const proximos=[...eventos,novo].slice(-500);if(!salvar(proximos)){$('#fd-aviso').textContent='Não foi possível salvar no navegador.';return}eventos=proximos;e.currentTarget.querySelector('textarea').value='';$('#fd-aviso').textContent='Atividade registrada neste navegador.';atualizar()};
 $('#fd-filtro').onchange=e=>{filtro=e.target.value;atualizar()};
+window.addEventListener('ander-flow:diario-atualizado',()=>{const novo=ler(chave);if(Array.isArray(novo))eventos=novo;atualizar()});
+window.addEventListener('storage',e=>{if(e.key===chave){const novo=ler(chave);if(Array.isArray(novo))eventos=novo;atualizar()}});
 $('#fd-exportar').onclick=()=>{const blob=new Blob([JSON.stringify({modo:'demonstracao',eventos},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='flow-diario.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
 })();
