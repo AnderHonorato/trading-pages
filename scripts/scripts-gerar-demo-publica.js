@@ -34,6 +34,10 @@ function gerar(){
   copiar('frontend/compartilhado/conversa-contextual.js');
   copiar('frontend/compartilhado/movimentos-tematicos.js');
   copiar('evolucao-v11.css');
+  copiar('frontend/componentes/equipe-flow.css');
+  copiar('frontend/componentes/equipe-flow.js');
+  copiar('frontend/componentes/mural-missoes.css');
+  copiar('frontend/componentes/mural-missoes.js');
 
   let evolucao=fs.readFileSync(path.join(raiz,'evolucao-v11.js'),'utf8');
   evolucao=evolucao
