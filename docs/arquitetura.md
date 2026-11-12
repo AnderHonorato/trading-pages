@@ -48,3 +48,11 @@ A linha do tempo não é um log imutável/auditável: alterações antigas podem
 - Importações em `agentes-orbitais.html` e cópias em `scripts/scripts-gerar-demo-publica.js`.
 - Fluxo: pendente → andamento → revisão → aprovado; revisão rejeitada reabre a tarefa e aparece em ajustes.
 - Para validar: gerar demo, executar Chrome em 360px/1440px, conferir filtros, reabertura, persistência, console e CI antes de merge/publicação.
+
+## Jardim Flow — cenário de tarefas (12/11/2026)
+- Crie `frontend/componentes/jardim-flow.js` para o estado interativo, leitura/gravação de `ander-flow-despachos-v1`, criação de tarefas, avanço e conclusão manual.
+- Crie `frontend/componentes/jardim-flow.css` para cenário 2D com sol, nuvem, plantas em três estágios e responsividade.
+- Importe ambos em `agentes-orbitais.html` e copie no gerador `scripts/scripts-gerar-demo-publica.js`.
+- Ao plantar, um despacho pendente é criado. Regar inicia; florescer exige resultado escrito; replantar reabre. Alterações emitem `ander-flow-despachos-alterados` e `ander-flow:radar-atualizado`.
+- O cenário não é orbital; respeita `prefers-reduced-motion` e não executa IA ou ordens financeiras.
+- Validação pendente: CI, Playwright em 360px/1440px, persistência e integração com Sala/Quadro/Fluxo.
