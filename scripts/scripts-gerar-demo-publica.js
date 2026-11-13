@@ -26,6 +26,21 @@ function gerar(){
   fs.writeFileSync(path.join(destino,'index.html'),html);
 
   copiar('frontend/paginas/painel/painel.css');
+  copiar('frontend/paginas/equipe/equipe.html');
+  copiar('frontend/paginas/equipe/equipe.css');
+  copiar('frontend/paginas/equipe/equipe.js');
+  copiar('frontend/paginas/equipe/historico-flow.js');
+  copiar('frontend/paginas/equipe/missoes-flow.js');
+  copiar('frontend/paginas/equipe/despacho-flow.js');
+  copiar('frontend/paginas/equipe/despacho-flow.css');
+  copiar('frontend/paginas/equipe/oficina-viva.js');
+  copiar('frontend/paginas/equipe/oficina-viva.css');
+  copiar('frontend/paginas/equipe/calendario-flow.js');
+  copiar('frontend/paginas/equipe/calendario-flow.css');
+  copiar('frontend/paginas/equipe/memoria-flow.js');
+  copiar('frontend/paginas/equipe/memoria-flow.css');
+  copiar('frontend/paginas/equipe/comando-flow.js');
+  copiar('frontend/paginas/equipe/comando-flow.css');
   copiar('frontend/paginas/painel/painel.js');
   copiar('frontend/paginas/painel/demo-publica.css');
   copiar('frontend/compartilhado/orbital-fisica.js');
