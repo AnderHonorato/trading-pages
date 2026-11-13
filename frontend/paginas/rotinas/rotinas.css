@@ -1,0 +1,67 @@
+:root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;background:#101526;color:#f5f6ff}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 20% 0%,#2d3357,#101526 60%);min-height:100vh}.aplicativo{max-width:1350px;margin:auto;padding:clamp(16px,4vw,48px)}.topo{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:28px}.topo h1{font-size:clamp(2rem,5vw,3.5rem);margin:5px 0}.topo p{color:#bec6dc}.sobretitulo{font-size:.72rem;letter-spacing:.2em;color:#9cd9e4!important}.topo a{color:#bcecf1;text-decoration:none;border:1px solid #66738e;border-radius:12px;padding:14px}.painel,.historico{background:#1b2339;border:1px solid #35435e;border-radius:22px;padding:22px;margin-bottom:20px}form{display:grid;grid-template-columns:minmax(200px,2fr) repeat(2,minmax(130px,1fr)) auto;align-items:end;gap:14px}label{display:grid;gap:8px;color:#d8deed;font-weight:600;font-size:.9rem}input,select,button{font:inherit;min-height:48px;border-radius:12px;padding:10px 13px}input,select{background:#10192c;border:1px solid #5d6b88;color:white;width:100%}button{background:#354563;border:1px solid #647b9d;color:white;cursor:pointer}button:hover{background:#486184}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #89e4e6;outline-offset:2px}.principal{background:#a3e0e3;color:#13213a;border:0;font-weight:800}.ajuda,.historico p{color:#aebbd2;font-size:.85rem}.resumo{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0}.resumo>div{background:#222b45;border:1px solid #42516e;border-radius:18px;padding:20px;display:grid;gap:6px}.resumo strong{font-size:2rem}.resumo span{color:#b8c5da}.ferramentas{display:flex;align-items:end;gap:12px;flex-wrap:wrap;margin-bottom:20px}.ferramentas label{min-width:180px}.quadro{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.coluna{background:#182137;border:1px solid #364563;border-radius:20px;padding:16px;min-height:270px}.coluna h2{font-size:1.05rem;display:flex;justify-content:space-between;align-items:center}.coluna h2 span{background:#354666;border-radius:30px;padding:4px 11px}.tarefa{background:#27334f;border:1px solid #506181;border-radius:16px;padding:15px;margin:12px 0;animation:entrar .22s ease-out}.tarefa h3{margin:10px 0;overflow-wrap:anywhere}.tarefa p{color:#c2cde1;font-size:.83rem}.prioridade{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:#d9e8ff}.prioridade.alta{color:#ffc8a1}.acoes{display:flex;gap:7px;flex-wrap:wrap}.acoes button{min-height:44px;padding:8px 11px;font-size:.83rem}.vazio{color:#aab8d0;border:1px dashed #52627e;padding:20px;border-radius:12px}.historico{margin-top:24px}.historico li{padding:7px 0;overflow-wrap:anywhere}footer{color:#9aabc6;font-size:.8rem;padding:20px 0}@keyframes entrar{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}@media(max-width:900px){form{grid-template-columns:1fr 1fr}.quadro{grid-template-columns:1fr}.coluna{min-height:120px}}@media(max-width:520px){form{grid-template-columns:1fr}.resumo{gap:7px}.resumo>div{padding:12px}.resumo strong{font-size:1.5rem}.resumo span{font-size:.72rem}.ferramentas label{flex:1;min-width:130px}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* Planejador integrado: prazos, checklist e progresso por atividade */
+.plano{margin:16px 0;padding:14px;background:#141f34;border:1px solid #465779;border-radius:14px;display:grid;gap:12px}
+.plano-cabecalho{display:flex;align-items:center;justify-content:space-between;font-size:.85rem;color:#c5eef1}
+.plano progress{width:100%;height:12px;accent-color:#8edfe3}
+.plano .prazo{font-size:.78rem;display:grid;gap:6px}
+.plano input[type=date]{min-height:44px}
+.plano small{color:#bdd0e8}.plano small.atrasado{color:#ffc49d;font-weight:700}
+.etapas{list-style:none;padding:0;margin:0;display:grid;gap:7px}
+.etapas li{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#253451;border-radius:10px;padding:6px 8px}
+.etapas label{display:flex;align-items:center;gap:9px;min-width:0;font-size:.84rem;overflow-wrap:anywhere}
+.etapas input[type=checkbox]{width:20px;height:20px;min-height:20px;flex:none;accent-color:#8edfe3}
+.etapas input:checked+span{text-decoration:line-through;opacity:.65}
+.etapas button{min-height:40px;min-width:40px;padding:5px}
+.adicionar-etapa{display:flex;gap:8px;min-width:0}
+.adicionar-etapa input{min-width:0;flex:1}
+.adicionar-etapa button{min-height:44px;font-size:.8rem}
+@media(max-width:520px){.plano{padding:10px}.adicionar-etapa{flex-wrap:wrap}.adicionar-etapa button{flex:1}}
+
+/* Planejamento diário com navegação acessível e ações rápidas. */
+.painel-dia{background:#1b2339;border:1px solid #455673;border-radius:22px;padding:clamp(14px,2vw,24px);margin:0 0 24px}
+.dia-cabecalho{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap}
+.dia-cabecalho h2{font-size:clamp(1.6rem,3vw,2.2rem);margin:4px 0 16px}
+.dia-descricao{color:#c3d0e2;font-size:.85rem;max-width:370px}
+.dia-metricas{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0 20px}
+.dia-metricas>div{background:#26344e;border:1px solid #50627e;border-radius:14px;padding:14px;display:grid;gap:4px}
+.dia-metricas strong{font-size:1.7rem;font-variant-numeric:tabular-nums}
+.dia-metricas span{color:#c6d4e7;font-size:.8rem}
+.dia-abas{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.dia-abas button{min-height:44px}
+.dia-abas button.ativo{background:#a3e0e3;color:#13213a;font-weight:800;border-color:#a3e0e3}
+.dia-lista{display:grid;gap:10px}
+.dia-item{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#25334f;border:1px solid #50627e;border-radius:14px;padding:14px;min-width:0}
+.dia-item-corpo{display:grid;gap:5px;min-width:0;overflow-wrap:anywhere}
+.dia-item-corpo strong{font-size:1rem}
+.dia-item-corpo small{color:#e9c7a8}
+.dia-item-corpo span{font-size:.75rem;color:#b9cbe1}
+.dia-item-acoes{display:flex;gap:7px;flex-wrap:wrap}
+.dia-item-acoes button{min-height:44px;white-space:nowrap}
+.dia-vazio{border:1px dashed #647b9d;border-radius:12px;padding:22px;color:#c6d4e7}
+@media(max-width:650px){.dia-metricas{grid-template-columns:repeat(2,minmax(0,1fr))}.dia-item{align-items:stretch;flex-direction:column}.dia-item-acoes button{flex:1}.dia-abas button{flex:1}}
+
+/* Estudio de foco: painel vivo com personagem 2D e movimentos reduzidos. */
+.foco-guiado{background:linear-gradient(125deg,#242747,#192b40);border:1px solid #627394;border-radius:24px;padding:clamp(16px,3vw,28px);margin-bottom:24px}
+.foco-cabecalho{display:flex;align-items:end;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.foco-cabecalho h2{font-size:clamp(1.5rem,3vw,2.2rem);margin:4px 0}
+.foco-cabecalho>p{color:#cad8ea;max-width:390px;line-height:1.5}
+.foco-corpo{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(220px,1fr);gap:20px;margin-top:18px}
+.foco-controle{display:grid;gap:12px;align-content:start}
+.foco-controle label{max-width:450px}
+.foco-relogio{font-size:clamp(3rem,8vw,5.5rem);font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:.03em}
+.foco-progresso{width:100%;height:14px;accent-color:#9ee2dc}
+.foco-status{color:#c6d7e8;min-height:1.5em;margin:0}
+.foco-acoes{display:flex;gap:9px;flex-wrap:wrap}
+.foco-acoes button{flex:1;min-width:95px}
+.foco-personagem{min-height:240px;border-radius:22px;background:radial-gradient(circle at 50% 65%,#44627b,#1b2b46 65%);display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:20px;text-align:center}
+.foco-rosto{width:136px;height:124px;border-radius:46% 46% 42% 42%;background:#f4c59f;border:5px solid #533f65;box-shadow:0 14px 0 #28344f,0 20px 40px #0c162b;display:flex;justify-content:center;align-items:center;gap:20px;position:relative;transform-origin:50% 90%}
+.foco-olho{width:14px;height:20px;background:#2a2845;border-radius:50%;animation:foco-piscar 6s ease-in-out infinite}
+.foco-boca{position:absolute;bottom:26px;width:28px;height:14px;border-bottom:5px solid #69435a;border-radius:50%}
+.foco-fala{font-weight:700;color:#e9f7ff;max-width:240px}
+.foco-ciclos{font-size:.8rem;color:#b9d9ec}
+.em-foco .foco-rosto{animation:foco-respirar 3s ease-in-out infinite}
+@keyframes foco-respirar{50%{transform:translateY(-8px) rotate(-2deg)}}
+@keyframes foco-piscar{0%,44%,48%,100%{transform:scaleY(1)}46%{transform:scaleY(.12)}}
+@media(max-width:700px){.foco-corpo{grid-template-columns:1fr}.foco-personagem{min-height:210px}.foco-relogio{font-size:3.7rem}}
+@media(prefers-reduced-motion:reduce){.foco-rosto,.foco-olho{animation:none!important}}
