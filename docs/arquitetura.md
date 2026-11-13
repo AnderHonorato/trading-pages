@@ -25,3 +25,9 @@ No checkout da branch: `node --check frontend/paginas/equipe/despacho-flow.js`, 
 - `frontend/paginas/equipe/oficina-viva.css`: cenografia 2D em postos de trabalho, expressoes animadas, layout 360 px e reducao de movimento. Nao utiliza orbitas.
 - `equipe.html` importa os dois arquivos; `equipe.js` alterna a aba Oficina viva; `scripts/scripts-gerar-demo-publica.js` inclui os novos assets no build estatico.
 - Aceite pendente: executar build, testes e validar navegacao/touch no navegador real antes de merge/deploy.
+
+## Linha do Tempo Flow (13/11/2026)
+- `frontend/paginas/equipe/memoria-flow.js`: compoe uma cronologia local de criacao, ultima alteracao e notas de cada missao, com filtros por tipo/periodo, resumo, exportacao JSON e navegacao para o Despacho. Nao fabrica historico anterior: apenas o ultimo estado e as notas existentes podem ser recuperados.
+- `frontend/paginas/equipe/memoria-flow.css`: estacoes visuais 2D, trilha cronologica, responsividade e movimento reduzido.
+- `equipe.html` e `equipe.js`: aba Linha do tempo e seus controles. `despacho-flow.js`: evento `flow:abrir-missao` seleciona a missao e `flow:diario-atualizado` sincroniza o diario. `scripts/scripts-gerar-demo-publica.js`: copia os novos arquivos para a demo.
+- Aceite ainda exige build, navegador 360 px e desktop, clique de ida e volta, exportacao e atualizacao ao salvar notas.
