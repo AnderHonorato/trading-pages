@@ -19,3 +19,9 @@ A aplicação demonstrativa mantém a arena legada e acrescenta módulos indepen
 
 ## Verificação
 No checkout da branch: `node --check frontend/paginas/equipe/despacho-flow.js`, `node --check frontend/paginas/equipe/equipe.js`, `node --check frontend/paginas/equipe/missoes-flow.js`, `node scripts/scripts-gerar-demo-publica.js`, `npm test`. Validar 360 px, desktop, navegação por teclado, armazenamento, edição de missão e movimento reduzido antes de merge/publicação.
+
+## Oficina viva Flow (evolucao de 12/11/2026)
+- `frontend/paginas/equipe/oficina-viva.js`: renderiza postos de personagens da equipe real do navegador, filtra missoes por agente e altera etapa/responsavel no mesmo contrato `ander-flow-missoes-v1`.
+- `frontend/paginas/equipe/oficina-viva.css`: cenografia 2D em postos de trabalho, expressoes animadas, layout 360 px e reducao de movimento. Nao utiliza orbitas.
+- `equipe.html` importa os dois arquivos; `equipe.js` alterna a aba Oficina viva; `scripts/scripts-gerar-demo-publica.js` inclui os novos assets no build estatico.
+- Aceite pendente: executar build, testes e validar navegacao/touch no navegador real antes de merge/deploy.
