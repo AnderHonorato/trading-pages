@@ -11,3 +11,24 @@
 #flow-central .flow-notas{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;margin:6px 0;color:#e3e7f5}
 #flow-central .flow-item>div:last-child{display:flex;flex-wrap:wrap;gap:6px;flex:0 1 auto}
 @media(max-width:420px){#flow-central .flow-resumo{gap:5px}#flow-central .flow-resumo span{font-size:11px;padding:10px 3px}#flow-central .flow-resumo b{font-size:22px}#flow-central .flow-filtros button{padding:7px 9px}}
+
+/* Planejamento de missões: etapas, histórico e progresso, inclusive por toque. */
+#flow-central .flow-busca{display:grid;gap:6px;margin:12px 0}
+#flow-central .flow-busca input{width:100%;box-sizing:border-box;padding:12px;border-radius:12px;border:1px solid #747d99;background:#171c2e;color:#fff}
+#flow-central .flow-missao{flex-wrap:wrap;align-items:flex-start}
+#flow-central .flow-missao>div:first-child{flex:1 1 230px}
+#flow-central .flow-progresso{height:8px;border-radius:100px;background:#41465c;overflow:hidden;margin:10px 0 6px}
+#flow-central .flow-progresso span{display:block;height:100%;border-radius:100px;background:linear-gradient(90deg,#e5b26d,#82d9b7);transition:width .3s ease}
+#flow-central .flow-detalhes{flex:1 0 100%;border-top:1px solid #4a526c;padding-top:12px;display:grid;gap:12px}
+#flow-central .flow-detalhes form{display:flex;flex-wrap:wrap}
+#flow-central .flow-detalhes form input{flex:1 1 160px}
+#flow-central .flow-detalhes h3{font-size:15px;margin:0}
+#flow-central .flow-etapas{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+#flow-central .flow-etapas li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px;background:#171e31;border-radius:10px}
+#flow-central .flow-etapas label{display:flex;align-items:center;gap:12px;flex:1;min-width:0;overflow-wrap:anywhere}
+#flow-central .flow-etapas input{width:20px;height:20px;accent-color:#85d5af;flex:none}
+#flow-central .flow-etapas input:checked+span{text-decoration:line-through;opacity:.7}
+#flow-central .flow-historico{margin:0;padding-left:22px;max-height:180px;overflow:auto}
+#flow-central .flow-historico li{padding:4px 0;overflow-wrap:anywhere}
+#flow-central .flow-detalhes button,#flow-central .flow-etapas button{min-height:44px;min-width:44px}
+@media(prefers-reduced-motion:reduce){#flow-central .flow-progresso span{transition:none}}
