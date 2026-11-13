@@ -4,3 +4,6 @@
 
 /* Ferramentas de busca e exportacao do Atelie */
 .ferramentas-missao{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) auto;gap:12px;align-items:end;margin:16px 0}.ferramentas-missao label{margin:0}.ferramentas-missao button{min-height:48px}@media(max-width:700px){.ferramentas-missao{grid-template-columns:1fr}.ferramentas-missao button{width:100%}}
+
+/* Planejamento diario: foco acionavel sem movimentos orbitais */
+.form-missao{grid-template-columns:repeat(2,minmax(0,1fr))}.form-missao button{grid-column:1/-1}.painel-foco{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:18px;align-items:start;background:linear-gradient(125deg,#3b2c52,#221d36);border:1px solid #73528d;border-radius:22px;padding:20px;margin:18px 0}.painel-foco h3{font-size:24px;margin:4px 0}.painel-foco p{color:#d5c7e7}.foco-lista{display:grid;gap:9px}.foco-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border:1px solid #68527e;border-radius:14px;background:#211b30}.foco-item div{display:grid;gap:5px;min-width:0;overflow-wrap:anywhere}.foco-item button{flex-shrink:0;min-height:44px}.missao-prazo{font-weight:700}.missao-prazo.atrasada{color:#ffc0aa}@media(max-width:680px){.painel-foco{grid-template-columns:1fr}.foco-item{align-items:stretch;flex-direction:column}.form-missao{grid-template-columns:1fr}}
