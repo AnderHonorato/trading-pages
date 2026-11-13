@@ -17,3 +17,26 @@
 .adicionar-etapa input{min-width:0;flex:1}
 .adicionar-etapa button{min-height:44px;font-size:.8rem}
 @media(max-width:520px){.plano{padding:10px}.adicionar-etapa{flex-wrap:wrap}.adicionar-etapa button{flex:1}}
+
+/* Planejamento diário com navegação acessível e ações rápidas. */
+.painel-dia{background:#1b2339;border:1px solid #455673;border-radius:22px;padding:clamp(14px,2vw,24px);margin:0 0 24px}
+.dia-cabecalho{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap}
+.dia-cabecalho h2{font-size:clamp(1.6rem,3vw,2.2rem);margin:4px 0 16px}
+.dia-descricao{color:#c3d0e2;font-size:.85rem;max-width:370px}
+.dia-metricas{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0 20px}
+.dia-metricas>div{background:#26344e;border:1px solid #50627e;border-radius:14px;padding:14px;display:grid;gap:4px}
+.dia-metricas strong{font-size:1.7rem;font-variant-numeric:tabular-nums}
+.dia-metricas span{color:#c6d4e7;font-size:.8rem}
+.dia-abas{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.dia-abas button{min-height:44px}
+.dia-abas button.ativo{background:#a3e0e3;color:#13213a;font-weight:800;border-color:#a3e0e3}
+.dia-lista{display:grid;gap:10px}
+.dia-item{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#25334f;border:1px solid #50627e;border-radius:14px;padding:14px;min-width:0}
+.dia-item-corpo{display:grid;gap:5px;min-width:0;overflow-wrap:anywhere}
+.dia-item-corpo strong{font-size:1rem}
+.dia-item-corpo small{color:#e9c7a8}
+.dia-item-corpo span{font-size:.75rem;color:#b9cbe1}
+.dia-item-acoes{display:flex;gap:7px;flex-wrap:wrap}
+.dia-item-acoes button{min-height:44px;white-space:nowrap}
+.dia-vazio{border:1px dashed #647b9d;border-radius:12px;padding:22px;color:#c6d4e7}
+@media(max-width:650px){.dia-metricas{grid-template-columns:repeat(2,minmax(0,1fr))}.dia-item{align-items:stretch;flex-direction:column}.dia-item-acoes button{flex:1}.dia-abas button{flex:1}}
