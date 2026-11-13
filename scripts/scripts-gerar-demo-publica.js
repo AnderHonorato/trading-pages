@@ -32,6 +32,8 @@ function gerar(){
   copiar('frontend/paginas/equipe/missoes-flow.js');
   copiar('frontend/paginas/equipe/despacho-flow.js');
   copiar('frontend/paginas/equipe/despacho-flow.css');
+  copiar('frontend/paginas/equipe/oficina-viva.js');
+  copiar('frontend/paginas/equipe/oficina-viva.css');
   copiar('frontend/paginas/painel/painel.js');
   copiar('frontend/paginas/painel/demo-publica.css');
   copiar('frontend/compartilhado/orbital-fisica.js');
