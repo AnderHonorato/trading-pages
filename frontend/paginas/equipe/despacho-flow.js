@@ -10,7 +10,7 @@ const notas=()=>{const n=ler(NOTAS,{});return n&&typeof n==='object'&&!Array.isA
 const criar=(tag,classe,txt)=>{const n=document.createElement(tag);if(classe)n.className=classe;if(txt!==undefined)n.textContent=txt;return n};
 const responsavel=(m,e)=>m.responsavel==='chefe'?e.chefe:e.agentes.find(a=>a.id===m.responsavel)?.nome||'Agente removido';
 function gravar(lista){try{localStorage.setItem(CHAVE,JSON.stringify(lista));window.dispatchEvent(new Event('flow:missoes-atualizadas'));return true}catch{alert('Não foi possível salvar as missões.');return false}}
-function registrar(id,texto){const n=notas(),atual=Array.isArray(n[id])?n[id]:[];n[id]=[...atual,{texto,quando:Date.now()}].slice(-30);try{localStorage.setItem(NOTAS,JSON.stringify(n));return true}catch{alert('Não foi possível salvar o registro.');return false}}
+function registrar(id,texto){const n=notas(),atual=Array.isArray(n[id])?n[id]:[];n[id]=[...atual,{texto,quando:Date.now()}].slice(-30);try{localStorage.setItem(NOTAS,JSON.stringify(n));window.dispatchEvent(new Event('flow:diario-atualizado'));return true}catch{alert('Não foi possível salvar o registro.');return false}}
 function atualizar(){const lista=missoes(),e=equipe(),concluidas=lista.filter(m=>m.etapa==='concluida').length,ativas=lista.filter(m=>m.etapa!=='concluida').length;
 $('despacho-resumo').textContent=`${ativas} missões ativas · ${concluidas} concluídas · ${lista.filter(m=>m.etapa==='revisao').length} em revisão`;
 const palco=$('despacho-palco');palco.replaceChildren();['fila','fazendo','revisao','concluida'].forEach((etapa,i)=>{const grupo=lista.filter(m=>m.etapa===etapa),estacao=criar('div','despacho-estacao'),mascote=criar('div','despacho-mascote'),olhos=criar('span','despacho-olhos'),boca=criar('span','despacho-boca'),rotulo=criar('strong','',etapas[etapa]),numero=criar('small','',grupo.length+' missões');mascote.append(olhos,boca);estacao.style.setProperty('--indice',i);estacao.append(mascote,rotulo,numero);palco.append(estacao)});
@@ -28,6 +28,7 @@ const form=criar('form','despacho-form'),label=criar('label','', 'Registrar deci
 }
 document.querySelectorAll('[data-despacho-filtro]').forEach(b=>b.addEventListener('click',()=>{filtro=b.dataset.despachoFiltro;document.querySelectorAll('[data-despacho-filtro]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));atualizar()}));
 document.querySelector('[data-aba="despacho"]').addEventListener('click',atualizar);
+window.addEventListener('flow:abrir-missao',ev=>{selecionada=ev.detail?.id||null;filtro='todas';document.querySelectorAll('[data-despacho-filtro]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.despachoFiltro==='todas')));atualizar()});
 window.addEventListener('storage',ev=>{if([CHAVE,EQUIPE,NOTAS].includes(ev.key))atualizar()});
 window.addEventListener('flow:missoes-atualizadas',atualizar);
 atualizar();
