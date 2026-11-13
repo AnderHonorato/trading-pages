@@ -5,7 +5,7 @@ const $=id=>document.getElementById(id);
 let missoes=[];
 try{const salvo=JSON.parse(localStorage.getItem(CHAVE)||'[]');if(Array.isArray(salvo))missoes=salvo.filter(m=>m&&typeof m.titulo==='string'&&etapas.some(e=>e[0]===m.etapa)).slice(-200)}catch{}
 function equipe(){try{const d=JSON.parse(localStorage.getItem(EQUIPE)||'{}');return {chefe:d.chefe?.nome||'Chefinho',agentes:Array.isArray(d.agentes)?d.agentes:[]}}catch{return {chefe:'Chefinho',agentes:[]}}}
-function gravar(){try{localStorage.setItem(CHAVE,JSON.stringify(missoes))}catch{alert('Não foi possível salvar. Verifique o armazenamento do navegador.')}}
+function gravar(){try{localStorage.setItem(CHAVE,JSON.stringify(missoes));window.dispatchEvent(new Event('flow:missoes-atualizadas'))}catch{alert('Não foi possível salvar. Verifique o armazenamento do navegador.')}}
 function el(tag,classe,texto){const n=document.createElement(tag);if(classe)n.className=classe;if(texto!==undefined)n.textContent=texto;return n}
 function atualizarResponsaveis(){const sel=$('missao-responsavel'),antigo=sel.value,eq=equipe();sel.replaceChildren();[[ 'chefe',eq.chefe],...eq.agentes.map(a=>[a.id,a.nome])].forEach(([id,nome])=>{const op=el('option','',nome);op.value=id;sel.append(op)});if([...sel.options].some(o=>o.value===antigo))sel.value=antigo}
 function render(){
