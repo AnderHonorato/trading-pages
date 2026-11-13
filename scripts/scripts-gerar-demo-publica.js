@@ -29,6 +29,7 @@ function gerar(){
   copiar('frontend/paginas/equipe/equipe.html');
   copiar('frontend/paginas/equipe/equipe.css');
   copiar('frontend/paginas/equipe/equipe.js');
+  copiar('frontend/paginas/equipe/historico-flow.js');
   copiar('frontend/paginas/equipe/missoes-flow.js');
   copiar('frontend/paginas/equipe/despacho-flow.js');
   copiar('frontend/paginas/equipe/despacho-flow.css');
