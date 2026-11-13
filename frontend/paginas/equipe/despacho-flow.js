@@ -1,5 +1,6 @@
 (()=>{'use strict';
 const CHAVE='ander-flow-missoes-v1',EQUIPE='ander-flow-equipe-v1',NOTAS='ander-flow-despacho-v1';
+const prioridades={normal:'Normal',alta:'Alta',urgente:'Urgente'};
 const etapas={fila:'A preparar',fazendo:'Em produção',revisao:'Em revisão',concluida:'Concluída'};
 const $=id=>document.getElementById(id);let filtro='todas',selecionada=null;
 const ler=(chave,padrao)=>{try{return JSON.parse(localStorage.getItem(chave))??padrao}catch{return padrao}};
@@ -19,7 +20,9 @@ const atual=lista.find(m=>m.id===selecionada);const detalhe=$('despacho-detalhe'
 detalhe.append(criar('h3','',atual.titulo),criar('p','',etapas[atual.etapa]+' · '+responsavel(atual,e)));
 const campo=(titulo,opcoes,valor,aoMudar)=>{const label=criar('label','',titulo),select=criar('select');opcoes.forEach(([id,nome])=>{const opt=criar('option','',nome);opt.value=id;select.append(opt)});select.value=valor;select.onchange=()=>aoMudar(select.value);label.append(select);detalhe.append(label)};
 const alterar=(prop,valor)=>{const nova=missoes();const item=nova.find(x=>x.id===atual.id);if(!item)return;item[prop]=valor;item.alterada=Date.now();if(gravar(nova))atualizar()};
-campo('Etapa',Object.entries(etapas),atual.etapa,v=>alterar('etapa',v));campo('Responsável',[['chefe',e.chefe],...e.agentes.map(a=>[a.id,a.nome])],atual.responsavel,v=>alterar('responsavel',v));
+campo('Etapa',Object.entries(etapas),atual.etapa,v=>alterar('etapa',v));
+campo('Prioridade',Object.entries(prioridades),atual.prioridade||'normal',v=>alterar('prioridade',v));
+const prazoLabel=criar('label','','Prazo'),prazoInput=criar('input');prazoInput.type='date';prazoInput.value=atual.prazo||'';prazoInput.onchange=()=>alterar('prazo',prazoInput.value);prazoLabel.append(prazoInput);detalhe.append(prazoLabel);campo('Responsável',[['chefe',e.chefe],...e.agentes.map(a=>[a.id,a.nome])],atual.responsavel,v=>alterar('responsavel',v));
 const hist=criar('div','despacho-historico'),registros=notas()[atual.id]||[];hist.append(criar('h4','','Diário da missão'));if(!registros.length)hist.append(criar('p','','Sem registros ainda.'));registros.forEach(n=>hist.append(criar('p','',new Date(n.quando).toLocaleString('pt-BR')+' · '+n.texto)));detalhe.append(hist);
 const form=criar('form','despacho-form'),label=criar('label','', 'Registrar decisão ou evidência'),textarea=criar('textarea');textarea.required=true;textarea.maxLength=500;textarea.rows=3;textarea.placeholder='Ex.: Chefinho revisou o layout mobile e solicitou ajuste.';label.append(textarea);const enviar=criar('button','','Salvar no diário');form.append(label,enviar);form.onsubmit=ev=>{ev.preventDefault();const texto=textarea.value.trim();if(texto&&registrar(atual.id,texto))atualizar()};detalhe.append(form)
 }
