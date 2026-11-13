@@ -13,7 +13,7 @@
     } catch { return inicial(); }
   }
   let estado=carregar();
-  const salvar=()=>localStorage.setItem(CHAVE,JSON.stringify(estado));
+  const salvar=()=>{localStorage.setItem(CHAVE,JSON.stringify(estado));window.dispatchEvent(new Event('flow:equipe-alterada'));};
   const escapar=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const funcoes=[['Pesquisa','Lupinha'],['Design','Pincelinho'],['Código','Codinho'],['Segurança','Escudinho'],['Testes','Testinho'],['Documentação','Letrinha']];
   const painel=document.createElement('section');
