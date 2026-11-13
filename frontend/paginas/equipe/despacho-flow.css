@@ -1,0 +1,20 @@
+/* Sala de Despacho Flow: estações de trabalho, nunca órbitas */
+.despacho-cabecalho p{color:#c7bbd4}.despacho-resumo{padding:15px 18px;background:#30263e;border:1px solid #68567b;border-radius:16px;margin:16px 0}
+.despacho-palco{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:22px 14px;border-radius:24px;background:linear-gradient(160deg,#393048,#1a1d30);border:1px solid #635171}
+.despacho-estacao{min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:7px;padding:14px 6px;border-radius:18px;background:#ffffff0b;border:1px solid #ffffff20}
+.despacho-estacao strong{font-size:13px}.despacho-estacao small{font-size:11px;letter-spacing:0}
+.despacho-mascote{width:68px;height:68px;position:relative;border-radius:22px 22px 29px 29px;background:linear-gradient(145deg,#ffcf9c,#f09b9d);box-shadow:inset -7px -8px #0002;animation:despacho-trabalho 2.8s ease-in-out infinite;animation-delay:calc(var(--indice)*-.4s)}
+.despacho-estacao:nth-child(2) .despacho-mascote{background:linear-gradient(145deg,#b2dfff,#7da8ed);border-radius:28px 28px 15px 15px}
+.despacho-estacao:nth-child(3) .despacho-mascote{background:linear-gradient(145deg,#e5c5ff,#a68ade);border-radius:20px 30px 20px 30px}
+.despacho-estacao:nth-child(4) .despacho-mascote{background:linear-gradient(145deg,#b6efd6,#72c8b3);border-radius:50% 50% 24px 24px}
+.despacho-olhos:before,.despacho-olhos:after{content:'';position:absolute;top:23px;width:8px;height:12px;border-radius:50%;background:#332d42;animation:despacho-piscar 5s infinite}.despacho-olhos:before{left:19px}.despacho-olhos:after{right:19px}
+.despacho-boca{position:absolute;top:43px;left:29px;width:12px;height:7px;border-bottom:3px solid #332d42;border-radius:50%}
+@keyframes despacho-trabalho{50%{transform:translateY(-5px)}}@keyframes despacho-piscar{0%,94%,98%,100%{transform:scaleY(1)}96%{transform:scaleY(.12)}}
+.despacho-filtros{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}.despacho-filtros button{background:#3b3151;color:#f8ecff}.despacho-filtros button[aria-pressed=true]{background:#d5a7ff;color:#21162c}
+.despacho-corpo{display:grid;grid-template-columns:minmax(200px,.85fr) minmax(0,1.15fr);gap:15px}.despacho-lista{display:grid;align-content:start;gap:9px;max-height:520px;overflow:auto}
+.despacho-item{text-align:left;background:#302940;color:#f8edff;border:1px solid #65557c;display:grid;gap:6px;width:100%;overflow-wrap:anywhere}.despacho-item small{letter-spacing:0}.despacho-item.ativo{border-color:#f1c1ff;background:#4c365e}
+.despacho-detalhe{min-width:0;background:#262037;border:1px solid #574568;border-radius:20px;padding:18px}.despacho-detalhe h3{margin-top:0;overflow-wrap:anywhere}
+.despacho-historico{max-height:250px;overflow:auto;margin:16px 0}.despacho-historico p{padding:9px;background:#ffffff0b;border-radius:9px;overflow-wrap:anywhere}
+.despacho-form textarea{width:100%;resize:vertical;min-height:90px;background:#151324;color:#fff;border:1px solid #706181;border-radius:12px;padding:12px;font:inherit}.despacho-form button{width:100%}
+@media(max-width:650px){.despacho-palco{grid-template-columns:repeat(2,minmax(0,1fr))}.despacho-corpo{grid-template-columns:1fr}.despacho-lista{max-height:280px}}
+@media(prefers-reduced-motion:reduce){.despacho-mascote,.despacho-olhos:before,.despacho-olhos:after{animation:none}}
